@@ -1,108 +1,74 @@
+---
+id: constitution
+artifact: constitution
+status: live
+revised: 2026-09-27
+---
+
+<!-- Written to the writing standard meow-prose ships: lead with the answer, give each rule its reason in the same sentence, and show the failing case. -->
+
 # CLAUDE.md
 
 <role>
-Root policy for Claude Code working in the meowg1k repository. This file is
-canonical. Anything under `.claude/` adds routing and workflow detail and must
-not override this policy. `docs/spec/` is normative about what the binary does;
-this file is normative about how to work on it, and the two do not overlap.
+The root policy for working on meowg1k. It outranks every installed plugin's
+defaults where the two disagree. `docs/spec/` decides what the binary does and
+this file decides how to work on it, so neither restates the other.
+`.meowpaw/profile.toml` declares the verbs, the commit convention and the
+branch.
 </role>
 
 <project>
-meowg1k is a script-friendly AI companion CLI. Users define their own commands
-in Starlark and their own agents in markdown; the Rust binary supplies the
-runtime, the model gateways, the session store, the index, and the terminal.
-
-The tree is Rust. `v0.2.1` was the last Go implementation and is tagged; the
-Go code is gone from this branch and the history has it. `docs/spec/` fixes
-what the binary does, in ten areas of numbered requirements, and
-`docs/design/` records the decisions that produced them.
+meowg1k is a script-friendly AI companion CLI. Users write their commands in
+Starlark and their agents in markdown, and the Rust binary supplies the
+runtime, the model gateways, the session store, the index and the terminal.
+`v0.2.1` was the last Go release and is tagged; the Go code is gone from `dev`.
+`docs/spec/` holds the numbered requirements, and `docs/design/` records the
+decisions that produced them.
 </project>
 
 <principles>
 
-<principle name="always_technical_english">
-Load the `technical-english` skill at the start of every conversation, before
-writing anything, and keep it loaded. It governs all prose you produce here -
-design documents, specifications, code comments, commit messages, pull request
-bodies, issue text, and your own replies in chat. This is not conditional on
-the task looking like a writing task; a commit message is prose and a chat
-reply is prose.
+<principle name="spec_first">
+Write the requirement in `docs/spec/` before the code whose behaviour no
+requirement covers, because v0.2.x collected behaviour nobody decided on: a
+context built twice, an agent loop returning a bare string, a retry that backed
+off on authentication failures. Each requirement is `R-<AREA>-<n>`, uses MUST
+and MUST NOT in the RFC 2119 sense, and states one testable obligation at a
+boundary; `docs/spec/README.md` has the areas, the tombstone for a withdrawn
+number and the template. When an implementation contradicts a requirement,
+stop, and propose the amendment as its own reviewable change, with the reason,
+the requirements and tests it touches, and the migration. Rewording a
+requirement to match the code loses the reason it was written.
 </principle>
 
-<principle name="spec_first">
-No behaviour ships that a specification does not describe. Before writing code
-whose behaviour no requirement in `docs/spec/` covers, stop and write the
-requirement. When an implementation contradicts a requirement, stop and run
-`/amend-spec`; never write code the spec forbids and reword the spec
-afterwards. The `spec-driven` skill has the method.
+<principle name="requirements_trace_to_tests">
+Name the requirement in a doc comment on every test that checks one, as in
+`/// [R-SESSION-014] compaction supersedes without deleting`, because the set of
+IDs in `docs/spec/` and the set in the tests are then two lists a check can
+compare. An ID in the spec with no test is unbuilt or untested, and an ID in a
+test with no requirement is a typo or a stale withdrawal.
 </principle>
 
 <principle name="starlark_api_is_the_product">
-The Starlark surface is what users actually touch; the Rust code exists to
-serve it. A change that makes a crate tidier but leaves `agent.run` harder to
-write agents against is a regression. When the two conflict, the Starlark API
-wins.
-
-`.meow/` in this repository is the test of it. If a change makes the workspace
-meowg1k uses on itself worse to read, the change is wrong however good the
-internals look.
+Prefer the change that keeps `agent.run` easy to write agents against over the
+one that makes a crate tidier, because users touch the Starlark surface and
+the Rust code exists to serve it. `.meow/` in this repository is the test: if a
+change makes the workspace meowg1k uses on itself harder to read, the change
+is wrong. `meow review`, `meow commit` and `meow ask` run on this repository.
 </principle>
 
 <principle name="docs_must_match_code">
-The v0.2.x guides described modules and commands that did not exist, and they
-are deleted rather than corrected. Do not start a third account of the system:
-`docs/spec/` says what the binary does, `docs/design/` says why, and the code
-says how. If you touch a subsystem and find a document describing something
-else, fix it in the same change or delete the stale section.
+Fix or delete a document that describes something else in the same change that
+touches its subsystem, because the v0.2.x guides described modules and commands
+that didn't exist and were deleted for it. `docs/spec/` says what, `docs/design/`
+says why and the code says how; don't start a fourth account. A Starlark API
+change updates `docs/design/0.3.0-starlark-api.md`, and an architecture change
+updates `docs/design/0.3.0-architecture.md` and the crate table below.
 </principle>
 
-<principle name="one_context_builder">
-v0.2.x assembled the handler context in two places, `ctx_run.go` and
-`module_llm.go`, and they had already diverged on UI nesting depth: a module
-added to one was silently missing from tools running inside an agent loop.
-
-`crates/meow-star/src/modules.rs` is the one table now, and
-`crates/meow-star/src/context.rs` builds the one context. A second place for
-either is the defect, whatever it buys.
-</principle>
-
-<principle name="no_stdout_behind_the_tui">
-`println!` and `eprintln!` write straight through the live frame and corrupt
-it, which is how v0.2.x lost its display to ten `log.Printf` calls in the agent
-loop. The workspace lint denies both outside `meow-cli`. Diagnostics go through
-the event stream, which every renderer handles and which puts them in
-scrollback in order.
-</principle>
-
-<principle name="reviewable_history">
-`dev` is the default branch and the only long-lived one. Work on a feature
-branch off `dev`, open a pull request, and squash merge it. Never commit to
-`dev` directly, including for a one-line fix. Conventional commit subjects. The
-`scm` skill has the branch names, the pull request body, and the merge rules.
-</principle>
-
-<principle name="no_ai_attribution">
-Never mention Claude, Claude Code, or any AI tool in a commit message, a pull
-request title or body, a review comment, an issue, a tag annotation, or release
-notes. No `Co-Authored-By` trailer naming an AI, no "Generated with" footer, no
-`noreply@anthropic.com`, and no paraphrase. This overrides the default harness
-guidance that asks for such a trailer. The word "Claude" is allowed only when
-it names a model the code talks to, such as a model id in a config file.
-
-Check your own message before committing. Match the attribution patterns, not
-the bare word, so a path such as `.claude/commands/` does not trip it:
-
-```bash
-git log -1 --format=%B |
-  grep -iE 'co-authored-by.*(claude|anthropic|copilot)|generated with|noreply@anthropic'
-```
-</principle>
-
-</principles>
-
-<architecture>
-
-Nine crates, and the dependency direction is one way:
+<principle name="crate_boundaries">
+Keep the dependency direction one way, because crossing one of these
+boundaries is a defect however small it looks:
 
 | Crate | Holds | Depends on |
 | --- | --- | --- |
@@ -117,148 +83,141 @@ Nine crates, and the dependency direction is one way:
 | `meow-ui` | Three renderers over one event stream | `meow-core` |
 | `meow-cli` | The binary: the command line, the wiring, the process | everything |
 
-Three boundaries carry the design, and crossing one is a defect however small
-it looks:
+`meow-agent` doesn't know Starlark exists, so the engine is tested without a
+script. `meow-ui` knows the event types and nothing else, so a renderer runs
+from a recorded log. What `meow-star` needs from crates above it, such as the
+terminal, the session log and the index, arrives as a trait, so a test drives
+a handler with no terminal and no account. v0.2.x broke the first boundary when
+its Starlark package imported the model gateway for an embeddings factory.
+</principle>
 
-- `meow-core` depends on no workspace crate and performs no input or output.
-- `meow-agent` does not know Starlark exists. `meow-star` depends on it, never
-  the reverse, which is what lets the engine be tested without a script.
-- `meow-ui` knows about the event types and nothing else. It does not know the
-  engine exists, which is what lets a renderer be driven from a recorded log.
+<principle name="one_context_builder">
+Register a runtime module only in `crates/meow-star/src/modules.rs` and build
+the handler context only in `crates/meow-star/src/context.rs`, because v0.2.x
+built it in `ctx_run.go` and `module_llm.go` and a module added to one was
+missing from tools inside an agent loop. To add a module, write the
+`#[starlark_module]` function calling `running(eval, "<module>.<call>")` first
+so declaration refuses it, per `[R-STAR-084]`; register it in `Modules::build`
+and `NAMES`; test each builtin and its argument errors in
+`crates/meow-star/tests/running.rs`; and document it in section 10 of
+`docs/design/0.3.0-starlark-api.md`.
+</principle>
 
-What `meow-star` needs from crates that depend on it - the terminal, the
-session log, the index - arrives as a trait. That is also what lets a test
-drive a handler with no terminal and no account.
+<principle name="starlark_thread_bridge">
+Run each script invocation on its own blocking thread with its own `Evaluator`,
+and have a builtin that does input or output call the async engine through a
+`tokio::runtime::Handle`, because the engine is `Send` and async and the
+evaluator is neither. Never hold a `starlark::Value` across an `.await`. Thread
+a `CancellationToken` through every engine call that can run longer than a few
+milliseconds, because an agent Ctrl-C can't stop is a defect.
+</principle>
 
-</architecture>
+<principle name="no_stdout_behind_the_tui">
+Send diagnostics through `tracing` and the event stream, because `println!` and
+`eprintln!` write through the live frame and corrupt it, which is how v0.2.x
+lost its display to ten `log.Printf` calls in the agent loop. The workspace lint
+denies both outside `meow-cli`. Put a span on each agent step and each tool
+call, and none inside an inner loop.
+</principle>
 
-<starlark_runtime>
+<principle name="errors">
+Give each library crate one `thiserror` enum, with variants named for what went
+wrong and carrying enough to act on, and convert to `miette` in `meow-cli`, so a
+Starlark mistake renders as a diagnostic pointing at the line. Never `unwrap`
+or `expect` outside tests: restructure so the compiler sees the invariant, and
+where that's impossible, write an `#[allow]` with the reason beside it. Return
+every error the caller needs, because v0.2.x logged session write failures and
+carried on, and wrote session logs that were silently wrong.
+</principle>
 
-A user command is a Starlark file under `.meow/` that calls `meow.tool(...)` to
-declare typed arguments and a handler, then `meow.command(...)` to put it on the
-command line. `.meow/meow.star` is the entry point: it declares providers,
-models, the index, the policy, and the commands. An agent is a markdown file
-under `.meow/agents/` whose frontmatter carries its settings and whose body is
-its system prompt; shared prompt fragments live in `.meow/lib/*.md`.
+<principle name="tests">
+Test the failure paths as carefully as the success path: missing arguments,
+cancellation mid-call, exhausted budgets, malformed model output and storage
+failures are where the defects are. Test only through the public API, because a
+test that reaches past it makes the crate hard to change and proves nothing a
+user can observe. Snapshot rendered output with `insta`. `clippy.toml` exempts
+`#[test]` functions from the `unwrap` denial and not their helpers, so an
+integration test file with helpers starts with `#![allow(clippy::unwrap_used)]`
+and a line saying why.
+</principle>
 
-This repository uses its own workspace on itself, which is the acceptance test
-for the design. `meow review` reviews what is staged, `meow commit` writes a
-message for it, and `meow ask` answers a question about the code.
+<principle name="code_conventions">
+Put the Apache 2.0 header from `LICENSE_HEADER.txt` on every Rust file; the
+`insert-license` pre-commit hook adds it. Keep default `rustfmt`, and give every
+`#[allow]` a comment with its reason. A derive that emits an `unsafe impl` needs
+the allow at module scope, because an attribute on the struct doesn't cover a
+sibling item. Name a type for what the design documents call it. Add a
+dependency only with a reason in the pull request, and run `cargo machete`
+before opening a pull request that changes `Cargo.toml`.
+</principle>
 
-Runtime modules are registered in `crates/meow-star/src/modules.rs`. There is
-one table and every consumer takes a module from it, which is what
-`[R-STAR-010]` asks for. To add one:
+<principle name="reviewable_history">
+Branch off `dev`, open a pull request against it and squash merge, because the
+repository allows no other merge method and a change that skipped review is
+invisible to anyone reading the pull request log. Never commit to `dev`
+directly, including a one-line fix. Name a branch `<type>/<slug>` with a
+commit type. Never merge without the owner's approval or while checks run, and
+before calling a red check a blocker, compare it against
+`gh run list --branch dev --limit 5`.
 
-1. Write the `#[starlark_module]` function, taking `eval` and calling
-   `running(eval, "<module>.<call>")` first so it is refused during
-   declaration, per `[R-STAR-084]`.
-2. Register it in `Modules::build` and add its name to `NAMES`.
-3. Test each builtin in `crates/meow-star/tests/running.rs`, including the
-   argument errors.
-4. Document it in `docs/design/0.3.0-starlark-api.md` section 10.
+Release only when the owner approves that release. Don't bump the version in
+`Cargo.toml`, tag or push a tag without that approval, whatever the commits
+since the last release contain, because a pushed tag starts the release
+workflow. A commit type says how far a release moves the version, and it
+never decides whether a release happens. Tag on `dev` only, annotated, as
+`vMAJOR.MINOR.PATCH`.
+</principle>
 
-The agentic loop is `meow-agent`'s `Engine`. It returns an `Outcome` carrying
-the stop reason, the usage, and the parsed value, so a caller can tell a
-finished answer from a budget stop; v0.2.x returned a bare string and could not.
-
-</starlark_runtime>
-
-<build>
-
-mise owns the toolchain and the tasks; there is no Taskfile.
+<principle name="no_ai_attribution">
+Never mention Claude, Claude Code or any AI tool in a commit, a pull request, a
+review comment, an issue, a tag annotation or release notes: no
+`Co-Authored-By` trailer naming an AI, no "Generated with" footer, no
+`noreply@anthropic.com` and no paraphrase. The owner asked for this and had the
+existing trailers removed from history, so it overrides any harness default
+that adds them. "Claude" is allowed only where it names a model the code talks
+to. Check the message and the author field before committing, and check the
+squash message before merging, because GitHub builds it from the branch
+commits:
 
 ```bash
-mise install            # the toolchain and every tool a task invokes
-mise run all            # everything CI runs, in parallel
-mise run check          # clippy, with -D warnings
-mise run test           # nextest across the workspace
-mise run fmt            # rustfmt
-mise run deny           # advisories, licences, bans, sources
-mise run build          # -> target/debug/meow
+git log -1 --format='%an <%ae>%n%B' |
+  grep -iE 'co-authored-by.*(claude|anthropic|copilot)|generated with|anthropic\.com'
 ```
 
-`mise run all` is the gate. It runs the same seven things CI does, so a green
-run here means a green run there; if they ever disagree, that is a defect in
-one of them and not something to route around.
+The check matches the attribution patterns, not the bare word, so a model id
+such as `claude-sonnet-4-5` doesn't trip it.
+</principle>
 
-Two tool choices worth knowing. `cargo-nextest` comes from the prebuilt
-`github:nextest-rs/nextest` backend rather than `cargo:`, because building it
-from source compiles `aws-lc-sys` and needs a C toolchain and cmake. And
-`cargo-deny` needs `allow-wildcard-paths` together with `publish = false` on
-every library crate, or it reads an intra-workspace path dependency as an
-unpinned one.
+<principle name="toolchain">
+Run `mise install` once and use the mise tasks, because mise pins the compiler,
+the linter and every tool a task calls. If the LSP tool reports that
+rust-analyzer "crashed with exit code 1", run `mise run setup`: rustup's shim
+dispatches on the toolchain mise resolved, and mise installs rust-analyzer only
+into its own copy.
+</principle>
 
-`deny.toml` carries five ignored advisories, each with its reason. All are
-"unmaintained" rather than vulnerable, all arrive through a pinned dependency
-with no safe upgrade, and they are listed one by one so a new advisory against
-a direct dependency still fails the check.
+</principles>
 
-</build>
+<gate>
+`mise run all` is the gate, and it runs the seven checks CI runs, so a green
+run here means a green run there. The `gates-agree` job in `ci.yaml` fails when
+the two lists differ.
 
-<conventions>
-
-- Apache 2.0 header on every Rust file; `LICENSE_HEADER.txt` is the template.
-- One `thiserror` enum per crate. Variants named for what went wrong rather
-  than for where, and each carries enough to act on.
-- Never `unwrap` or `expect` outside tests. When an invariant truly cannot
-  fail, restructure so the compiler sees it; where that is impossible, the
-  message says which invariant and why.
-- `clippy.toml` exempts `#[test]` functions from the `unwrap` denial and not
-  the helpers beside them, so an integration test file with helpers needs a
-  file-level `#![allow(clippy::unwrap_used)]`.
-- Every test that checks a requirement names it in a doc comment:
-  `/// [R-SESSION-014] compaction supersedes without deleting`.
-- Test the failure paths as carefully as the success path. Missing arguments,
-  cancellation mid-call, exhausted budgets, malformed model output, and storage
-  failures are where the defects are.
-- Do not test private internals. A test that reaches past a public API makes
-  the crate hard to change and proves nothing a user could observe.
-- An `#[allow]` needs a comment saying why. A derive that emits an `unsafe
-  impl` needs the allow at module scope, because an attribute on the struct
-  does not cover a sibling item.
-
-</conventions>
-
-<workflow>
-
-Work is specification-driven. A change moves through five steps, each with a
-command:
-
-| Command | Does | Stops at |
+| Task | Runs | Fails on |
 | --- | --- | --- |
-| `/spec` | Writes or extends a component spec in `docs/spec/` | Human approval |
-| `/plan` | Decomposes an approved spec into issues with dependencies | Human approval, before creating anything on GitHub |
-| `/implement` | Builds one issue on a feature branch | A pull request, never a merge |
-| `/verify` | Checks code against spec in both directions | A report, fixes nothing |
-| `/review` | Reviews a pull request against its spec and conventions | A verdict |
-| `/amend-spec` | Proposes a spec change after implementation contradicted it | Human approval |
+| `fmt-check` | `cargo fmt --all -- --check` | Any unformatted file |
+| `check` | `cargo clippy --workspace --all-targets -- -D warnings` | Any clippy warning, including `unwrap` and `println!` outside their exemptions |
+| `test` | `cargo nextest run --workspace --no-tests=pass` | Any failing test |
+| `doc` | `cargo doc --workspace --no-deps` | A broken doc build; CI also denies rustdoc warnings |
+| `deny` | `cargo deny check` | A new advisory, a banned licence or an unpinned source |
+| `unused-deps` | `cargo machete` | A dependency nothing uses |
+| `lint-md` | `markdownlint-cli2` | A markdownlint finding |
 
-The skills in `.claude/skills/`:
-
-- `technical-english` - all prose. Always loaded, see the principle above.
-- `spec-driven` - requirement identifiers, traceability, the divergence
-  protocol.
-- `scm` - branches, commits, pull requests, squash merges, the attribution ban.
-- `rust` - crate boundaries, errors, the async bridge, tests. For v0.3.0 code.
-
-</workflow>
-
-<maintenance>
-
-Keep this file, `docs/spec/`, and `docs/design/` synchronized with the code.
-When you change:
-
-- **behaviour** - find the requirement in `docs/spec/` first. If there is none,
-  write one; if the code would contradict one, amend it in place with the date
-  and the reason, and say so in the pull request.
-- **the Starlark API** - update `docs/design/0.3.0-starlark-api.md`, and check
-  whether `.meow/` in this repository still reads well against it.
-- **architecture or wiring** - update `docs/design/0.3.0-architecture.md` and
-  the table above.
-- **build or lint configuration** - update the `<build>` section above and
-  `CONTRIBUTING.md`.
-
-This file is the only instruction file in the repository. If a tool wants its
-own, point it here instead of adding a second source of truth.
-
-</maintenance>
+`deny.toml` ignores five "unmaintained" advisories, each with its reason, one by
+one so a new advisory against a direct dependency still fails. `cargo-deny`
+needs `allow-wildcard-paths` and `publish = false` on every library crate, or it
+reads a workspace path dependency as unpinned. nextest comes from the prebuilt
+`github:nextest-rs/nextest` backend, because building it from source compiles
+`aws-lc-sys` and needs a C toolchain and cmake. A change to the build or lint
+configuration updates this section and `CONTRIBUTING.md`.
+</gate>

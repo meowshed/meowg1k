@@ -1,0 +1,50 @@
+# What this repository declares to the harness. Every value below comes from
+# what the repository already does; a verb or a section it has no command or
+# practice for is left out.
+
+# Each verb is a mise task, because mise owns the toolchain and the tasks here
+# and `mise run all` is the gate CI mirrors. `typecheck` sits outside `all`,
+# because clippy under `lint` already type-checks every target.
+[verbs]
+fmt = "mise run fmt-check"
+lint = "mise run check"
+typecheck = "mise run typecheck"
+test = "mise run test"
+build = "mise run build"
+
+# Conventional commits, enforced by the conventional-pre-commit hook. All 147
+# commits on dev follow the format, none has a subject over 72 characters, and
+# every one carries a Signed-off-by trailer.
+[commits]
+subject_limit = 72
+trailers = ["Signed-off-by"]
+
+# The types the history uses, and how far each moves the version when a
+# release happens. CHANGELOG.md follows semantic versioning, so a feature bumps
+# the minor version, a fix the patch, and the rest nothing. No type starts a
+# release: a release happens only when the owner approves it.
+[commits.types]
+feat = "minor"
+fix = "patch"
+build = "none"
+docs = "none"
+ci = "none"
+chore = "none"
+refactor = "none"
+spec = "none"
+test = "none"
+
+# dev is the only long-lived branch and every change lands by squash merge.
+# All 147 commits on dev carry a signature, and commit.gpgsign is on.
+[git]
+trunk = "dev"
+require_signatures = true
+
+# docs/spec holds the numbered requirements and docs/design the decisions
+# behind them.
+[record]
+root = "docs"
+
+# /plan decomposes a spec into GitHub issues, and pull requests close them.
+[tracker]
+kind = "github"
