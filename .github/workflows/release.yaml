@@ -36,12 +36,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: The tag is on dev
+      - name: The tag is on main
         run: |
           set -euo pipefail
-          git fetch --no-tags origin dev
-          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/dev; then
-            echo "::error::${GITHUB_REF_NAME} points at a commit that is not on dev"
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/main; then
+            echo "::error::${GITHUB_REF_NAME} points at a commit that is not on main"
             exit 1
           fi
 

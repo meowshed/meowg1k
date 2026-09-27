@@ -21,7 +21,7 @@ branch.
 meowg1k is a script-friendly AI companion CLI. Users write their commands in
 Starlark and their agents in markdown, and the Rust binary supplies the
 runtime, the model gateways, the session store, the index and the terminal.
-`v0.2.1` was the last Go release and is tagged; the Go code is gone from `dev`.
+`v0.2.1` was the last Go release and is tagged; the Go code is gone from `main`.
 `docs/spec/` holds the numbered requirements, and `docs/design/` records the
 decisions that produced them.
 </project>
@@ -152,19 +152,19 @@ before opening a pull request that changes `Cargo.toml`.
 </principle>
 
 <principle name="reviewable_history">
-Branch off `dev`, open a pull request against it and squash merge, because the
+Branch off `main`, open a pull request against it and squash merge, because the
 repository allows no other merge method and a change that skipped review is
-invisible to anyone reading the pull request log. Never commit to `dev`
+invisible to anyone reading the pull request log. Never commit to `main`
 directly, including a one-line fix. Name a branch `<type>/<slug>` with a
 commit type. Never merge without the owner's approval or while checks run, and
 before calling a red check a blocker, compare it against
-`gh run list --branch dev --limit 5`.
+`gh run list --branch main --limit 5`.
 
 Release only when the owner approves that release. Don't bump the version in
 `Cargo.toml`, tag or push a tag without that approval, whatever the commits
 since the last release contain, because a pushed tag starts the release
 workflow. A commit type says how far a release moves the version, and it
-never decides whether a release happens. Tag on `dev` only, annotated, as
+never decides whether a release happens. Tag on `main` only, annotated, as
 `vMAJOR.MINOR.PATCH`.
 </principle>
 
