@@ -63,6 +63,10 @@ there. If they ever disagree, that is a defect in one of them.
 Run it before opening a pull request, and again after any change you make in
 review.
 
+`mise run typecheck` runs `cargo check` alone, for a faster answer than clippy
+while you work. It isn't part of the gate, because `check` already
+type-checks every target.
+
 ## Branches and commits
 
 Work on a branch off `dev`. Never commit to `dev` directly, including for a

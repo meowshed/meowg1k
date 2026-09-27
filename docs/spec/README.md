@@ -4,9 +4,9 @@ This directory holds the normative specifications for meowg1k v0.3.0. A
 specification says what a component must do; the code either satisfies it or
 has a defect.
 
-Read `.claude/skills/spec-driven/SKILL.md` for the method: when a spec gets
-written, how requirements are identified, how tests trace to them, and what to
-do when an implementation contradicts one.
+`CLAUDE.md` says when a spec gets written, how tests trace to requirements and
+what to do when an implementation contradicts one. This file says how a
+requirement is identified and what a spec file holds.
 
 ## How this relates to the other documentation
 
@@ -124,5 +124,5 @@ contradicts its source is the wrong thing to correct.
 The cost is that these drafts are ahead of the code. The `starlark-rust` spike
 in `docs/design/0.3.0-architecture.md` section 12 has not run, and if the
 `!Send` value model fights the module design, `starlark.md` and `agent.md` will
-need amendments. Use `/amend-spec` when that happens rather than rewording a
-requirement in place.
+need amendments. Propose each as its own reviewable change, because rewording a
+requirement in place loses the reason it was written.
