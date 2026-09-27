@@ -5,7 +5,7 @@
 
 /// What kind of failure this is.
 ///
-/// `[R-LLM-030]` requires exactly one of three for every error. The v0.2.x
+/// `[REQ-1624]` requires exactly one of three for every error. The v0.2.x
 /// gateway had no classification and retried everything that was not a hard
 /// quota error, which is why an invalid API key cost the full backoff schedule
 /// before anyone saw it.
@@ -49,7 +49,7 @@ pub enum LlmError {
 
     /// A credential could not be obtained or renewed.
     ///
-    /// `[R-LLM-004]`. Its own variant rather than a `Transport`, because it
+    /// `[REQ-1604, REQ-1605, REQ-1606]`. Its own variant rather than a `Transport`, because it
     /// is the one failure here a person can fix and the message says how.
     /// Retrying it is pointless: a grant that will not renew does not renew
     /// on the second attempt either.
@@ -63,7 +63,7 @@ pub enum LlmError {
 
     /// The provider does not do this.
     ///
-    /// `[R-LLM-002]`: raised before a request is sent, so a caller is not
+    /// `[REQ-1602]`: raised before a request is sent, so a caller is not
     /// billed for discovering it.
     #[error("{provider} does not support {capability}")]
     Unsupported {
@@ -93,7 +93,7 @@ pub enum LlmError {
 
     /// The caller cancelled.
     ///
-    /// `[R-LLM-061]` keeps this distinct from a timeout or a transport error,
+    /// `[REQ-1649]` keeps this distinct from a timeout or a transport error,
     /// because a run that was stopped on purpose is not a run that broke.
     #[error("cancelled")]
     Cancelled,
@@ -114,7 +114,7 @@ pub enum LlmError {
 impl LlmError {
     /// Which kind of failure this is.
     ///
-    /// Satisfies `[R-LLM-031]`, `[R-LLM-032]`, and `[R-LLM-037]`. A 429 is a
+    /// Satisfies `[REQ-1625]`, `[REQ-1626]`, and `[REQ-1634, REQ-1635]`. A 429 is a
     /// rate limit unless the provider's own signal says the quota is spent:
     /// retrying a spent quota costs a delay, while refusing a rate limit costs
     /// the run, so the ambiguous case takes the cheaper mistake. The signal is

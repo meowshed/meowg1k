@@ -76,7 +76,7 @@ pub struct Environment {
 
 /// Build the renderer this run should use.
 ///
-/// `[R-TUI-001]`: the choice is made here, from what the runtime can see, and
+/// `[REQ-2800]`: the choice is made here, from what the runtime can see, and
 /// there is no way for a script to reach it.
 pub fn build(environment: Environment) -> Sink {
     let no_color = std::env::var_os("NO_COLOR").is_some();

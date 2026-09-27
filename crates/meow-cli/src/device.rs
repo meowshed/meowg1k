@@ -3,8 +3,8 @@
 
 //! The OAuth device-code flow, for providers that do not issue API keys.
 //!
-//! `[R-AUTH-020]`: the command shows a code and a URL, waits for the person to
-//! approve, and stores the result. `[R-AUTH-021]`: it honours the interval the
+//! `[REQ-1213]`: the command shows a code and a URL, waits for the person to
+//! approve, and stores the result. `[REQ-1214, REQ-1215, REQ-1216]`: it honours the interval the
 //! server asks for, stops when the server says the code expired, and can be
 //! interrupted without leaving anything half-written.
 
@@ -22,7 +22,7 @@ const CEILING: Duration = Duration::from_secs(15 * 60);
 /// The shortest poll interval this will use.
 ///
 /// GitHub asks for five seconds and answers `slow_down` when a client is too
-/// eager. Honouring the ask is `[R-AUTH-021]`; this floor is what stops a
+/// eager. Honouring the ask is `[REQ-1214, REQ-1215, REQ-1216]`; this floor is what stops a
 /// server that sends `0` from becoming a busy loop.
 const FLOOR: Duration = Duration::from_secs(1);
 
@@ -217,7 +217,7 @@ pub async fn run(
         match answer.error.as_deref() {
             // Nobody has approved it yet, which is the ordinary case.
             Some("authorization_pending") => {}
-            // `[R-AUTH-021]`: the server is entitled to ask for more room.
+            // `[REQ-1214, REQ-1215, REQ-1216]`: the server is entitled to ask for more room.
             Some("slow_down") => {
                 wait = answer
                     .interval

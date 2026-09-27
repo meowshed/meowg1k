@@ -173,7 +173,7 @@ pub fn build(
 ///
 /// `allowed` is consulted while the graph is walked rather than afterwards, so
 /// a filter narrows the search instead of narrowing its results. That is what
-/// `[R-INDEX-044]` means by applying the filter before ranking.
+/// `[REQ-1433, REQ-1434]` means by applying the filter before ranking.
 ///
 /// The graph is loaded and dropped inside this call. `hnsw_rs` ties a loaded
 /// graph to the reader that produced it, and the data file is mapped rather

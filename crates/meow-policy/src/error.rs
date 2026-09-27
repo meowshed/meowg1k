@@ -10,7 +10,7 @@
 /// A policy could not be built.
 #[derive(Debug, thiserror::Error)]
 pub enum PolicyError {
-    /// A tool name pattern has a shape `[R-POLICY-002]` forbids.
+    /// A tool name pattern has a shape `[REQ-2002, REQ-2003]` forbids.
     #[error("`{pattern}` is not a valid tool pattern: {reason}")]
     BadPattern {
         /// What was written.
@@ -30,7 +30,7 @@ pub enum PolicyError {
 
     /// A selector was put on a rule whose tools do not have it.
     ///
-    /// `[R-POLICY-005]`: raised at build time. A `commands` selector on
+    /// `[REQ-2009]`: raised at build time. A `commands` selector on
     /// `fs.*` matches nothing, and finding that out when an agent is denied
     /// mid-run is finding it out too late.
     #[error("no tool matching `{pattern}` supports a `{selector}` selector")]

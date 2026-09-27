@@ -4,7 +4,7 @@
 //! Session rows, at the level the store owns them.
 //!
 //! What a session *means* - the append-only log, compaction, forking - belongs
-//! to `meow-session` and arrives with `docs/spec/session.md`. The store owns
+//! to `meow-session` and arrives with `SPC-2200`. The store owns
 //! the rows, the ordering, and deletion, because deletion has to decrement the
 //! reference count of every blob the session referenced and nothing above the
 //! store can see those counts.
@@ -54,7 +54,7 @@ impl Store {
 
     /// Append one event.
     ///
-    /// One event, one commit. `[R-STORE-020]` forbids wrapping a turn in a
+    /// One event, one commit. `[REQ-2623, REQ-2624]` forbids wrapping a turn in a
     /// transaction held open across tool execution: the log is append-only, so
     /// a half-written turn is a true record of how far the run got, and
     /// holding the single write lock for the length of a tool would block
@@ -81,7 +81,7 @@ impl Store {
 
     /// Add one referent to a payload that is already stored.
     ///
-    /// `[R-SESSION-052]`: a fork copies event rows that point at the origin's
+    /// `[REQ-2239, REQ-2240, REQ-2241, REQ-2242]`: a fork copies event rows that point at the origin's
     /// blobs, and without this the origin could be collected out from under
     /// them. Separate from [`Store::put_blob`] because the bytes are already
     /// here and reading them back only to hash them again would be work for
@@ -128,7 +128,7 @@ impl Store {
 
     /// Copy the first `upto` events of one session into another.
     ///
-    /// Satisfies the copying half of `[R-SESSION-052]`: the rows are copies
+    /// Satisfies the copying half of `[REQ-2239, REQ-2240, REQ-2241, REQ-2242]`: the rows are copies
     /// referencing the same blobs, every referenced blob gains a referent, and
     /// the origin is not touched. The usage and compaction side tables come
     /// too, because a rebuild reads them rather than the bodies and a fork
@@ -204,7 +204,7 @@ impl Store {
 
     /// Delete a session and everything that belongs to it.
     ///
-    /// Satisfies `[R-STORE-040]` and `[R-STORE-041]`. The whole thing goes or
+    /// Satisfies `[REQ-2634]` and `[REQ-2635]`. The whole thing goes or
     /// nothing does, because a half-truncated log is worse than no log, and
     /// every blob the events referenced loses one referent on the way out.
     /// A session with children fails rather than orphaning them; the caller

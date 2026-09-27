@@ -3,7 +3,7 @@
 
 //! What a provider sends to authenticate, asked for rather than held.
 //!
-//! `[R-LLM-004]`. Every provider here but one uses a key that does not change,
+//! `[REQ-1604, REQ-1605, REQ-1606]`. Every provider here but one uses a key that does not change,
 //! and building the token in was right for them. It is wrong for one that
 //! exchanges a long-lived grant for a short-lived token: the provider would
 //! have to be rebuilt on a schedule nobody owns.
@@ -49,7 +49,7 @@ impl Bearer for Fixed {
 /// A token obtained by exchanging something longer-lived, and re-obtained
 /// when it expires.
 ///
-/// `[R-AUTH-022]`: the person is not asked again. What they approved is the
+/// `[REQ-1217, REQ-1218, REQ-1219, REQ-1220]`: the person is not asked again. What they approved is the
 /// grant; this is what the grant is for.
 pub struct Exchanged {
     /// Which provider, for the error when it will not renew.
@@ -159,7 +159,7 @@ impl Bearer for Exchanged {
         let body = response.text().await.unwrap_or_default();
 
         if !status.is_success() {
-            // `[R-AUTH-022]`: name the command, because the usual cause is a
+            // `[REQ-1217, REQ-1218, REQ-1219, REQ-1220]`: name the command, because the usual cause is a
             // grant that was revoked and the fix is to authenticate again.
             return Err(LlmError::Auth {
                 provider: self.provider.clone(),

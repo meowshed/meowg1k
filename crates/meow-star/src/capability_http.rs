@@ -5,8 +5,8 @@
 //!
 //! Everything else in the table is confined - `fs` and `shell` to the
 //! workspace, `store` to its own table - and this is not confined to anything.
-//! Three things follow from that, and they are `[R-STAR-022]` and
-//! `[R-STAR-023]`.
+//! Three things follow from that, and they are `[REQ-2447, REQ-2448, REQ-2449, REQ-2450, REQ-2451]` and
+//! `[REQ-2452, REQ-2453, REQ-2454, REQ-2455]`.
 //!
 //! A call carries a deadline and caps what it will read, because a server that
 //! never answers and a server that answers forever both hang a handler that
@@ -16,7 +16,7 @@
 //! run's cancellation token is in the select, so Ctrl-C does not leave a
 //! request in flight.
 //!
-//! It is not behind the policy layer, for the reason `docs/spec/policy.md`
+//! It is not behind the policy layer, for the reason `ADR-2002`
 //! gives: policy governs what a model decided, and a handler is code the
 //! workspace's own author wrote. What a model decided still passes through
 //! policy, because the model calls a tool and the tool call is what a rule
@@ -173,7 +173,7 @@ fn send<'v>(
     let cap = max_bytes.into_option().unwrap_or(DEFAULT_MAX_BYTES) as usize;
     let cancel = state.runtime.cancel_token().clone();
 
-    // `[R-STAR-081]`: the thread blocks. A handler has nothing useful to do
+    // `[REQ-2520, REQ-2521]`: the thread blocks. A handler has nothing useful to do
     // with a future, and the evaluator could not hold one anyway.
     let (status, got, text) = state.runtime.block_on(async move {
         // Before the selects below. `select!` polls its branches in an
@@ -216,7 +216,7 @@ fn send<'v>(
                     timeout.as_secs()
                 )));
             }
-            // `[R-STAR-023]`: this is the failure that is a failure. A status
+            // `[REQ-2452, REQ-2453, REQ-2454, REQ-2455]`: this is the failure that is a failure. A status
             // the server chose is an answer, and arrives below.
             response = request.send() => response
                 .map_err(|e| oops(format!("could not reach `{url}`: {e}")))?,

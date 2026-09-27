@@ -4,7 +4,7 @@
 //! Loading Starlark a workspace did not write.
 //!
 //! Every test here puts the package in the cache by hand. That is deliberate:
-//! `[R-PKG-012]` says a load never fetches, so a load is testable with no
+//! `[REQ-1809, REQ-1810]` says a load never fetches, so a load is testable with no
 //! network at all, and a test that needed one would be testing the wrong half.
 #![allow(clippy::unwrap_used)]
 
@@ -79,7 +79,7 @@ meow.package(name = "acme", source = "https://example.invalid/acme.tar.gz", vers
 load("@acme//models.star", "setup")
 "#;
 
-/// [R-PKG-001] a declared, locked, cached package loads
+/// [REQ-1800, REQ-1801, REQ-1802] a declared, locked, cached package loads
 #[test]
 fn a_pinned_package_loads() {
     let (dir, hash) = with_package(
@@ -101,7 +101,7 @@ fn a_pinned_package_loads() {
     );
 }
 
-/// [R-PKG-011] contents that do not hash to what is locked are refused, and
+/// [REQ-1807, REQ-1808] contents that do not hash to what is locked are refused, and
 /// nothing is evaluated
 ///
 /// This is the whole point of a lockfile. A cache somebody edited, or a
@@ -137,7 +137,7 @@ fn contents_that_do_not_match_the_lockfile_are_refused() {
     );
 }
 
-/// [R-PKG-012] a declared package that is not locked does not fetch
+/// [REQ-1809, REQ-1810] a declared package that is not locked does not fetch
 #[test]
 fn a_package_that_is_not_locked_says_to_lock_it() {
     let (dir, _) = with_package(
@@ -153,7 +153,7 @@ fn a_package_that_is_not_locked_says_to_lock_it() {
     );
 }
 
-/// [R-PKG-012] a locked package that is not cached says to fetch it
+/// [REQ-1809, REQ-1810] a locked package that is not cached says to fetch it
 #[test]
 fn a_package_that_is_not_cached_says_to_fetch_it() {
     let dir = tempfile::tempdir().unwrap();
@@ -173,7 +173,7 @@ fn a_package_that_is_not_cached_says_to_fetch_it() {
     );
 }
 
-/// [R-PKG-010] a source changed in the declaration and not re-locked is caught
+/// [REQ-1805, REQ-1806] a source changed in the declaration and not re-locked is caught
 #[test]
 fn a_source_the_lockfile_disagrees_with_is_refused() {
     let (dir, hash) = with_package(
@@ -195,7 +195,7 @@ fn a_source_the_lockfile_disagrees_with_is_refused() {
     );
 }
 
-/// [R-PKG-002] two packages with one name are refused, naming both
+/// [REQ-1803] two packages with one name are refused, naming both
 #[test]
 fn two_packages_with_the_same_name_are_refused() {
     let dir = tempfile::tempdir().unwrap();
@@ -217,7 +217,7 @@ meow.package(name = "acme", source = "https://b.invalid/x.tar.gz", version = "2"
     );
 }
 
-/// [R-PKG-003] a package may not be called `std`
+/// [REQ-1804] a package may not be called `std`
 #[test]
 fn a_package_may_not_shadow_the_runtime_modules() {
     let dir = tempfile::tempdir().unwrap();
@@ -236,7 +236,7 @@ fn a_package_may_not_shadow_the_runtime_modules() {
     );
 }
 
-/// [R-PKG-030] a package's file can load `@std//` and another of its own files
+/// [REQ-1821] a package's file can load `@std//` and another of its own files
 #[test]
 fn a_package_reaches_the_runtime_modules_and_its_own_files() {
     let (dir, hash) = with_package(
@@ -257,8 +257,8 @@ load("@acme//inner.star", "helper")
 
 def setup():
     # Reached at run time. Calling either of these here, or calling `setup`
-    # from `meow.star`, would be refused by `[R-STAR-084]` - which is
-    # `[R-PKG-033]` working, and has a test of its own below.
+    # from `meow.star`, would be refused by `[REQ-2524, REQ-2525]` - which is
+    # `[REQ-1824]` working, and has a test of its own below.
     return join("a", helper())
 {PRELUDE}
 "#
@@ -279,7 +279,7 @@ def setup():
     assert!(loaded.registry.model("fast").is_some());
 }
 
-/// [R-PKG-031] a package cannot climb out of itself
+/// [REQ-1822] a package cannot climb out of itself
 #[test]
 fn a_package_path_cannot_climb_out() {
     let (dir, hash) = with_package(
@@ -307,7 +307,7 @@ load("@acme//../../meow.star", "anything")
     );
 }
 
-/// [R-PKG-010] a hash covers where a file is, not only what is in it
+/// [REQ-1805, REQ-1806] a hash covers where a file is, not only what is in it
 #[test]
 fn moving_a_file_changes_the_hash() {
     let dir = tempfile::tempdir().unwrap();
@@ -323,7 +323,7 @@ fn moving_a_file_changes_the_hash() {
     );
 }
 
-/// [R-PKG-033] a package runs under the same rules as the workspace's own code
+/// [REQ-1824] a package runs under the same rules as the workspace's own code
 ///
 /// The declaration phase reaches nothing, for a package as much as for
 /// `meow.star`. A package that could call `fs.read` while being loaded would

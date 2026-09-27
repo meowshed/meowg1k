@@ -89,7 +89,7 @@ impl Drop for Exchange {
     }
 }
 
-/// [R-LLM-004] a fixed key is handed over unchanged, and asks nobody
+/// [REQ-1604, REQ-1605, REQ-1606] a fixed key is handed over unchanged, and asks nobody
 #[tokio::test(flavor = "multi_thread")]
 async fn a_fixed_key_is_what_it_was_given() {
     let bearer = Fixed::new("sk-a-key");
@@ -99,7 +99,7 @@ async fn a_fixed_key_is_what_it_was_given() {
     assert_eq!(bearer.token(&cancel).await.unwrap(), "sk-a-key");
 }
 
-/// [R-LLM-004] a token that is still good is reused rather than re-fetched
+/// [REQ-1604, REQ-1605, REQ-1606] a token that is still good is reused rather than re-fetched
 #[tokio::test(flavor = "multi_thread")]
 async fn a_token_that_has_not_expired_is_not_fetched_again() {
     let server = Exchange::new(200, 3600);
@@ -113,7 +113,7 @@ async fn a_token_that_has_not_expired_is_not_fetched_again() {
     assert_eq!(server.asked(), 1, "it was exchanged twice");
 }
 
-/// [R-AUTH-022] an expired token is renewed without asking anybody
+/// [REQ-1217, REQ-1218, REQ-1219, REQ-1220] an expired token is renewed without asking anybody
 #[tokio::test(flavor = "multi_thread")]
 async fn an_expired_token_is_renewed() {
     // Expiring in ten seconds, which is inside the window that treats a token
@@ -129,7 +129,7 @@ async fn an_expired_token_is_renewed() {
     assert_eq!(server.asked(), 2);
 }
 
-/// [R-LLM-004] the grant is what is sent to the exchange
+/// [REQ-1604, REQ-1605, REQ-1606] the grant is what is sent to the exchange
 #[tokio::test(flavor = "multi_thread")]
 async fn the_grant_authenticates_the_exchange() {
     let server = Exchange::new(200, 3600);
@@ -158,7 +158,7 @@ async fn the_grant_authenticates_the_exchange() {
     );
 }
 
-/// [R-AUTH-022] a refusal names the provider and the command that fixes it
+/// [REQ-1217, REQ-1218, REQ-1219, REQ-1220] a refusal names the provider and the command that fixes it
 #[tokio::test(flavor = "multi_thread")]
 async fn a_refused_renewal_says_what_to_run() {
     let server = Exchange::new(401, 3600);
@@ -177,7 +177,7 @@ async fn a_refused_renewal_says_what_to_run() {
     );
 }
 
-/// [R-LLM-004] a renewal that will not work is fatal, not retried
+/// [REQ-1604, REQ-1605, REQ-1606] a renewal that will not work is fatal, not retried
 #[tokio::test(flavor = "multi_thread")]
 async fn a_refused_renewal_is_not_worth_retrying() {
     let server = Exchange::new(401, 3600);
@@ -192,7 +192,7 @@ async fn a_refused_renewal_is_not_worth_retrying() {
     );
 }
 
-/// [R-LLM-004] a renewal stops when the run is cancelled
+/// [REQ-1604, REQ-1605, REQ-1606] a renewal stops when the run is cancelled
 #[tokio::test(flavor = "multi_thread")]
 async fn cancelling_stops_a_renewal() {
     let server = Exchange::new(200, 3600);

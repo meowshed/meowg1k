@@ -129,7 +129,7 @@ fn workspace() -> TempDir {
     dir
 }
 
-/// Run `meow`, having first agreed to the workspace - `[R-AUTH-030]`.
+/// Run `meow`, having first agreed to the workspace - `[REQ-1222, REQ-1223]`.
 fn run(dir: &Path, args: &[&str]) -> std::process::Output {
     let _ = bare(dir, &["trust"]);
     bare(dir, args)
@@ -145,7 +145,7 @@ fn bare(dir: &Path, args: &[&str]) -> std::process::Output {
         .unwrap()
 }
 
-/// [R-STAR-010] [R-STAR-011] every module is reachable from a handler this
+/// [REQ-2414, REQ-2415] [REQ-2416] every module is reachable from a handler this
 /// binary ran, and wired to something that answers
 #[test]
 fn every_module_works_through_the_binary() {
@@ -165,7 +165,7 @@ fn every_module_works_through_the_binary() {
     );
 }
 
-/// [R-STAR-003] a module that does not exist is refused, and the error lists
+/// [REQ-2405, REQ-2406] a module that does not exist is refused, and the error lists
 /// the ones that do
 #[test]
 fn an_unknown_module_lists_the_real_ones() {

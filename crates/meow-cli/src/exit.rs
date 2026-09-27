@@ -31,7 +31,7 @@ pub enum Ending {
 
 /// The exit code for an ending.
 ///
-/// Satisfies `[R-TUI-080]` by following its table exactly, and `[R-TUI-081]`
+/// Satisfies `[REQ-2852]` by following its table exactly, and `[REQ-2853, REQ-2854]`
 /// because the match is total and no arm repeats a number. A test walks all
 /// six stop reasons and checks the codes are distinct, which is what a shell
 /// branching on `$?` depends on.
@@ -56,7 +56,7 @@ pub fn code(ending: Ending) -> u8 {
 
 /// How a run that finished ended, given what its handler returned.
 ///
-/// A handler that returns nothing has not failed. `[R-TUI-080]` distinguishes
+/// A handler that returns nothing has not failed. `[REQ-2852]` distinguishes
 /// only `false` from everything else, because a handler returning a string is
 /// reporting a result rather than a verdict.
 pub fn finished(returned: Option<bool>) -> Ending {
@@ -90,7 +90,7 @@ mod tests {
         StopReason::Failed,
     ];
 
-    /// [R-TUI-081] no code means two things, so a shell can branch on one
+    /// [REQ-2853, REQ-2854] no code means two things, so a shell can branch on one
     #[test]
     fn every_stop_reason_has_a_code_of_its_own() {
         let mut seen: Vec<(u8, StopReason)> = Vec::new();
@@ -112,7 +112,7 @@ mod tests {
         }
     }
 
-    /// [R-TUI-080] the table, code by code
+    /// [REQ-2852] the table, code by code
     #[test]
     fn the_codes_are_the_ones_the_table_names() {
         assert_eq!(code(Ending::Passed), 0);
@@ -127,7 +127,7 @@ mod tests {
         assert_eq!(code(Ending::Stopped(StopReason::Failed)), 9);
     }
 
-    /// [R-TUI-080] only an explicit false is a failure
+    /// [REQ-2852] only an explicit false is a failure
     #[test]
     fn a_handler_that_returns_nothing_has_not_failed() {
         assert_eq!(super::finished(None), Ending::Passed);

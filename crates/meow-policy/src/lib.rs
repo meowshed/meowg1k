@@ -14,7 +14,7 @@
 //! `shell_exec` is an ordinary tool there, so an agent that is talked into
 //! running a command runs it.
 //!
-//! `docs/spec/policy.md` is normative.
+//! `SPC-2000` is normative.
 
 mod error;
 mod policy;

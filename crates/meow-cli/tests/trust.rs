@@ -64,7 +64,7 @@ fn workspace(source: &str) -> TempDir {
     dir
 }
 
-/// [R-AUTH-030] [R-AUTH-031] an untrusted workspace does not run, and says how
+/// [REQ-1222, REQ-1223] [REQ-1224, REQ-1225] an untrusted workspace does not run, and says how
 /// to agree
 #[test]
 fn an_untrusted_workspace_does_not_run() {
@@ -86,7 +86,7 @@ fn an_untrusted_workspace_does_not_run() {
     );
 }
 
-/// [R-AUTH-030] what is shown is what is being agreed to
+/// [REQ-1222, REQ-1223] what is shown is what is being agreed to
 #[test]
 fn the_question_shows_the_agents_tools_and_policy() {
     let home = home();
@@ -107,7 +107,7 @@ fn the_question_shows_the_agents_tools_and_policy() {
     }
 }
 
-/// [R-AUTH-030] agreeing lets it run
+/// [REQ-1222, REQ-1223] agreeing lets it run
 #[test]
 fn a_trusted_workspace_runs() {
     let home = home();
@@ -121,7 +121,7 @@ fn a_trusted_workspace_runs() {
     assert!(stdout(&out).contains("ran"), "{}", stdout(&out));
 }
 
-/// [R-AUTH-034] widening the policy asks again
+/// [REQ-1229] widening the policy asks again
 ///
 /// This is the case the whole feature is for. Agreeing once and forever means
 /// agreeing to whatever the repository becomes, and a `.meow/` that changes
@@ -151,7 +151,7 @@ fn widening_the_policy_withdraws_the_agreement() {
     );
 }
 
-/// [R-AUTH-034] a new tool asks again
+/// [REQ-1229] a new tool asks again
 #[test]
 fn a_new_tool_withdraws_the_agreement() {
     let home = home();
@@ -177,7 +177,7 @@ meow.command(meow.tool(name = "another", about = "something else", run = second)
     );
 }
 
-/// [R-AUTH-034] editing a handler's body does not ask again
+/// [REQ-1229] editing a handler's body does not ask again
 ///
 /// The record is what a workspace may do, not what it says. Re-asking for
 /// every edit would make the question a formality people click through, which
@@ -202,7 +202,7 @@ fn editing_a_handler_does_not_ask_again() {
     assert!(stdout(&out).contains("ran differently"), "{}", stdout(&out));
 }
 
-/// [R-AUTH-032] trust can be withdrawn, and listed
+/// [REQ-1226, REQ-1227] trust can be withdrawn, and listed
 #[test]
 fn trust_can_be_listed_and_withdrawn() {
     let home = home();
@@ -232,7 +232,7 @@ fn trust_can_be_listed_and_withdrawn() {
     );
 }
 
-/// [R-AUTH-030] the commands that describe a workspace do not need trust
+/// [REQ-1222, REQ-1223] the commands that describe a workspace do not need trust
 ///
 /// They are how a person decides whether to trust one. Requiring trust before
 /// they run would make the decision impossible to inform.
@@ -258,7 +258,7 @@ fn describing_a_workspace_needs_no_trust() {
     }
 }
 
-/// [R-AUTH-030] a declared package is shown, because it is code somebody else
+/// [REQ-1222, REQ-1223] a declared package is shown, because it is code somebody else
 /// wrote
 ///
 /// This is the single most important line on the list. A workspace that
@@ -285,7 +285,7 @@ meow.package(name = "acme", source = "https://example.invalid/acme.tar.gz", vers
     );
 }
 
-/// [R-AUTH-034] adding a package withdraws the agreement
+/// [REQ-1229] adding a package withdraws the agreement
 #[test]
 fn adding_a_package_asks_again() {
     let home = home();

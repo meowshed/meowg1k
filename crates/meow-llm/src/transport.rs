@@ -4,7 +4,7 @@
 //! The one thing a provider needs from the network.
 //!
 //! Keeping HTTP behind a trait is what lets a provider be tested against a
-//! recorded exchange instead of a live account. `[R-LLM-021]` is stated over a
+//! recorded exchange instead of a live account. `[REQ-1618]` is stated over a
 //! recording for the same reason: two live calls to a model cannot be compared,
 //! because the model is free to answer differently.
 

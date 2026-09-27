@@ -4,7 +4,7 @@
 //! Agents and tools as Starlark values.
 //!
 //! `meow.agent` and `meow.tool` return something you can hold, rather than
-//! registering a name you later quote. That is what `[R-STAR-041]` needs: an
+//! registering a name you later quote. That is what `[REQ-2490, REQ-2491]` needs: an
 //! agent goes into another agent's `tools` list the same way a tool does, and
 //! presents the same schema there. It is also what the migration table in
 //! `0.3.0-starlark-api.md` means by replacing `ctx.run("name", k = v)` with
@@ -84,7 +84,7 @@ impl<'v> StarlarkValue<'v> for Tool {
 
 /// One agent and one task, built but not run.
 ///
-/// `[R-STAR-043]`. A Starlark closure cannot cross a thread boundary, so
+/// `[REQ-2493, REQ-2494]`. A Starlark closure cannot cross a thread boundary, so
 /// `meow.parallel` is given declarations of work rather than things to call.
 #[derive(Debug, Allocative, ProvidesStaticType, NoSerialize)]
 pub struct Invocation {
@@ -110,7 +110,7 @@ impl<'v> StarlarkValue<'v> for Invocation {
 /// The name a `tools` entry refers to.
 ///
 /// A value or a string, because a Starlark declaration holds values and a
-/// markdown one can only hold names. `[R-STAR-051]` needs both to produce the
+/// markdown one can only hold names. `[REQ-2498, REQ-2499]` needs both to produce the
 /// same agent, and they do: both end up as a name here.
 pub fn name_of(value: StarValue<'_>) -> Option<String> {
     if let Some(agent) = value.downcast_ref::<Agent>() {
@@ -128,7 +128,7 @@ fn oops(message: impl std::fmt::Display) -> starlark::Error {
 
 /// Turn an engine outcome into what a handler reads.
 ///
-/// `[R-STAR-042]`: `stop` and `detail` travel with the text, because a caller
+/// `[REQ-2492]`: `stop` and `detail` travel with the text, because a caller
 /// that cannot tell a finished answer from a budget stop will treat a partial
 /// one as complete. That is the defect v0.2.x had, where `agent_turn` returned
 /// a bare string and "the model finished", "we hit max_iterations", and "the
@@ -199,7 +199,7 @@ pub fn outcome<'v>(
 fn agent_methods(builder: &mut MethodsBuilder) {
     /// Run this agent on a task and wait for it.
     ///
-    /// `[R-STAR-081]`: the call blocks the script thread. There is no future
+    /// `[REQ-2520, REQ-2521]`: the call blocks the script thread. There is no future
     /// and no callback, because either one would mean a Starlark value
     /// crossing a thread boundary.
     fn run<'v>(
@@ -282,8 +282,8 @@ fn tool_methods(builder: &mut MethodsBuilder) {
 
 /// Run several invocations at once.
 ///
-/// Satisfies `[R-STAR-043]` by taking invocations rather than callables, and
-/// `[R-STAR-044]` by saying why when it is given something else. A Starlark
+/// Satisfies `[REQ-2493, REQ-2494]` by taking invocations rather than callables, and
+/// `[REQ-2495]` by saying why when it is given something else. A Starlark
 /// function looks like the natural argument here and cannot be one: it lives
 /// on its evaluator's heap, and the runs happen on other threads.
 pub fn parallel<'v>(

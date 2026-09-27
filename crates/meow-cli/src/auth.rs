@@ -3,9 +3,9 @@
 
 //! The credential store, at `~/.meow/auth.json`.
 //!
-//! Outside every workspace, by `[R-AUTH-010]`: a repository cannot carry a
+//! Outside every workspace, by `[REQ-1204]`: a repository cannot carry a
 //! credential and a contributor cannot commit one. Nothing in `.meow/` can
-//! read it and no runtime module exposes it, by `[R-AUTH-004]` - a workspace
+//! read it and no runtime module exposes it, by `[REQ-1203]` - a workspace
 //! that could read the store would be a workspace that could exfiltrate it.
 
 use std::collections::BTreeMap;
@@ -22,7 +22,7 @@ pub enum AuthError {
 
     /// The file is readable by somebody other than its owner.
     ///
-    /// `[R-AUTH-011]`: refused rather than repaired. A file that was
+    /// `[REQ-1205, REQ-1206]`: refused rather than repaired. A file that was
     /// world-readable has already been readable, and silently tightening the
     /// mode would hide that from the person who needs to know.
     #[error("`{path}` is readable by others (mode {mode:o}); it must be {expected:o}")]
@@ -58,7 +58,7 @@ pub enum AuthError {
 
 /// One provider's credential.
 ///
-/// An API key and an OAuth token live in the same store, by `[R-AUTH-022]`,
+/// An API key and an OAuth token live in the same store, by `[REQ-1217, REQ-1218, REQ-1219, REQ-1220]`,
 /// because a `.star` file could hold neither and the person managing them
 /// should not have to know which kind a provider uses.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -94,7 +94,7 @@ impl Credential {
 
     /// What to describe it as, without describing it.
     ///
-    /// `[R-AUTH-014]`: nothing here returns any part of a secret.
+    /// `[REQ-1212]`: nothing here returns any part of a secret.
     pub fn describe(&self) -> &'static str {
         match self {
             Self::ApiKey { .. } => "api key",
@@ -178,7 +178,7 @@ impl Store {
 
     /// Every provider with a credential, and what kind it is.
     ///
-    /// `[R-AUTH-013]`: what a listing may say. Never the credential itself.
+    /// `[REQ-1209, REQ-1210, REQ-1211]`: what a listing may say. Never the credential itself.
     pub fn list(&self) -> Vec<(&str, &Credential)> {
         self.entries
             .iter()
@@ -198,7 +198,7 @@ impl Store {
 
     /// Write the store back.
     ///
-    /// `[R-AUTH-012]`: through a temporary file in the same directory and a
+    /// `[REQ-1207, REQ-1208]`: through a temporary file in the same directory and a
     /// rename, so a process that dies mid-write leaves the old store rather
     /// than half of the new one. A truncated credential store locks the user
     /// out of every provider at once.
@@ -219,7 +219,7 @@ impl Store {
 
 /// Write a JSON file under `~/.meow/`, privately and atomically.
 ///
-/// `[R-AUTH-012]`: through a temporary beside the target and a rename, so a
+/// `[REQ-1207, REQ-1208]`: through a temporary beside the target and a rename, so a
 /// process that dies mid-write leaves the old file rather than half of the new
 /// one. A truncated credential store locks the user out of every provider at
 /// once, and a truncated trust record asks every question again.
@@ -270,7 +270,7 @@ fn home_dir() -> Option<PathBuf> {
     }
 }
 
-/// Refuse a store anybody else can read - `[R-AUTH-011]`.
+/// Refuse a store anybody else can read - `[REQ-1205, REQ-1206]`.
 #[cfg(unix)]
 fn check_mode(path: &Path) -> Result<(), AuthError> {
     use std::os::unix::fs::PermissionsExt;

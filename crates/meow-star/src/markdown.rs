@@ -74,13 +74,13 @@ fn split(text: &str) -> Split<'_> {
 
 /// Read a markdown agent.
 ///
-/// Satisfies `[R-STAR-050]` through [`Fields`], which is the same structure a
-/// `meow.agent` call fills, and `[R-STAR-051]` because the value comes out of
+/// Satisfies `[REQ-2496, REQ-2497]` through [`Fields`], which is the same structure a
+/// `meow.agent` call fills, and `[REQ-2498, REQ-2499]` because the value comes out of
 /// the same builder.
 ///
 /// # Errors
 ///
-/// [`StarError::Load`] carrying the file and the line, per `[R-STAR-052]`.
+/// [`StarError::Load`] carrying the file and the line, per `[REQ-2500]`.
 pub fn agent(
     path: &Path,
     name: &str,
@@ -90,7 +90,7 @@ pub fn agent(
     let parts = split(text);
 
     let fields: Fields = serde_yaml_ng::from_str(parts.yaml).map_err(|e| {
-        // `[R-STAR-052]`: every line number the parser produces is relative to
+        // `[REQ-2500]`: every line number the parser produces is relative to
         // the frontmatter, and a user counts from the top of the file. Shifting
         // only the one in the prefix would leave the message contradicting
         // itself, so the ones inside it are shifted too.
@@ -112,7 +112,7 @@ pub fn agent(
     let mut declared = fields.build(name, Source::Markdown, &origin, prompts)?;
 
     // `build` joined the includes and an empty system prompt; the body goes on
-    // the end, separated the same way `[R-STAR-054]` separates the includes.
+    // the end, separated the same way `[REQ-2502, REQ-2503, REQ-2504, REQ-2505]` separates the includes.
     let body = parts.body.trim();
     if body.is_empty() {
         return Err(StarError::Load {

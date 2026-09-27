@@ -12,7 +12,7 @@ use ratatui::backend::TestBackend;
 
 /// A run with a step, a tool, some output, and an end.
 ///
-/// One recording, replayed into every renderer, which is what `[R-TUI-005]`
+/// One recording, replayed into every renderer, which is what `[REQ-2804, REQ-2805]`
 /// asks for: the same stream, and none of them needing a terminal.
 fn recording() -> Vec<ViewEvent> {
     vec![
@@ -93,7 +93,7 @@ fn json_of(events: &[ViewEvent]) -> Vec<serde_json::Value> {
         .collect()
 }
 
-/// [R-TUI-001] [R-TUI-002] the renderer is a function of the runtime's
+/// [REQ-2800] [REQ-2801] the renderer is a function of the runtime's
 /// conditions, and `--format json` wins whatever the terminal is
 #[test]
 fn json_wins_whatever_the_terminal_is() {
@@ -112,7 +112,7 @@ fn json_wins_whatever_the_terminal_is() {
     }
 }
 
-/// [R-TUI-003] a pipe, NO_COLOR, and --color=never all select plain
+/// [REQ-2802] a pipe, NO_COLOR, and --color=never all select plain
 #[test]
 fn a_pipe_or_no_colour_selects_plain() {
     let base = Conditions {
@@ -145,7 +145,7 @@ fn a_pipe_or_no_colour_selects_plain() {
     );
 }
 
-/// [R-TUI-004] otherwise the inline terminal renderer
+/// [REQ-2803] otherwise the inline terminal renderer
 #[test]
 fn a_terminal_selects_the_inline_renderer() {
     assert_eq!(
@@ -159,7 +159,7 @@ fn a_terminal_selects_the_inline_renderer() {
     );
 }
 
-/// [R-TUI-005] all three take the same stream with no terminal attached
+/// [REQ-2804, REQ-2805] all three take the same stream with no terminal attached
 #[test]
 fn all_three_take_the_same_recording() {
     let events = recording();
@@ -174,7 +174,7 @@ fn all_three_take_the_same_recording() {
     tty.finish().unwrap();
 }
 
-/// [R-TUI-020] the plain renderer emits no escape sequences
+/// [REQ-2821, REQ-2822] the plain renderer emits no escape sequences
 #[test]
 fn the_plain_renderer_emits_no_escapes() {
     let text = plain_of(&recording());
@@ -182,7 +182,7 @@ fn the_plain_renderer_emits_no_escapes() {
     assert!(!text.contains('\r'), "{text:?}");
 }
 
-/// [R-TUI-021] the plain renderer carries the steps, the tool calls with their
+/// [REQ-2823] the plain renderer carries the steps, the tool calls with their
 /// policy decisions, and the totals
 #[test]
 fn the_plain_renderer_carries_the_same_information() {
@@ -204,7 +204,7 @@ fn the_plain_renderer_carries_the_same_information() {
     );
 }
 
-/// [R-TUI-030] [R-TUI-031] one object per line, each with a type, and the
+/// [REQ-2824] [REQ-2825] one object per line, each with a type, and the
 /// schema version first
 #[test]
 fn the_json_renderer_announces_its_schema_first() {
@@ -219,7 +219,7 @@ fn the_json_renderer_announces_its_schema_first() {
     }
 }
 
-/// [R-TUI-032] a persisted kind serialises identically in the live stream and
+/// [REQ-2826, REQ-2827] a persisted kind serialises identically in the live stream and
 /// in an export
 #[test]
 fn a_persisted_kind_serialises_the_same_in_both() {
@@ -238,7 +238,7 @@ fn a_persisted_kind_serialises_the_same_in_both() {
     assert_eq!(exported, live);
 }
 
-/// [R-TUI-034] no kind belongs to only one of the two streams by accident
+/// [REQ-2830, REQ-2831] no kind belongs to only one of the two streams by accident
 #[test]
 fn live_and_persisted_kinds_do_not_collide() {
     for live in LiveKind::NAMES {
@@ -263,7 +263,7 @@ fn live_and_persisted_kinds_do_not_collide() {
     );
 }
 
-/// [R-TUI-040] ctx.out has exactly ten calls
+/// [REQ-2832] ctx.out has exactly ten calls
 #[test]
 fn ctx_out_has_exactly_ten_calls() {
     assert_eq!(Output::CALLS.len(), 10);
@@ -276,7 +276,7 @@ fn ctx_out_has_exactly_ten_calls() {
     );
 }
 
-/// [R-TUI-041] [R-TUI-042] each call is a typed event every renderer handles
+/// [REQ-2833] [REQ-2834] each call is a typed event every renderer handles
 #[test]
 fn every_out_call_reaches_every_renderer() {
     let calls = [
@@ -359,7 +359,7 @@ fn every_out_call_reaches_every_renderer() {
     tty.finish().unwrap();
 }
 
-/// [R-TUI-010] the terminal renderer never leaves the main screen
+/// [REQ-2806, REQ-2807] the terminal renderer never leaves the main screen
 #[test]
 fn the_terminal_renderer_stays_on_the_main_screen() {
     let mut tty = Tty::new(TestBackend::new(40, 6), Theme::ascii()).unwrap();
@@ -373,7 +373,7 @@ fn the_terminal_renderer_stays_on_the_main_screen() {
     assert_eq!(meow_ui::tty::RUN_ROWS, 3);
 }
 
-/// [R-TUI-016] the live region is three rows and never changes height, and it
+/// [REQ-2817, REQ-2818, REQ-2819, REQ-2820] the live region is three rows and never changes height, and it
 /// says so when a question is waiting
 #[test]
 fn the_live_region_keeps_one_height_and_says_when_it_is_waiting() {
@@ -405,7 +405,7 @@ fn the_live_region_keeps_one_height_and_says_when_it_is_waiting() {
     assert_eq!(after, meow_ui::tty::RUN_ROWS);
 }
 
-/// [R-TUI-011] a finalized line goes into scrollback, and the live region is
+/// [REQ-2808, REQ-2809] a finalized line goes into scrollback, and the live region is
 /// not it
 #[test]
 fn a_finalized_line_goes_into_scrollback() {
@@ -422,7 +422,7 @@ fn a_finalized_line_goes_into_scrollback() {
     assert!(!live.contains("committed"), "{live}");
 }
 
-/// [R-TUI-012] the live region carries the tool, the elapsed time, the step
+/// [REQ-2810, REQ-2811] the live region carries the tool, the elapsed time, the step
 /// count, and what has been spent
 #[test]
 fn the_live_region_shows_progress() {
@@ -451,7 +451,7 @@ fn the_live_region_shows_progress() {
     assert!(live.contains("review"), "no agent: {live}");
 }
 
-/// [R-TUI-013] the run ends with a line naming the stop reason
+/// [REQ-2812, REQ-2813] the run ends with a line naming the stop reason
 #[test]
 fn the_run_ends_with_its_stop_reason() {
     let mut tty = Tty::new(TestBackend::new(80, 8), Theme::ascii()).unwrap();
@@ -465,7 +465,7 @@ fn the_run_ends_with_its_stop_reason() {
     assert!(live.trim().is_empty(), "the live region survived: {live:?}");
 }
 
-/// [R-TUI-014] a resize reflows the live region and leaves scrollback alone
+/// [REQ-2814] a resize reflows the live region and leaves scrollback alone
 #[test]
 fn a_resize_reflows_only_the_live_region() {
     let mut tty = Tty::new(TestBackend::new(40, 8), Theme::ascii()).unwrap();
@@ -489,7 +489,7 @@ fn a_resize_reflows_only_the_live_region() {
     assert!(live.contains("fs.read"), "{live}");
 }
 
-/// [R-TUI-015] a diagnostic lands in scrollback rather than over the live
+/// [REQ-2815, REQ-2816] a diagnostic lands in scrollback rather than over the live
 /// region
 #[test]
 fn a_diagnostic_does_not_tear_through_the_live_region() {
@@ -517,7 +517,7 @@ fn a_diagnostic_does_not_tear_through_the_live_region() {
     assert!(live.contains("git.diff"), "{live}");
 }
 
-/// [R-TUI-060] a prompt lives in the live region and leaves the transcript
+/// [REQ-2838, REQ-2839] a prompt lives in the live region and leaves the transcript
 /// above it alone
 #[test]
 fn a_prompt_does_not_overwrite_the_transcript() {
@@ -558,7 +558,7 @@ fn a_prompt_does_not_overwrite_the_transcript() {
     assert!(after.contains("allow shell?"), "{after}");
 }
 
-/// [R-TUI-090] NO_COLOR wins over everything
+/// [REQ-2855] NO_COLOR wins over everything
 #[test]
 fn no_color_wins_over_every_other_signal() {
     assert_eq!(
@@ -568,7 +568,7 @@ fn no_color_wins_over_every_other_signal() {
     assert_eq!(Theme::new(Depth::None, true).depth(), Depth::None);
 }
 
-/// [R-TUI-091] colour depth is detected and quantised rather than dropped
+/// [REQ-2856] colour depth is detected and quantised rather than dropped
 #[test]
 fn colour_is_quantised_to_what_the_terminal_has() {
     assert_eq!(
@@ -588,7 +588,7 @@ fn colour_is_quantised_to_what_the_terminal_has() {
     assert!(style.fg.is_some());
 }
 
-/// [R-TUI-092] colour is never the only carrier of meaning
+/// [REQ-2857, REQ-2858] colour is never the only carrier of meaning
 #[test]
 fn every_severity_carries_a_word_as_well_as_a_colour() {
     use meow_ui::Role;
@@ -613,7 +613,7 @@ fn every_severity_carries_a_word_as_well_as_a_colour() {
     assert_eq!(text, "note: a\nwarning: b\nerror: c\n");
 }
 
-/// [R-TUI-093] a terminal that cannot be shown to support unicode gets ASCII
+/// [REQ-2859] a terminal that cannot be shown to support unicode gets ASCII
 #[test]
 fn unicode_is_used_only_when_it_is_known_to_work() {
     use meow_ui::theme::unicode;

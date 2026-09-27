@@ -65,7 +65,7 @@ fn home_of(dir: &Path) -> std::path::PathBuf {
 
 /// Run `meow`, having first agreed to the workspace.
 ///
-/// `[R-AUTH-030]` stops a command in a workspace this machine has not agreed
+/// `[REQ-1222, REQ-1223]` stops a command in a workspace this machine has not agreed
 /// to, and a temporary directory is always one. Every test here is about
 /// something else, so each agrees first; `trust.rs` is where the gate itself
 /// is tested.
@@ -100,7 +100,7 @@ fn code(output: &Output) -> i32 {
     output.status.code().unwrap_or(-1)
 }
 
-/// [R-TUI-070] a declared command is reachable at the top level, with no prefix
+/// [REQ-2843] a declared command is reachable at the top level, with no prefix
 #[test]
 fn a_declared_command_needs_no_prefix() {
     let dir = workspace(WORKSPACE);
@@ -115,7 +115,7 @@ fn a_declared_command_needs_no_prefix() {
     assert!(stdout(&help).contains("say hello"), "{}", stdout(&help));
 }
 
-/// [R-TUI-070] a declared command's arguments become flags described by their
+/// [REQ-2843] a declared command's arguments become flags described by their
 /// declaration
 #[test]
 fn a_declared_argument_becomes_a_described_flag() {
@@ -126,7 +126,7 @@ fn a_declared_argument_becomes_a_described_flag() {
     assert!(stdout(&help).contains("(required)"), "{}", stdout(&help));
 }
 
-/// [R-TUI-071] built-ins are grouped, and only the named ones stay at the top
+/// [REQ-2844] built-ins are grouped, and only the named ones stay at the top
 #[test]
 fn only_the_named_builtins_stay_at_the_top_level() {
     let dir = workspace(WORKSPACE);
@@ -164,7 +164,7 @@ fn only_the_named_builtins_stay_at_the_top_level() {
     );
 }
 
-/// [R-TUI-071] a grouped built-in is not also at the top level
+/// [REQ-2844] a grouped built-in is not also at the top level
 #[test]
 fn a_grouped_builtin_is_reachable_only_through_its_group() {
     let dir = workspace(WORKSPACE);
@@ -176,7 +176,7 @@ fn a_grouped_builtin_is_reachable_only_through_its_group() {
     assert_eq!(code(&ungrouped), 2, "{}", stderr(&ungrouped));
 }
 
-/// [R-TUI-080] a finished run whose handler returned nothing exits zero, and
+/// [REQ-2852] a finished run whose handler returned nothing exits zero, and
 /// one that returned false exits one
 #[test]
 fn the_handlers_verdict_decides_between_zero_and_one() {
@@ -186,7 +186,7 @@ fn the_handlers_verdict_decides_between_zero_and_one() {
     assert_eq!(code(&run(dir.path(), &["gate"])), 1);
 }
 
-/// [R-TUI-080] a bad command line exits two
+/// [REQ-2852] a bad command line exits two
 #[test]
 fn a_usage_mistake_exits_two() {
     let dir = workspace(WORKSPACE);
@@ -200,7 +200,7 @@ fn a_usage_mistake_exits_two() {
     assert_eq!(code(&run(dir.path(), &["greet", "a", "--nope"])), 2);
 }
 
-/// [R-TUI-080] a workspace that will not load exits seven, and says why
+/// [REQ-2852] a workspace that will not load exits seven, and says why
 #[test]
 fn a_broken_workspace_exits_seven() {
     let dir = workspace("meow.provider(name = \"a\")\n");
@@ -210,7 +210,7 @@ fn a_broken_workspace_exits_seven() {
     assert!(stderr(&output).contains("meow.star"), "{}", stderr(&output));
 }
 
-/// [R-TUI-080] running outside a workspace exits seven and names what to do
+/// [REQ-2852] running outside a workspace exits seven and names what to do
 #[test]
 fn no_workspace_exits_seven() {
     let dir = tempfile::tempdir().unwrap();
@@ -220,7 +220,7 @@ fn no_workspace_exits_seven() {
     assert!(stderr(&output).contains("meow init"), "{}", stderr(&output));
 }
 
-/// [R-TUI-080] a missing credential exits six
+/// [REQ-2852] a missing credential exits six
 #[test]
 fn a_missing_credential_exits_six() {
     let dir = workspace(
@@ -251,7 +251,7 @@ fn help_and_version_exit_zero() {
     );
 }
 
-/// [R-TUI-002] [R-TUI-033] --format json selects the JSON renderer even from a
+/// [REQ-2801] [REQ-2828, REQ-2829] --format json selects the JSON renderer even from a
 /// terminal, and every line of stdout is an event
 #[test]
 fn format_json_produces_one_object_per_line() {
@@ -315,7 +315,7 @@ fn models_and_providers_list_what_was_declared() {
     );
 }
 
-/// [R-TUI-051] asking with no terminal fails, and does not block
+/// [REQ-2836, REQ-2837] asking with no terminal fails, and does not block
 #[test]
 fn asking_with_no_terminal_fails_rather_than_waiting() {
     let dir = workspace(
@@ -343,7 +343,7 @@ meow.command(meow.tool(name = "who", about = "ask", run = who))
     );
 }
 
-/// [R-TUI-073] --yes refuses rather than approving
+/// [REQ-2848, REQ-2849] --yes refuses rather than approving
 #[test]
 fn yes_refuses_rather_than_approving() {
     let dir = workspace(
@@ -368,7 +368,7 @@ meow.command(meow.tool(name = "who", about = "ask", run = who))
     );
 }
 
-/// [R-TUI-074] --continue with nothing to continue fails rather than starting
+/// [REQ-2850, REQ-2851] --continue with nothing to continue fails rather than starting
 /// a fresh run
 #[test]
 fn continue_with_nothing_to_continue_fails() {
@@ -387,7 +387,7 @@ fn continue_with_nothing_to_continue_fails() {
     assert!(stdout(&output).trim().is_empty(), "{}", stdout(&output));
 }
 
-/// [R-SESSION-054] [R-TUI-074] a run starts a session, and --continue adds to
+/// [REQ-2244, REQ-2245] [REQ-2850, REQ-2851] a run starts a session, and --continue adds to
 /// the most recent one of that command
 #[test]
 fn continue_adds_to_the_most_recent_session_of_that_command() {
@@ -415,7 +415,7 @@ fn continue_adds_to_the_most_recent_session_of_that_command() {
     );
 }
 
-/// [R-TUI-074] --continue picks the command being invoked, not the newest run
+/// [REQ-2850, REQ-2851] --continue picks the command being invoked, not the newest run
 #[test]
 fn continue_does_not_resume_another_commands_session() {
     let dir = workspace(WORKSPACE);
@@ -518,7 +518,7 @@ meow.command(meow.tool(
 ))
 "#;
 
-/// [R-TUI-071] `index` is a group, and its commands live under it
+/// [REQ-2844] `index` is a group, and its commands live under it
 #[test]
 fn the_index_commands_are_grouped() {
     let dir = workspace(INDEXED);
@@ -531,7 +531,7 @@ fn the_index_commands_are_grouped() {
     assert_eq!(code(&run(dir.path(), &["stats"])), 2);
 }
 
-/// [R-STAR-035] a workspace that declares no index is told to declare one
+/// [REQ-2484, REQ-2485, REQ-2486, REQ-2487] a workspace that declares no index is told to declare one
 #[test]
 fn an_index_command_without_a_declaration_says_so() {
     let dir = workspace(WORKSPACE);
@@ -572,7 +572,7 @@ fn index_update_chunks_and_reports() {
     assert!(stdout(&stats).contains("model\t-"), "{}", stdout(&stats));
 }
 
-/// [R-INDEX-041] a query before a build says the index is empty
+/// [REQ-1428, REQ-1429] a query before a build says the index is empty
 #[test]
 fn a_query_before_a_build_says_the_index_is_empty() {
     let dir = workspace(INDEXED);
@@ -586,7 +586,7 @@ fn a_query_before_a_build_says_the_index_is_empty() {
     );
 }
 
-/// [R-INDEX-052] `meow index clear` forgets the index
+/// [REQ-1438, REQ-1439] `meow index clear` forgets the index
 #[test]
 fn index_clear_forgets_what_was_chunked() {
     let dir = workspace(INDEXED);
@@ -599,7 +599,7 @@ fn index_clear_forgets_what_was_chunked() {
     assert!(stdout(&stats).contains("chunks\t0"), "{}", stdout(&stats));
 }
 
-/// [R-STAR-021] `search.code` is reached with `load`, and says why when there
+/// [REQ-2446] `search.code` is reached with `load`, and says why when there
 /// is nothing to search
 #[test]
 fn search_code_is_loaded_and_reports_an_empty_index() {
@@ -697,7 +697,7 @@ fn a_declared_base_url_is_kept() {
     assert_eq!(code(&checked), 0, "{}", stderr(&checked));
 }
 
-/// [R-STAR-026] a stored value survives the process that wrote it
+/// [REQ-2463, REQ-2464, REQ-2465] a stored value survives the process that wrote it
 #[test]
 fn the_store_outlives_the_run_that_wrote_it() {
     let dir = workspace(
@@ -718,7 +718,7 @@ meow.command(meow.tool(name = "recall", about = "say the count", run = recall))
     );
 
     // Three separate processes. Nothing is shared but the workspace database,
-    // which is the whole claim R-STAR-026 makes.
+    // which is the whole claim REQ-2463, REQ-2464, REQ-2465 makes.
     for _ in 0..3 {
         assert!(run(dir.path(), &["remember"]).status.success());
     }
@@ -731,7 +731,7 @@ meow.command(meow.tool(name = "recall", about = "say the count", run = recall))
     );
 }
 
-/// [R-STAR-026] collecting every session leaves the store alone
+/// [REQ-2463, REQ-2464, REQ-2465] collecting every session leaves the store alone
 #[test]
 fn session_gc_does_not_take_the_store_with_it() {
     let dir = workspace(
@@ -771,7 +771,7 @@ meow.command(meow.tool(name = "recall", about = "read it back", run = recall))
     );
 }
 
-/// [R-STAR-019] a workspace with no index still searches its own files
+/// [REQ-2441, REQ-2442, REQ-2443, REQ-2444] a workspace with no index still searches its own files
 ///
 /// The defect this pins was found by driving the binary, not by a unit test:
 /// every path in `searcher` that could not build an index handed back a port
@@ -808,7 +808,7 @@ meow.command(meow.tool(name = "look", about = "search with no index", run = look
     );
 }
 
-/// [R-STAR-025] the searches that need an index still say they have none
+/// [REQ-2459, REQ-2460, REQ-2461, REQ-2462] the searches that need an index still say they have none
 #[test]
 fn ranking_without_an_index_says_so_rather_than_answering() {
     let dir = workspace(
@@ -834,7 +834,7 @@ meow.command(meow.tool(name = "rank", about = "rank with no index", run = rank))
     );
 }
 
-/// [R-TUI-033] a diagnostic goes to stderr, not into the stream
+/// [REQ-2828, REQ-2829] a diagnostic goes to stderr, not into the stream
 #[test]
 fn json_keeps_diagnostics_off_stdout() {
     let dir = tempfile::tempdir().unwrap();

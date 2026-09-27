@@ -37,7 +37,7 @@ pub struct Loaded {
 
 /// Refuse `print`.
 ///
-/// `[R-STAR-082]`: it would write straight through the terminal frame and
+/// `[REQ-2522]`: it would write straight through the terminal frame and
 /// corrupt it, so the error names the thing to use instead rather than saying
 /// only that this is not allowed.
 #[derive(Debug)]
@@ -57,12 +57,12 @@ struct Loader<'a> {
     state: &'a Declaring,
     globals: &'a Globals,
     std: Arc<Modules>,
-    /// `[R-STAR-007]`: a file evaluated once, however many times it is named.
+    /// `[REQ-2413]`: a file evaluated once, however many times it is named.
     done: RefCell<HashMap<String, FrozenModule>>,
-    /// `[R-STAR-006]`: what is being evaluated right now, innermost last.
+    /// `[REQ-2412]`: what is being evaluated right now, innermost last.
     stack: RefCell<Vec<String>>,
     order: RefCell<Vec<PathBuf>>,
-    /// `[R-PKG-012]`: read once, so a load consults it rather than the
+    /// `[REQ-1809, REQ-1810]`: read once, so a load consults it rather than the
     /// network.
     lock: crate::package::Lock,
     /// Whether a package that is not yet available may stand in.
@@ -91,7 +91,7 @@ impl Loader<'_> {
         if let Some(name) = path.strip_prefix("@std//") {
             return self.std_module(name);
         }
-        // [R-STAR-005]: checked before `//`, so `@acme//lib.star` is never
+        // [REQ-2409, REQ-2410, REQ-2411]: checked before `//`, so `@acme//lib.star` is never
         // read as a path relative to `.meow/`. Silently treating it as local
         // would find the wrong file on one machine and no file on another.
         if let Some(rest) = path.strip_prefix('@') {
@@ -119,7 +119,7 @@ impl Loader<'_> {
 
     /// `@<pkg>//<path>`, from the cache the lockfile pins.
     ///
-    /// `[R-PKG-012]`: nothing here fetches. `[R-PKG-030]` and `[R-PKG-031]`:
+    /// `[REQ-1809, REQ-1810]`: nothing here fetches. `[REQ-1821]` and `[REQ-1822]`:
     /// a package's file goes through the same evaluation as a local one, so
     /// it gets `@std//` and the cycle check and the evaluate-once cache, and
     /// its own `//` loads resolve against the workspace - which is why the
@@ -217,7 +217,7 @@ impl Loader<'_> {
         let file = self.workspace.resolve_local(path)?;
         let key = path.to_owned();
 
-        // [R-STAR-053]: a markdown file has no Starlark in it, so it becomes a
+        // [REQ-2501]: a markdown file has no Starlark in it, so it becomes a
         // module with one symbol rather than something to evaluate. Routing it
         // through `load` rather than giving it a builtin of its own means the
         // escape check, the cycle check, and the evaluate-once cache all apply
@@ -235,7 +235,7 @@ impl Loader<'_> {
             return Ok(module.clone());
         }
 
-        // [R-STAR-006]: the ring is reported in the order it was walked,
+        // [REQ-2412]: the ring is reported in the order it was walked,
         // because "circular import" without the ring is a puzzle.
         if let Some(at) = self.stack.borrow().iter().position(|p| p == &key) {
             let mut cycle: Vec<String> = self.stack.borrow()[at..].to_vec();
@@ -255,7 +255,7 @@ impl Loader<'_> {
     /// Read every `.md` file under `.meow/agents/`.
     ///
     /// After `meow.star`, so a markdown agent and a Starlark agent compete for
-    /// a name on equal terms and `[R-STAR-031]` reports the collision either
+    /// a name on equal terms and `[REQ-2477]` reports the collision either
     /// way round. Sorted, so a duplicate names the same two files whatever
     /// order the directory happens to be read in.
     fn markdown_agents(&self) -> Result<()> {
@@ -299,7 +299,7 @@ impl Loader<'_> {
 
     /// Read a `.meow/lib/*.md` prompt named by an `include`.
     ///
-    /// `[R-STAR-054]`. The path goes through the same check every other load
+    /// `[REQ-2502, REQ-2503, REQ-2504, REQ-2505]`. The path goes through the same check every other load
     /// does, so an `include` cannot reach outside `.meow/` either.
     fn prompt_text(&self, path: &str) -> Result<String> {
         if !path.ends_with(".md") {
@@ -327,7 +327,7 @@ impl Loader<'_> {
 
         let previous = self.state.entering(name);
 
-        // [R-STAR-080]: one evaluator per file, and it never leaves this
+        // [REQ-2518, REQ-2519]: one evaluator per file, and it never leaves this
         // closure. The heap it allocates on is scoped to the call, so nothing
         // it touched can outlive the thread that made it.
         let outcome = Module::with_temp_heap(|module| {
@@ -355,16 +355,16 @@ impl Loader<'_> {
 
 /// Evaluate a workspace and return what it declared.
 ///
-/// Satisfies `[R-STAR-007]` through the module cache, `[R-STAR-032]` by
+/// Satisfies `[REQ-2413]` through the module cache, `[REQ-2478, REQ-2479]` by
 /// resolving references only after every file has been evaluated, and
-/// `[R-STAR-080]` by owning the evaluators for the whole call and letting none
+/// `[REQ-2518, REQ-2519]` by owning the evaluators for the whole call and letting none
 /// of them outlive it.
 ///
 /// # Errors
 ///
 /// Anything in [`StarError`]. A Starlark failure keeps the diagnostic the
 /// evaluator produced, which is what carries the file, line, and column
-/// `[R-STAR-090]` asks for.
+/// `[REQ-2526]` asks for.
 pub fn load(workspace: &crate::Workspace) -> Result<Loaded> {
     load_inner(workspace, false)
 }
@@ -390,7 +390,7 @@ fn load_inner(workspace: &crate::Workspace, stub: bool) -> Result<Loaded> {
 
     let std = Arc::new(Modules::build()?);
 
-    // Read once, before anything is evaluated: [R-PKG-012] says a load
+    // Read once, before anything is evaluated: [REQ-1809, REQ-1810] says a load
     // consults the lockfile, and re-reading it per load would let a file
     // rewritten mid-load change what a later load resolves to.
     let lock = crate::package::Lock::read(&workspace.config_dir())?;
@@ -426,8 +426,8 @@ fn load_inner(workspace: &crate::Workspace, stub: bool) -> Result<Loaded> {
 
 /// Resolve an `@std//` name against the one table.
 ///
-/// `[R-STAR-003]`: a name with no module fails listing what there is.
-/// `[R-STAR-011]`: the declaration phase and the run phase call this same
+/// `[REQ-2405, REQ-2406]`: a name with no module fails listing what there is.
+/// `[REQ-2416]`: the declaration phase and the run phase call this same
 /// function, so a module cannot exist in one and not the other.
 fn std_module(table: &Modules, name: &str) -> Result<FrozenModule> {
     table.get(name).cloned().ok_or_else(|| StarError::Load {

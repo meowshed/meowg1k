@@ -1,9 +1,9 @@
 // Copyright © 2025 The meowg1k Authors
 // SPDX-License-Identifier: Apache-2.0
 
-//! Every requirement in `docs/spec/store.md`, one test or more each.
+//! Every requirement in `SPC-2600`, one test or more each.
 //!
-//! `[R-STORE-005]` has no test of its own: it forbids a downgrade path, and
+//! `[REQ-2609, REQ-2610]` has no test of its own: it forbids a downgrade path, and
 //! what satisfies it is that `migrations.rs` offers no way to express one. A
 //! test cannot prove the absence of an API; review can.
 
@@ -21,7 +21,7 @@ fn temp() -> (tempfile::TempDir, PathBuf) {
     (dir, path)
 }
 
-/// [R-STORE-001] one database per workspace, at a known path
+/// [REQ-2600] one database per workspace, at a known path
 #[test]
 fn the_database_lives_at_one_known_path() {
     let (_guard, root) = temp();
@@ -33,7 +33,7 @@ fn the_database_lives_at_one_known_path() {
     assert!(store.path().exists());
 }
 
-/// [R-STORE-002] write-ahead logging, foreign keys, and synchronous NORMAL
+/// [REQ-2601, REQ-2602] write-ahead logging, foreign keys, and synchronous NORMAL
 #[test]
 fn the_connection_pragmas_are_set() {
     let (_guard, root) = temp();
@@ -56,8 +56,8 @@ fn the_connection_pragmas_are_set() {
     );
 }
 
-/// [R-STORE-003] the schema version is recorded in the file
-/// [R-STORE-004] migrations run on open and are idempotent across reopens
+/// [REQ-2606] the schema version is recorded in the file
+/// [REQ-2607, REQ-2608] migrations run on open and are idempotent across reopens
 #[test]
 fn the_schema_version_is_recorded_and_reopening_is_idempotent() {
     let (_guard, root) = temp();
@@ -67,7 +67,7 @@ fn the_schema_version_is_recorded_and_reopening_is_idempotent() {
     assert_eq!(first, second, "reopening moved the schema version");
 }
 
-/// [R-STORE-006] a database from the future is an error, and is not touched
+/// [REQ-2611, REQ-2612] a database from the future is an error, and is not touched
 #[test]
 fn a_newer_schema_is_refused_without_modifying_the_file() {
     let (_guard, root) = temp();
@@ -103,14 +103,14 @@ fn a_newer_schema_is_refused_without_modifying_the_file() {
     );
 }
 
-/// [R-STORE-007] the database is unencrypted and says so
+/// [REQ-2603, REQ-2604] the database is unencrypted and says so
 #[test]
 fn the_database_reports_that_it_is_unencrypted() {
     let (_guard, root) = temp();
     assert!(!Store::open(&root).unwrap().is_encrypted());
 }
 
-/// [R-STORE-008] owner-only permissions
+/// [REQ-2605] owner-only permissions
 #[cfg(unix)]
 #[test]
 fn the_database_is_readable_by_its_owner_only() {
@@ -125,7 +125,7 @@ fn the_database_is_readable_by_its_owner_only() {
     assert_eq!(mode, 0o600, "mode was {mode:o}");
 }
 
-/// [R-STORE-010] payloads are content addressed, and inlining is invisible
+/// [REQ-2613, REQ-2614, REQ-2615, REQ-2616] payloads are content addressed, and inlining is invisible
 #[test]
 fn a_payload_round_trips_by_hash_whatever_its_size() {
     let (_guard, root) = temp();
@@ -138,7 +138,7 @@ fn a_payload_round_trips_by_hash_whatever_its_size() {
     }
 }
 
-/// [R-STORE-011] writing a payload twice stores one copy and does not fail
+/// [REQ-2617, REQ-2618] writing a payload twice stores one copy and does not fail
 #[test]
 fn writing_the_same_payload_twice_stores_it_once() {
     let (_guard, root) = temp();
@@ -154,7 +154,7 @@ fn writing_the_same_payload_twice_stores_it_once() {
     );
 }
 
-/// [R-STORE-012] a payload is deleted when its last referent goes
+/// [REQ-2619, REQ-2620] a payload is deleted when its last referent goes
 #[test]
 fn a_payload_survives_until_its_last_referent_goes() {
     let (_guard, root) = temp();
@@ -176,7 +176,7 @@ fn a_payload_survives_until_its_last_referent_goes() {
     ));
 }
 
-/// [R-STORE-013] a missing payload is an error naming the hash, never empty
+/// [REQ-2621, REQ-2622] a missing payload is an error naming the hash, never empty
 #[test]
 fn a_missing_payload_names_its_hash_rather_than_reading_empty() {
     let (_guard, root) = temp();
@@ -188,7 +188,7 @@ fn a_missing_payload_names_its_hash_rather_than_reading_empty() {
     }
 }
 
-/// [R-STORE-020] each event is committed on its own, visible to another reader
+/// [REQ-2623, REQ-2624] each event is committed on its own, visible to another reader
 #[test]
 fn an_event_is_visible_to_another_connection_at_once() {
     let (_guard, root) = temp();
@@ -202,7 +202,7 @@ fn an_event_is_visible_to_another_connection_at_once() {
     assert_eq!(reader.event_count("s1").unwrap(), 1);
 }
 
-/// [R-STORE-021] a failed write reaches the caller
+/// [REQ-2625, REQ-2626] a failed write reaches the caller
 #[test]
 fn a_failed_write_is_returned_rather_than_logged() {
     let (_guard, root) = temp();
@@ -221,8 +221,8 @@ fn a_failed_write_is_returned_rather_than_logged() {
     );
 }
 
-/// [R-STORE-022] one writer, readers alongside it
-/// [R-STORE-023] a blocked write waits rather than failing at once
+/// [REQ-2627, REQ-2628] one writer, readers alongside it
+/// [REQ-2631] a blocked write waits rather than failing at once
 #[test]
 fn a_blocked_write_waits_for_the_other_writer() {
     let (guard, root) = temp();
@@ -255,7 +255,7 @@ fn a_blocked_write_waits_for_the_other_writer() {
     drop(guard);
 }
 
-/// [R-STORE-024] a bulk write commits in batches
+/// [REQ-2629, REQ-2630] a bulk write commits in batches
 #[test]
 fn a_bulk_write_commits_in_batches() {
     let (_guard, root) = temp();
@@ -272,7 +272,7 @@ fn a_bulk_write_commits_in_batches() {
     );
 }
 
-/// [R-STORE-030] the key-value store has get, put, delete, and keys
+/// [REQ-2632] the key-value store has get, put, delete, and keys
 #[test]
 fn the_key_value_store_reads_writes_deletes_and_lists() {
     let (_guard, root) = temp();
@@ -289,7 +289,7 @@ fn the_key_value_store_reads_writes_deletes_and_lists() {
     assert_eq!(store.kv_keys().unwrap(), vec!["b".to_owned()]);
 }
 
-/// [R-STORE-031] deleting a session leaves the key-value store intact
+/// [REQ-2633] deleting a session leaves the key-value store intact
 #[test]
 fn deleting_a_session_leaves_the_key_value_store_alone() {
     let (_guard, root) = temp();
@@ -303,7 +303,7 @@ fn deleting_a_session_leaves_the_key_value_store_alone() {
     );
 }
 
-/// [R-STORE-040] deleting a session releases the payloads it referenced
+/// [REQ-2634] deleting a session releases the payloads it referenced
 #[test]
 fn deleting_a_session_releases_its_payloads() {
     let (_guard, root) = temp();
@@ -336,7 +336,7 @@ fn deleting_a_session_releases_its_payloads() {
     );
 }
 
-/// [R-STORE-041] a deletion removes the whole session or fails
+/// [REQ-2635] a deletion removes the whole session or fails
 #[test]
 fn deleting_a_session_is_all_or_nothing() {
     let (_guard, root) = temp();
@@ -365,7 +365,7 @@ fn deleting_a_session_is_all_or_nothing() {
     ));
 }
 
-/// [R-STORE-042] the store reports its size so retention can act on it
+/// [REQ-2636] the store reports its size so retention can act on it
 #[test]
 fn the_store_reports_its_size() {
     let (_guard, root) = temp();
@@ -379,7 +379,7 @@ fn the_store_reports_its_size() {
     assert!(store.size_bytes().unwrap() > before, "size did not grow");
 }
 
-/// [R-STORE-045] embeddings are cached; generations are not unless asked
+/// [REQ-2637, REQ-2638, REQ-2639] embeddings are cached; generations are not unless asked
 #[test]
 fn generations_are_not_cached_unless_the_caller_asks() {
     let (_guard, root) = temp();
@@ -417,7 +417,7 @@ fn generations_are_not_cached_unless_the_caller_asks() {
     );
 }
 
-/// [R-STORE-046] the model is part of the cache key
+/// [REQ-2640, REQ-2641] the model is part of the cache key
 #[test]
 fn a_cache_lookup_misses_when_the_model_differs() {
     let (_guard, root) = temp();
@@ -438,7 +438,7 @@ fn a_cache_lookup_misses_when_the_model_differs() {
     );
 }
 
-/// [R-STORE-047] eviction is by age and size, and leaves sessions alone
+/// [REQ-2642, REQ-2643] eviction is by age and size, and leaves sessions alone
 #[test]
 fn eviction_is_by_age_and_size_and_does_not_touch_sessions() {
     let (_guard, root) = temp();

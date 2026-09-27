@@ -9,7 +9,7 @@
 //! disagree with its own history, and a fork that shares its origin's content
 //! without touching it.
 //!
-//! `docs/spec/session.md` is normative. This crate sits on `meow-store`, which
+//! `SPC-2200` is normative. This crate sits on `meow-store`, which
 //! owns the rows, and knows nothing about the engine that produces the events.
 
 mod error;
@@ -30,7 +30,7 @@ pub use crate::retention::{Retention, Swept};
 
 /// What state a session is in.
 ///
-/// `[R-SESSION-040]` fixes the set: `running`, or one of the six stop reasons.
+/// `[REQ-2228]` fixes the set: `running`, or one of the six stop reasons.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum State {
     /// The last event is not `Finished`.

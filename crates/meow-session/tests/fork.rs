@@ -80,7 +80,7 @@ fn record(sessions: &Sessions, id: &SessionId) {
     sessions.finish(id, StopReason::Finished, None).unwrap();
 }
 
-/// [R-SESSION-052] a fork copies the first n events and leaves the origin
+/// [REQ-2239, REQ-2240, REQ-2241, REQ-2242] a fork copies the first n events and leaves the origin
 /// alone
 #[test]
 fn a_fork_copies_the_prefix_and_does_not_touch_the_origin() {
@@ -101,7 +101,7 @@ fn a_fork_copies_the_prefix_and_does_not_touch_the_origin() {
     assert_eq!(sessions.state(&origin).unwrap().as_str(), "finished");
 }
 
-/// [R-SESSION-052] the fork records where it came from
+/// [REQ-2239, REQ-2240, REQ-2241, REQ-2242] the fork records where it came from
 #[test]
 fn a_fork_records_its_origin() {
     let (_dir, mut sessions) = sessions();
@@ -116,7 +116,7 @@ fn a_fork_records_its_origin() {
     assert!(sessions.origin(&origin).unwrap().is_none());
 }
 
-/// [R-SESSION-052] a blob the fork points at gains a referent, so collecting
+/// [REQ-2239, REQ-2240, REQ-2241, REQ-2242] a blob the fork points at gains a referent, so collecting
 /// the origin cannot delete it
 #[test]
 fn forking_retains_the_blobs_the_copy_points_at() {
@@ -148,7 +148,7 @@ fn forking_retains_the_blobs_the_copy_points_at() {
     );
 }
 
-/// [R-SESSION-053] a sequence that does not exist fails, naming what would
+/// [REQ-2243] a sequence that does not exist fails, naming what would
 /// work
 #[test]
 fn forking_outside_the_range_names_the_range() {
@@ -167,7 +167,7 @@ fn forking_outside_the_range_names_the_range() {
     assert!(zero.contains("cannot fork at 0"), "{zero}");
 }
 
-/// [R-SESSION-053] a sequence inside a summarised range fails, naming the
+/// [REQ-2243] a sequence inside a summarised range fails, naming the
 /// range
 #[test]
 fn forking_inside_a_summarised_range_fails() {
@@ -187,7 +187,7 @@ fn forking_inside_a_summarised_range_fails() {
     assert!(sessions.fork(&origin, 5, &id(3)).is_ok());
 }
 
-/// [R-SESSION-080] retention deletes whole sessions, and a parent only with
+/// [REQ-2252, REQ-2253] retention deletes whole sessions, and a parent only with
 /// its descendants
 #[test]
 fn a_sweep_takes_a_parent_together_with_its_children() {
@@ -216,7 +216,7 @@ fn a_sweep_takes_a_parent_together_with_its_children() {
     assert!(sessions.session(&parent).is_err());
 }
 
-/// [R-SESSION-081] a named session survives unless it is asked for
+/// [REQ-2254] a named session survives unless it is asked for
 #[test]
 fn a_named_session_is_kept_unless_it_is_asked_for() {
     let (_dir, mut sessions) = sessions();
@@ -249,7 +249,7 @@ fn a_named_session_is_kept_unless_it_is_asked_for() {
     assert_eq!(asked.deleted, [kept]);
 }
 
-/// [R-SESSION-082] the strictest configured limit wins
+/// [REQ-2255, REQ-2256] the strictest configured limit wins
 #[test]
 fn the_strictest_limit_wins() {
     let (_dir, mut sessions) = sessions();
@@ -273,7 +273,7 @@ fn the_strictest_limit_wins() {
     assert_eq!(swept.deleted, [id(1), id(2)], "the oldest should go first");
 }
 
-/// [R-SESSION-090] a JSON export is the same schema the live renderer writes
+/// [REQ-2257, REQ-2258] a JSON export is the same schema the live renderer writes
 #[test]
 fn a_json_export_uses_the_live_schema() {
     let (_dir, sessions) = sessions();
@@ -307,7 +307,7 @@ fn a_json_export_uses_the_live_schema() {
     assert_eq!(tool_call["name"], "fs.read");
 }
 
-/// [R-SESSION-091] a markdown export carries the transcript, the calls with
+/// [REQ-2259] a markdown export carries the transcript, the calls with
 /// their decisions, and the totals
 #[test]
 fn a_markdown_export_carries_the_transcript_and_the_totals() {
@@ -335,7 +335,7 @@ fn a_markdown_export_carries_the_transcript_and_the_totals() {
     assert!(text.contains("**finished**"), "no ending: {text}");
 }
 
-/// [R-SESSION-092] a sensitive value is redacted in both formats
+/// [REQ-2260] a sensitive value is redacted in both formats
 #[test]
 fn a_sensitive_value_is_redacted_in_both_formats() {
     let (_dir, sessions) = sessions();
@@ -356,7 +356,7 @@ fn a_sensitive_value_is_redacted_in_both_formats() {
     }
 }
 
-/// [R-SESSION-093] reasoning is left out unless it is asked for
+/// [REQ-2261] reasoning is left out unless it is asked for
 #[test]
 fn reasoning_is_omitted_unless_it_is_asked_for() {
     let (_dir, sessions) = sessions();

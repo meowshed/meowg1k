@@ -10,7 +10,7 @@ use std::path::PathBuf;
 pub enum StarError {
     /// There is no workspace here or above here.
     ///
-    /// `[R-STAR-002]`: the directories that were searched are named, so a user
+    /// `[REQ-2403, REQ-2404]`: the directories that were searched are named, so a user
     /// can see whether they are simply in the wrong place.
     #[error(
         "no .meow/meow.star found. Searched:\n{}\nRun `meow init` to create one.",
@@ -30,7 +30,7 @@ pub enum StarError {
 
     /// Files load each other in a circle.
     ///
-    /// `[R-STAR-006]`: the cycle is listed in order, because "circular import"
+    /// `[REQ-2412]`: the cycle is listed in order, because "circular import"
     /// without the ring is a puzzle rather than a message.
     #[error("import cycle: {}", .cycle.join(" -> "))]
     Cycle {
@@ -40,7 +40,7 @@ pub enum StarError {
 
     /// Something was declared twice.
     ///
-    /// `[R-STAR-031]`: both sites are named. Knowing there is a duplicate
+    /// `[REQ-2477]`: both sites are named. Knowing there is a duplicate
     /// without knowing where the other one is leaves you grepping.
     #[error("{kind} `{name}` is declared twice: {first} and {second}")]
     Duplicate {
@@ -67,7 +67,7 @@ pub enum StarError {
 
     /// A model is the wrong kind for what named it.
     ///
-    /// `[R-STAR-034]`: both the model and the kind it is, because the fix is
+    /// `[REQ-2482, REQ-2483]`: both the model and the kind it is, because the fix is
     /// either to declare another model or to change this one's kind and
     /// neither is obvious from the name alone.
     #[error(
@@ -87,7 +87,7 @@ pub enum StarError {
 
     /// A command would shadow a built-in.
     ///
-    /// `[R-STAR-033]`: refused rather than shadowed in either direction, so
+    /// `[REQ-2480, REQ-2481]`: refused rather than shadowed in either direction, so
     /// `meow session` never becomes ambiguous.
     #[error("`{name}` is a built-in command and cannot be redeclared")]
     Reserved {
@@ -104,7 +104,7 @@ pub enum StarError {
 
     /// A module was used during declaration.
     ///
-    /// `[R-STAR-084]`.
+    /// `[REQ-2524, REQ-2525]`.
     #[error("`{module}` is not available while .meow/ is being loaded")]
     ModuleUnavailable {
         /// Which module.
@@ -114,7 +114,7 @@ pub enum StarError {
     /// The Starlark evaluator said no.
     ///
     /// `starlark-rust` renders its own diagnostic with a call stack and a
-    /// source span, which is why `[R-STAR-090]` needs nothing further here.
+    /// source span, which is why `[REQ-2526]` needs nothing further here.
     #[error("{0}")]
     Starlark(String),
 
@@ -136,14 +136,14 @@ fn article(word: &str) -> String {
     format!("{} {word}", if vowel { "an" } else { "a" })
 }
 
-/// The "did you mean" half of `[R-STAR-091]`.
+/// The "did you mean" half of `[REQ-2527]`.
 fn suggestion(closest: Option<&str>) -> String {
     closest.map_or_else(String::new, |c| format!(". Did you mean `{c}`?"))
 }
 
 /// The closest declared name, when one is within a small edit distance.
 ///
-/// `[R-STAR-091]`. The distance allowed grows with the length of what was
+/// `[REQ-2527]`. The distance allowed grows with the length of what was
 /// typed, because two edits in a four-letter name is a different word while
 /// two edits in a twelve-letter one is a typo. A transposition counts as one
 /// edit rather than two, since swapping adjacent letters is the mistake people

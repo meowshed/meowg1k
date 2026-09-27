@@ -14,7 +14,7 @@ use crate::render::Sink;
 
 /// Whether this run may ask anything at all.
 ///
-/// `[R-TUI-051]` and `[R-POLICY-020]` are the same rule seen from two sides:
+/// `[REQ-2836, REQ-2837]` and `[REQ-2022]` are the same rule seen from two sides:
 /// with no terminal, or with `--yes`, a question has no one to answer it, so
 /// asking fails and an `ask` decision becomes a denial. Neither may block, and
 /// neither may become more permissive.
@@ -48,7 +48,7 @@ impl Interaction {
         match self {
             Self::Possible => None,
             Self::NoTerminal => Some(AskError::NotATerminal { what }),
-            // `--yes` is not consent. `[R-TUI-073]`: it makes every decision
+            // `--yes` is not consent. `[REQ-2848, REQ-2849]`: it makes every decision
             // that needs a person resolve the safe way, and never the other.
             Self::Unattended => Some(AskError::Declined),
         }
@@ -61,7 +61,7 @@ pub struct Terminal {
     sink: Arc<Sink>,
     /// Tools a person has approved for the rest of the process.
     ///
-    /// `[R-POLICY-023]` and `[R-TUI-062]`: here and nowhere else. Nothing
+    /// `[REQ-2026, REQ-2027]` and `[REQ-2842]`: here and nowhere else. Nothing
     /// writes this back to a file, so a permission granted in a hurry does not
     /// outlive the terminal it was granted in.
     granted: std::sync::Mutex<std::collections::BTreeSet<String>>,
@@ -198,7 +198,7 @@ impl Approver for Terminal {
 
 /// What the prompt shows.
 ///
-/// `[R-TUI-061]` and `[R-POLICY-021]`: the tool, the arguments verbatim, the
+/// `[REQ-2840, REQ-2841]` and `[REQ-2023, REQ-2024]`: the tool, the arguments verbatim, the
 /// rule that caused the question, and which agent asked at which step. The
 /// arguments are not summarised, because a prompt that paraphrases what it is
 /// approving asks for consent to something the reader did not see.
@@ -244,7 +244,7 @@ impl meow_star::port::Stdin for Stdin {
 
 /// Read a secret from the terminal.
 ///
-/// `[R-AUTH-013]`: `meow auth login` takes a key from a person, and the
+/// `[REQ-1209, REQ-1210, REQ-1211]`: `meow auth login` takes a key from a person, and the
 /// alternative - a `--key` flag - puts it in shell history and in the process
 /// list. The flag exists for scripts that already have the key somewhere
 /// safer; this is the path a person should take.
@@ -295,7 +295,7 @@ mod tests {
         }
     }
 
-    /// [R-TUI-061] the prompt shows the tool, the arguments verbatim, the
+    /// [REQ-2840, REQ-2841] the prompt shows the tool, the arguments verbatim, the
     /// rule, and who asked at which step
     #[test]
     fn the_prompt_shows_what_is_being_approved() {
@@ -311,7 +311,7 @@ mod tests {
         assert!(shown.contains("reviewer at step 3"), "{shown}");
     }
 
-    /// [R-TUI-061] all four answers are offered, and each has a key
+    /// [REQ-2840, REQ-2841] all four answers are offered, and each has a key
     #[test]
     fn all_four_answers_are_offered() {
         let shown = describe(&prompt()).join("\n");
@@ -332,7 +332,7 @@ mod tests {
         }
     }
 
-    /// [R-TUI-051] [R-TUI-073] `--yes` means unattended even in a terminal,
+    /// [REQ-2836, REQ-2837] [REQ-2848, REQ-2849] `--yes` means unattended even in a terminal,
     /// and never means yes
     #[test]
     fn yes_is_unattended_and_is_not_consent() {
@@ -345,7 +345,7 @@ mod tests {
         assert!(Interaction::Unattended.refusal("approval").is_some());
     }
 
-    /// [R-TUI-051] with no terminal, asking fails and says why
+    /// [REQ-2836, REQ-2837] with no terminal, asking fails and says why
     #[test]
     fn no_terminal_refuses_and_names_the_call() {
         let refusal = Interaction::NoTerminal.refusal("ctx.ask.text");

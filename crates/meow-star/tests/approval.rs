@@ -247,7 +247,7 @@ async fn run(h: &Harness, command: &str, args: Map<String, serde_json::Value>) -
         .unwrap()
 }
 
-/// [R-POLICY-020] [R-TUI-073] with nobody to ask, an `ask` is a denial
+/// [REQ-2022] [REQ-2848, REQ-2849] with nobody to ask, an `ask` is a denial
 #[tokio::test(flavor = "multi_thread")]
 async fn an_ask_with_nobody_to_ask_is_a_denial() {
     let h = harness(
@@ -271,7 +271,7 @@ async fn an_ask_with_nobody_to_ask_is_a_denial() {
     );
 }
 
-/// [R-TUI-061] the prompt carries the tool, the arguments, the rule, and who
+/// [REQ-2840, REQ-2841] the prompt carries the tool, the arguments, the rule, and who
 /// asked
 #[tokio::test(flavor = "multi_thread")]
 async fn the_prompt_carries_everything_the_reader_needs() {
@@ -299,7 +299,7 @@ async fn the_prompt_carries_everything_the_reader_needs() {
     assert_eq!(prompt.step, 1);
 }
 
-/// [R-TUI-061] "once" lets the call through
+/// [REQ-2840, REQ-2841] "once" lets the call through
 #[tokio::test(flavor = "multi_thread")]
 async fn once_lets_the_call_through() {
     let approver = Arc::new(Scripted::new(Answer::Once));
@@ -318,7 +318,7 @@ async fn once_lets_the_call_through() {
     );
 }
 
-/// [R-TUI-061] "stop" ends the run rather than letting the model work around it
+/// [REQ-2840, REQ-2841] "stop" ends the run rather than letting the model work around it
 #[tokio::test(flavor = "multi_thread")]
 async fn stop_ends_the_run() {
     let approver = Arc::new(Scripted::new(Answer::Stop));
@@ -346,7 +346,7 @@ async fn stop_ends_the_run() {
     );
 }
 
-/// [R-TUI-072] a dry run decides policy, plans the call, and makes none
+/// [REQ-2845, REQ-2846, REQ-2847] a dry run decides policy, plans the call, and makes none
 #[tokio::test(flavor = "multi_thread")]
 async fn a_dry_run_plans_without_running() {
     let approver = Arc::new(Scripted::new(Answer::Once));
@@ -379,7 +379,7 @@ async fn a_dry_run_plans_without_running() {
     );
 }
 
-/// [R-TUI-072] the divergence is stated once, not on every call
+/// [REQ-2845, REQ-2846, REQ-2847] the divergence is stated once, not on every call
 #[tokio::test(flavor = "multi_thread")]
 async fn the_divergence_is_stated_once() {
     let approver = Arc::new(Scripted::new(Answer::Once));

@@ -11,7 +11,7 @@ use crate::error::{Result, StarError, closest};
 
 /// Commands the binary owns.
 ///
-/// `[R-STAR-033]`: a user command with one of these names is refused at load
+/// `[REQ-2480, REQ-2481]`: a user command with one of these names is refused at load
 /// time rather than shadowed in either direction, because `meow session` being
 /// sometimes one thing and sometimes another is worse than a clear refusal.
 pub const RESERVED: &[&str] = &[
@@ -61,7 +61,7 @@ pub struct Provider {
 
 /// What a model is for.
 ///
-/// `[R-STAR-034]`. Two kinds rather than one, because an agent given an
+/// `[REQ-2482, REQ-2483]`. Two kinds rather than one, because an agent given an
 /// embedding model and an index given a chat model both fail in ways that look
 /// like a bad answer rather than a bad declaration.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -119,8 +119,8 @@ pub struct Model {
 
 /// How a workspace is indexed.
 ///
-/// `[R-STAR-035]`: which model embeds it, and the parameters `[R-INDEX-003]`
-/// and `[R-INDEX-012]` call configured. Declared at most once, because two
+/// `[REQ-2484, REQ-2485, REQ-2486, REQ-2487]`: which model embeds it, and the parameters `[REQ-1405, REQ-1406]`
+/// and `[REQ-1412]` call configured. Declared at most once, because two
 /// declarations would leave the index built by whichever the loader reached
 /// first.
 #[derive(Debug, Clone)]
@@ -153,7 +153,7 @@ pub struct ToolDecl {
     /// What it takes.
     ///
     /// Kept as the declaration rather than as a finished schema, because
-    /// `[R-STAR-061]` asks the one declaration to produce the flag, the help
+    /// `[REQ-2511]` asks the one declaration to produce the flag, the help
     /// line, and the model's schema. Storing only the schema would leave the
     /// command line to reconstruct what it needs, which is the drift the
     /// requirement exists to stop.
@@ -164,7 +164,7 @@ pub struct ToolDecl {
 
 /// Everything one workspace declared.
 ///
-/// One table, per `[R-STAR-010]`. v0.2.x assembled its context in two places,
+/// One table, per `[REQ-2414, REQ-2415]`. v0.2.x assembled its context in two places,
 /// `ctx_run.go` and `module_llm.go`, which had already diverged on UI nesting
 /// depth: a module added to one was silently missing from tools running inside
 /// an agent loop. There is nowhere here for a second copy to live.
@@ -210,8 +210,8 @@ impl Registry {
     /// # Errors
     ///
     /// [`StarError::Duplicate`] naming both declaration sites, by
-    /// `[R-PKG-002]`; or [`StarError::Load`] when the name is `std`, by
-    /// `[R-PKG-003]` - the scheme that reaches the runtime modules cannot be
+    /// `[REQ-1803]`; or [`StarError::Load`] when the name is `std`, by
+    /// `[REQ-1804]` - the scheme that reaches the runtime modules cannot be
     /// shadowed by something fetched.
     pub fn add_package(&mut self, p: crate::package::Package) -> Result<()> {
         if p.name == "std" {
@@ -348,7 +348,7 @@ impl Registry {
 
     /// Check that every reference resolves.
     ///
-    /// Satisfies `[R-STAR-032]`: at load time, not at first use, and after
+    /// Satisfies `[REQ-2478, REQ-2479]`: at load time, not at first use, and after
     /// every declaration file has been evaluated, so that declaration order
     /// inside and between files does not matter. Resolving as each declaration
     /// is made would mean an agent could not name a model declared below it,
@@ -376,7 +376,7 @@ impl Registry {
                     closest: closest(&agent.model, self.models.keys().map(String::as_str)),
                 });
             };
-            // [R-STAR-034]: an agent given an embedding model produces
+            // [REQ-2482, REQ-2483]: an agent given an embedding model produces
             // nonsense that looks like an answer, so it is refused here.
             if model.kind != ModelKind::Chat {
                 return Err(StarError::WrongKind {
@@ -420,7 +420,7 @@ impl Registry {
             }
         }
 
-        // [R-STAR-032]: a reference is checked at load time, after every file
+        // [REQ-2478, REQ-2479]: a reference is checked at load time, after every file
         // and every markdown agent has been read, so naming one declared
         // below is fine and naming one that does not exist is not.
         for (name, origin) in &self.referenced {

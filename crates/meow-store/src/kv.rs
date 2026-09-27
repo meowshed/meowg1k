@@ -15,7 +15,7 @@ use crate::error::Result;
 impl Store {
     /// Read a value, or `None` when the key has never been written.
     ///
-    /// Satisfies `[R-STORE-030]`.
+    /// Satisfies `[REQ-2632]`.
     pub fn kv_get(&self, key: &str) -> Result<Option<Vec<u8>>> {
         Ok(self
             .conn()
@@ -25,7 +25,7 @@ impl Store {
 
     /// Write a value, replacing any previous one.
     ///
-    /// Satisfies `[R-STORE-030]` and `[R-STORE-031]`: the `kv` table is not
+    /// Satisfies `[REQ-2632]` and `[REQ-2633]`: the `kv` table is not
     /// reachable from a session row, so no session deletion can touch it.
     pub fn kv_put(&self, key: &str, value: &[u8]) -> Result<()> {
         self.conn().execute(

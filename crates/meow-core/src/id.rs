@@ -10,17 +10,17 @@ const ALPHABET: &[u8; 32] = b"0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
 /// How many characters of the identifier a person types.
 ///
-/// `[R-SESSION-034]`.
+/// `[REQ-2220]`.
 pub const SHORT_LEN: usize = 8;
 
 /// The identifier of one session.
 ///
 /// Twenty-six characters: a 48-bit millisecond timestamp followed by 80 bits
-/// of randomness, in Crockford base32. Sorting the text sorts by creation
+/// of entropy from the clock and the process id, in Crockford base32. Sorting the text sorts by creation
 /// time, because the timestamp leads.
 ///
-/// The short form is the **last** eight characters, which `[R-SESSION-034]`
-/// requires and `[R-SESSION-030]` got wrong: a prefix of a time-sortable
+/// The short form is the **last** eight characters, which `[REQ-2220]`
+/// requires and the prefix design `ADR-2202` rejected got wrong: a prefix of a time-sortable
 /// identifier is almost entirely timestamp, so two sessions created in the
 /// same period would share it.
 #[derive(
@@ -62,7 +62,7 @@ impl SessionId {
         &self.0
     }
 
-    /// The eight characters a person types, per `[R-SESSION-034]`.
+    /// The eight characters a person types, per `[REQ-2220]`.
     pub fn short(&self) -> &str {
         let n = self.0.len();
         &self.0[n.saturating_sub(SHORT_LEN)..]
@@ -89,7 +89,7 @@ mod tests {
     #[test]
     fn the_short_form_is_the_random_tail() {
         // Same millisecond, different entropy: a prefix would collide and the
-        // tail must not. This is the whole reason R-SESSION-030 was withdrawn.
+        // tail must not. This is the whole reason ADR-2202 rejected the prefix.
         let a = SessionId::new(1_700_000_000_000, [1; 10]);
         let b = SessionId::new(1_700_000_000_000, [2; 10]);
         assert_eq!(a.as_str()[..8], b.as_str()[..8], "a prefix does collide");

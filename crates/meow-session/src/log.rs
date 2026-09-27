@@ -11,7 +11,7 @@ use crate::{Session, State};
 
 /// How often a running writer says it is alive, in seconds.
 ///
-/// `[R-SESSION-043]`. A session whose heartbeat is older than three of these
+/// `[REQ-2231, REQ-2232, REQ-2233]`. A session whose heartbeat is older than three of these
 /// is treated as dead, so the window in which a crashed run still looks alive
 /// is bounded and tunable, which is what a process identifier plus a start
 /// time could not give without per-platform code.
@@ -52,9 +52,9 @@ impl Sessions {
 
     /// Create a session and open its first run.
     ///
-    /// Satisfies `[R-SESSION-005]`: a session holds one or more runs, and each
-    /// begins with a `Started` event. Satisfies `[R-SESSION-060]` by recording
-    /// the parent, and `[R-SESSION-061]` by leaving the foreign key to refuse
+    /// Satisfies `[REQ-2205, REQ-2206, REQ-2207]`: a session holds one or more runs, and each
+    /// begins with a `Started` event. Satisfies `[REQ-2246, REQ-2247]` by recording
+    /// the parent, and `[REQ-2248, REQ-2249]` by leaving the foreign key to refuse
     /// a parent that does not exist, which is what makes a cycle impossible
     /// rather than merely unlikely.
     pub fn start(
@@ -87,9 +87,9 @@ impl Sessions {
 
     /// Open another run on an existing session.
     ///
-    /// Satisfies `[R-SESSION-006]`: resuming appends a new `Started` event, so
+    /// Satisfies `[REQ-2208]`: resuming appends a new `Started` event, so
     /// a session that has already ended continues without rewriting the event
-    /// that ended it. Satisfies `[R-SESSION-050]` by growing the same session
+    /// that ended it. Satisfies `[REQ-2236, REQ-2237]` by growing the same session
     /// and the same sequence rather than creating a new one.
     pub fn resume(&self, id: &SessionId, task: &str) -> Result<()> {
         if self.state(id)? == State::Running {
@@ -113,7 +113,7 @@ impl Sessions {
 
     /// Close the open run.
     ///
-    /// Satisfies `[R-SESSION-005]`: exactly one `Finished` closes a run, and
+    /// Satisfies `[REQ-2205, REQ-2206, REQ-2207]`: exactly one `Finished` closes a run, and
     /// it must come before the next `Started`.
     pub fn finish(&self, id: &SessionId, stop: StopReason, detail: Option<&str>) -> Result<()> {
         if self.state(id)? != State::Running {
@@ -135,7 +135,7 @@ impl Sessions {
 
     /// Append one event.
     ///
-    /// Satisfies `[R-SESSION-001]` and `[R-SESSION-002]`: the log only grows,
+    /// Satisfies `[REQ-2200, REQ-2201]` and `[REQ-2202]`: the log only grows,
     /// and the sequence is monotonic and gapless because the store allocates
     /// it from the current maximum under the write lock.
     pub fn append(&self, id: &SessionId, kind: EventKind) -> Result<u64> {
@@ -174,8 +174,8 @@ impl Sessions {
 
     /// Record a summarised range.
     ///
-    /// Satisfies `[R-SESSION-010]`: the events in the range stay where they
-    /// are. Satisfies `[R-SESSION-013]` by refusing a range that an earlier
+    /// Satisfies `[REQ-2209, REQ-2210]`: the events in the range stay where they
+    /// are. Satisfies `[REQ-2214]` by refusing a range that an earlier
     /// compaction already covers, which would otherwise make the two rebuilds
     /// disagree about what a model saw.
     pub fn compact(
@@ -208,7 +208,7 @@ impl Sessions {
 
     /// Every event, as it was written.
     ///
-    /// Satisfies `[R-SESSION-012]`: this is the rebuild for a person, and it
+    /// Satisfies `[REQ-2212, REQ-2213]`: this is the rebuild for a person, and it
     /// returns the originals. A superseded event is still here, which is what
     /// makes compaction reversible and the transcript honest.
     pub fn events(&self, id: &SessionId) -> Result<Vec<Event>> {
@@ -230,7 +230,7 @@ impl Sessions {
 
     /// The events a model should see next.
     ///
-    /// Satisfies `[R-SESSION-011]`: every superseded range is skipped and its
+    /// Satisfies `[REQ-2211]`: every superseded range is skipped and its
     /// summary substituted. Written as its own walk rather than as a flag on
     /// [`Sessions::events`], because the two readings diverge and a shared
     /// function with a boolean is how they would drift back together.
@@ -238,7 +238,7 @@ impl Sessions {
         let ranges = self.store.compactions(id.as_str())?;
         let events = self.events(id)?;
 
-        // `[R-SESSION-011]` says substitute, not append: the summary stands
+        // `[REQ-2211]` says substitute, not append: the summary stands
         // where the range stood. Emitting the `Compaction` event at its own
         // position would put a summary of messages two and three after message
         // four, which presents the conversation in an order it never had.
@@ -268,7 +268,7 @@ impl Sessions {
 
     /// What state a session is in.
     ///
-    /// Satisfies `[R-SESSION-040]` and `[R-SESSION-041]`: the answer comes
+    /// Satisfies `[REQ-2228]` and `[REQ-2229, REQ-2230]`: the answer comes
     /// from the log, never from the cached copy, so no stored field can
     /// disagree with its own history.
     pub fn state(&self, id: &SessionId) -> Result<State> {
@@ -291,7 +291,7 @@ impl Sessions {
 
     /// Say the writer of a session is still alive.
     ///
-    /// `[R-SESSION-043]`.
+    /// `[REQ-2231, REQ-2232, REQ-2233]`.
     pub fn heartbeat(&self, id: &SessionId) -> Result<()> {
         self.store.heartbeat(id.as_str())?;
         Ok(())
@@ -299,7 +299,7 @@ impl Sessions {
 
     /// Close a session whose writer stopped saying it was alive.
     ///
-    /// Satisfies `[R-SESSION-042]`: a run whose process died leaves no
+    /// Satisfies `[REQ-2234, REQ-2235]`: a run whose process died leaves no
     /// `Finished` event, and a session that claims to be running forever is
     /// worse than one that admits it failed. Returns whether it acted.
     pub fn reap_if_dead(&self, id: &SessionId, now: i64) -> Result<bool> {
@@ -326,7 +326,7 @@ impl Sessions {
 
     /// What a session spent, including everything its children spent.
     ///
-    /// Satisfies `[R-SESSION-022]`.
+    /// Satisfies `[REQ-2219]`.
     pub fn usage(&self, id: &SessionId) -> Result<Usage> {
         let t = self.store.usage_totals(id.as_str())?;
         let mut total = Usage {
@@ -343,7 +343,7 @@ impl Sessions {
 
     /// The children of a session, oldest first.
     ///
-    /// `[R-SESSION-060]`.
+    /// `[REQ-2246, REQ-2247]`.
     pub fn children(&self, id: &SessionId) -> Result<Vec<Session>> {
         Ok(self
             .store

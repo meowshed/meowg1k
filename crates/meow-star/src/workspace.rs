@@ -20,7 +20,7 @@ pub struct Workspace {
 impl Workspace {
     /// Find the workspace containing a directory.
     ///
-    /// Satisfies `[R-STAR-001]`: the nearest ancestor with `.meow/meow.star`,
+    /// Satisfies `[REQ-2400, REQ-2401, REQ-2402]`: the nearest ancestor with `.meow/meow.star`,
     /// stopping at the first match and merging with no global configuration.
     /// The project wins outright, which is the decision `0.3.0-starlark-api.md`
     /// section 2 records: merging would mean a run behaves differently
@@ -30,7 +30,7 @@ impl Workspace {
     /// # Errors
     ///
     /// [`StarError::NoWorkspace`] naming every directory searched, per
-    /// `[R-STAR-002]`.
+    /// `[REQ-2403, REQ-2404]`.
     pub fn discover(from: &Path) -> Result<Self> {
         let mut searched = Vec::new();
         let mut here = Some(from);
@@ -73,7 +73,7 @@ impl Workspace {
 
     /// Turn a `//` path into a file, refusing one that escapes.
     ///
-    /// Satisfies `[R-STAR-004]`. Refusing at the lexical level rather than
+    /// Satisfies `[REQ-2407, REQ-2408]`. Refusing at the lexical level rather than
     /// after resolving: a `..` that happens to land back inside is still a
     /// mistake worth reporting, and resolving first would let a symlink decide.
     ///

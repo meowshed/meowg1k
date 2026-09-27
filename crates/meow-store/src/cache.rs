@@ -15,7 +15,7 @@ use crate::{Store, now_secs};
 
 /// What a cached response is a response to.
 ///
-/// The distinction exists to make `[R-STORE-045]` structural: there is no way
+/// The distinction exists to make `[REQ-2637, REQ-2638, REQ-2639]` structural: there is no way
 /// to cache a generation without naming [`CacheKind::Generation`], and the
 /// default path does not reach for it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -29,7 +29,7 @@ pub enum CacheKind {
 impl Store {
     /// Look a response up.
     ///
-    /// Satisfies `[R-STORE-046]`: the model is part of the key, so changing a
+    /// Satisfies `[REQ-2640, REQ-2641]`: the model is part of the key, so changing a
     /// model cannot return another model's answer. A lookup for a generation
     /// misses unless the caller opted in when writing.
     pub fn cache_get(&self, request_hash: &str, model: &str) -> Result<Option<Vec<u8>>> {
@@ -45,7 +45,7 @@ impl Store {
 
     /// Store a response.
     ///
-    /// Satisfies `[R-STORE-045]`. A [`CacheKind::Generation`] entry is written
+    /// Satisfies `[REQ-2637, REQ-2638, REQ-2639]`. A [`CacheKind::Generation`] entry is written
     /// only when `opted_in` is true; passing false for one is a no-op rather
     /// than an error, so a caller that forwards a flag does not have to branch.
     pub fn cache_put(
@@ -80,7 +80,7 @@ impl Store {
     /// Evict cache entries older than `max_age_secs`, then the oldest
     /// remaining until the cache is under `max_bytes`.
     ///
-    /// Satisfies `[R-STORE-047]`. Nothing here touches a session: a session
+    /// Satisfies `[REQ-2642, REQ-2643]`. Nothing here touches a session: a session
     /// that quoted a response holds its own copy in the blob table, so
     /// evicting the cache entry cannot change what a transcript says.
     pub fn cache_evict(&self, max_age_secs: i64, max_bytes: i64) -> Result<usize> {

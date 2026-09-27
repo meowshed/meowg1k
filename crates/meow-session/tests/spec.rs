@@ -1,10 +1,10 @@
 // Copyright © 2025 The meowg1k Authors
 // SPDX-License-Identifier: Apache-2.0
 
-//! Every requirement in `docs/spec/session.md` that M2 covers, one test or
+//! Every requirement in `SPC-2200` that M2 covers, one test or
 //! more each.
 //!
-//! `[R-SESSION-030]` is withdrawn; `[R-SESSION-034]` replaces it and is tested
+//! `ADR-2202` rejected the prefix short form; `[REQ-2220]` states the tail and is tested
 //! in `meow-core`, where the identifier lives.
 
 // `allow-unwrap-in-tests` in clippy.toml covers `#[test]` functions, not the
@@ -47,7 +47,7 @@ impl Fixture {
     }
 }
 
-/// [R-SESSION-001] the log only grows
+/// [REQ-2200, REQ-2201] the log only grows
 #[test]
 fn the_log_offers_no_way_to_change_what_it_holds() {
     let f = Fixture::new();
@@ -81,7 +81,7 @@ fn the_log_offers_no_way_to_change_what_it_holds() {
     }
 }
 
-/// [R-SESSION-002] the sequence is monotonic and gapless from one
+/// [REQ-2202] the sequence is monotonic and gapless from one
 #[test]
 fn the_sequence_starts_at_one_and_has_no_gaps() {
     let f = Fixture::new();
@@ -107,7 +107,7 @@ fn the_sequence_starts_at_one_and_has_no_gaps() {
     assert_eq!(seqs, (1..=6).collect::<Vec<_>>());
 }
 
-/// [R-SESSION-003] the event kinds are exactly ten
+/// [REQ-2203] the event kinds are exactly ten
 #[test]
 fn there_are_exactly_ten_event_kinds() {
     assert_eq!(EventKind::NAMES.len(), 10);
@@ -115,7 +115,7 @@ fn there_are_exactly_ten_event_kinds() {
     assert_eq!(unique.len(), 10, "a kind is listed twice");
 }
 
-/// [R-SESSION-004] every event carries when it happened
+/// [REQ-2204] every event carries when it happened
 #[test]
 fn every_event_carries_a_timestamp() {
     let f = Fixture::new();
@@ -125,7 +125,7 @@ fn every_event_carries_a_timestamp() {
     }
 }
 
-/// [R-SESSION-005] a run opens with Started and closes with exactly one Finished
+/// [REQ-2205, REQ-2206, REQ-2207] a run opens with Started and closes with exactly one Finished
 #[test]
 fn a_run_opens_and_closes_exactly_once() {
     let f = Fixture::new();
@@ -149,7 +149,7 @@ fn a_run_opens_and_closes_exactly_once() {
     assert_eq!(kinds, vec!["Started", "Finished"]);
 }
 
-/// [R-SESSION-006] resuming opens a new run without rewriting the old ending
+/// [REQ-2208] resuming opens a new run without rewriting the old ending
 #[test]
 fn resuming_appends_a_new_run_and_leaves_the_old_ending_alone() {
     let f = Fixture::new();
@@ -174,8 +174,8 @@ fn resuming_appends_a_new_run_and_leaves_the_old_ending_alone() {
     ));
 }
 
-/// [R-SESSION-010] compaction supersedes and does not delete
-/// [R-SESSION-012] the rebuild for a person returns the originals
+/// [REQ-2209, REQ-2210] compaction supersedes and does not delete
+/// [REQ-2212, REQ-2213] the rebuild for a person returns the originals
 #[test]
 fn compaction_supersedes_without_deleting() {
     let f = Fixture::new();
@@ -205,7 +205,7 @@ fn compaction_supersedes_without_deleting() {
     );
 }
 
-/// [R-SESSION-011] the rebuild for a model skips what was superseded
+/// [REQ-2211] the rebuild for a model skips what was superseded
 #[test]
 fn the_model_rebuild_skips_the_superseded_range() {
     let f = Fixture::new();
@@ -249,7 +249,7 @@ fn the_model_rebuild_skips_the_superseded_range() {
     );
 }
 
-/// [R-SESSION-013] a range cannot be superseded twice
+/// [REQ-2214] a range cannot be superseded twice
 #[test]
 fn a_range_cannot_be_superseded_twice() {
     let f = Fixture::new();
@@ -274,7 +274,7 @@ fn a_range_cannot_be_superseded_twice() {
     f.sessions.compact(&id, 5..=7, "second", 100).unwrap();
 }
 
-/// [R-SESSION-020] usage is typed, with cached as its own field
+/// [REQ-2215] usage is typed, with cached as its own field
 #[test]
 fn usage_is_typed_and_cached_tokens_are_their_own_field() {
     let f = Fixture::new();
@@ -298,7 +298,7 @@ fn usage_is_typed_and_cached_tokens_are_their_own_field() {
     assert_eq!(u.total(), 1200);
 }
 
-/// [R-SESSION-021] an unpriced model records an absent cost, never zero
+/// [REQ-2216, REQ-2217, REQ-2218] an unpriced model records an absent cost, never zero
 #[test]
 fn an_unpriced_call_records_no_cost_rather_than_a_free_one() {
     let f = Fixture::new();
@@ -334,7 +334,7 @@ fn an_unpriced_call_records_no_cost_rather_than_a_free_one() {
     );
 }
 
-/// [R-SESSION-022] totals include the children
+/// [REQ-2219] totals include the children
 #[test]
 fn a_parent_reports_what_its_children_spent() {
     let f = Fixture::new();
@@ -364,7 +364,7 @@ fn a_parent_reports_what_its_children_spent() {
     assert_eq!(total.cost_micros, Some(14));
 }
 
-/// [R-SESSION-031] an ambiguous short identifier fails with the candidates
+/// [REQ-2221, REQ-2222] an ambiguous short identifier fails with the candidates
 #[test]
 fn an_ambiguous_identifier_lists_the_candidates_rather_than_guessing() {
     let f = Fixture::new();
@@ -385,7 +385,7 @@ fn an_ambiguous_identifier_lists_the_candidates_rather_than_guessing() {
     assert_eq!(f.sessions.resolve(a.as_str()).unwrap().id, a);
 }
 
-/// [R-SESSION-032] the selectors resolve at the moment of use
+/// [REQ-2223] the selectors resolve at the moment of use
 #[test]
 fn the_selectors_resolve_when_they_are_used() {
     let f = Fixture::new();
@@ -402,7 +402,7 @@ fn the_selectors_resolve_when_they_are_used() {
     assert_eq!(f.sessions.resolve("@review").unwrap().id, third);
 }
 
-/// [R-SESSION-033] a name is unique and cannot shadow a selector
+/// [REQ-2224, REQ-2225, REQ-2226, REQ-2227] a name is unique and cannot shadow a selector
 #[test]
 fn a_name_resolves_and_cannot_begin_with_an_at_sign() {
     let f = Fixture::new();
@@ -422,8 +422,8 @@ fn a_name_resolves_and_cannot_begin_with_an_at_sign() {
     );
 }
 
-/// [R-SESSION-040] a session is running or in one of six stopped states
-/// [R-SESSION-041] the state comes from the log
+/// [REQ-2228] a session is running or in one of six stopped states
+/// [REQ-2229, REQ-2230] the state comes from the log
 #[test]
 fn the_state_is_whatever_the_log_says() {
     let f = Fixture::new();
@@ -445,7 +445,7 @@ fn the_state_is_whatever_the_log_says() {
     }
 }
 
-/// [R-SESSION-041] a stale cached copy never wins over the log
+/// [REQ-2229, REQ-2230] a stale cached copy never wins over the log
 #[test]
 fn the_cached_state_never_overrides_the_log() {
     let f = Fixture::new();
@@ -466,8 +466,8 @@ fn the_cached_state_never_overrides_the_log() {
     );
 }
 
-/// [R-SESSION-042] a session whose writer died stops claiming to be running
-/// [R-SESSION-043] liveness is a heartbeat
+/// [REQ-2234, REQ-2235] a session whose writer died stops claiming to be running
+/// [REQ-2231, REQ-2232, REQ-2233] liveness is a heartbeat
 #[test]
 fn a_session_whose_writer_died_is_closed_on_the_next_open() {
     let f = Fixture::new();
@@ -490,7 +490,7 @@ fn a_session_whose_writer_died_is_closed_on_the_next_open() {
     assert!(!f.sessions.reap_if_dead(&id, now).unwrap());
 }
 
-/// [R-SESSION-060] a sub-agent records its parent, and the parent sees it
+/// [REQ-2246, REQ-2247] a sub-agent records its parent, and the parent sees it
 #[test]
 fn a_parent_can_enumerate_its_children_in_order() {
     let f = Fixture::new();
@@ -511,7 +511,7 @@ fn a_parent_can_enumerate_its_children_in_order() {
     assert_eq!(kids[0].parent.as_ref(), Some(&parent));
 }
 
-/// [R-SESSION-061] a session's parent must already exist
+/// [REQ-2248, REQ-2249] a session's parent must already exist
 #[test]
 fn a_session_cannot_name_a_parent_that_does_not_exist() {
     let f = Fixture::new();
@@ -525,8 +525,8 @@ fn a_session_cannot_name_a_parent_that_does_not_exist() {
     );
 }
 
-/// [R-SESSION-070] every tool invocation records a policy decision
-/// [R-SESSION-071] denials are recorded too
+/// [REQ-2250] every tool invocation records a policy decision
+/// [REQ-2251] denials are recorded too
 #[test]
 fn every_policy_decision_is_recorded_including_the_denials() {
     let f = Fixture::new();

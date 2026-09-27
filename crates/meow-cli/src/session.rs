@@ -13,7 +13,7 @@ use serde_json::Value;
 /// A session that is actually written to disk.
 ///
 /// The lock is not for contention: a run has one writer by construction, and
-/// `[R-SESSION-043]` says so. It is because `[R-SESSION-050]` numbers events
+/// `[REQ-2231, REQ-2232, REQ-2233]` says so. It is because `[REQ-2236, REQ-2237]` numbers events
 /// in sequence and the sequence is read-then-write, so two threads asking at
 /// once would produce the same number.
 pub struct Log {
@@ -39,7 +39,7 @@ impl std::fmt::Debug for Log {
 impl Log {
     /// Open a session for this run: a fresh one, or the one being continued.
     ///
-    /// `[R-SESSION-054]`: a run that names no session starts one. Continuation
+    /// `[REQ-2244, REQ-2245]`: a run that names no session starts one. Continuation
     /// is never inferred from the workspace, which is why `resuming` is an
     /// argument and not something this works out.
     ///
@@ -56,7 +56,7 @@ impl Log {
     ) -> meow_session::Result<Self> {
         let (id, history) = match resuming {
             Some(id) => {
-                // `[R-SESSION-050]`: the same session and the same sequence.
+                // `[REQ-2236, REQ-2237]`: the same session and the same sequence.
                 let history = rebuild(&sessions, &id)?;
                 sessions.resume(&id, task)?;
                 (id, history)
@@ -91,7 +91,7 @@ impl Log {
 
 /// Turn a session's own view of itself into messages.
 ///
-/// `[R-SESSION-051]`: through `events_for_model`, so a resumed run sees
+/// `[REQ-2238]`: through `events_for_model`, so a resumed run sees
 /// compaction exactly as the original did rather than the full history the
 /// original had already decided was too long.
 fn rebuild(sessions: &Sessions, id: &SessionId) -> meow_session::Result<Vec<Message>> {
@@ -158,7 +158,7 @@ pub fn open(workspace: &meow_star::Workspace) -> meow_store::Result<Sessions> {
 
 /// The most recent session of one agent, for `--continue`.
 ///
-/// Satisfies `[R-TUI-074]`: the most recent session of the command being
+/// Satisfies `[REQ-2850, REQ-2851]`: the most recent session of the command being
 /// invoked, in this workspace, and nothing when there is none. Returning the
 /// newest session of any agent would resume somebody else's run.
 pub fn most_recent(sessions: &Sessions, agent: &str) -> meow_session::Result<Option<SessionId>> {

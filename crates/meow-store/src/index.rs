@@ -3,7 +3,7 @@
 
 //! The rows the index writes.
 //!
-//! `[R-INDEX-050]`: in the same database as sessions, the cache, and the
+//! `[REQ-1435]`: in the same database as sessions, the cache, and the
 //! blobs. v0.2.x kept the index in a second SQLite file, which meant two
 //! files to keep in step and no way for a chunk and a tool result quoting the
 //! same file to share anything.
@@ -110,7 +110,7 @@ impl Store {
 
     /// Chunks that still need embedding.
     ///
-    /// `[R-INDEX-022]`: what makes a build resumable is that this returns only
+    /// `[REQ-1421, REQ-1422]`: what makes a build resumable is that this returns only
     /// the work that is left, so an interrupted run does not pay twice.
     pub fn index_pending(&self, limit: i64) -> Result<Vec<ChunkRow>> {
         self.rows(
@@ -225,7 +225,7 @@ impl Store {
 
     /// Remove every chunk and every vector.
     ///
-    /// `[R-INDEX-052]`: the index and nothing else. Sessions and the
+    /// `[REQ-1438, REQ-1439]`: the index and nothing else. Sessions and the
     /// key-value store are in the same database and are not the index's to
     /// delete.
     ///

@@ -20,14 +20,14 @@ pub struct Origin {
 impl Sessions {
     /// Branch a session at a sequence.
     ///
-    /// Satisfies `[R-SESSION-052]`: the new session's first `n` events are
+    /// Satisfies `[REQ-2239, REQ-2240, REQ-2241, REQ-2242]`: the new session's first `n` events are
     /// copies referencing the same blobs, every such blob gains a referent so
     /// collecting the origin cannot delete content the fork points at, the
     /// origin and sequence are recorded, and the origin itself is untouched.
     ///
     /// The fork is a child of nothing. A fork is a sibling of the run it
     /// branched off, not its descendant: making it a child would put it under
-    /// the origin in `[R-SESSION-080]`'s deletion rule, so collecting the
+    /// the origin in `[REQ-2252, REQ-2253]`'s deletion rule, so collecting the
     /// origin would take the fork with it, which is the opposite of what the
     /// reference counting is for.
     ///
@@ -58,7 +58,7 @@ impl Sessions {
             });
         }
 
-        // [R-SESSION-053]: a fork inside a summarised range would copy events
+        // [REQ-2243]: a fork inside a summarised range would copy events
         // the origin's own rebuild no longer shows a model, so the fork would
         // start from a conversation that never happened.
         for range in self.store().compactions(origin.as_str())? {

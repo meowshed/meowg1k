@@ -10,7 +10,7 @@ use crate::log::Sessions;
 
 /// What to keep.
 ///
-/// `[R-SESSION-082]`: age, count, and total size, and the strictest of the
+/// `[REQ-2255, REQ-2256]`: age, count, and total size, and the strictest of the
 /// configured limits wins. Strictest rather than first-matching, because three
 /// limits that each delete a different set would otherwise depend on the order
 /// they were checked in, which nobody could predict from the configuration.
@@ -24,7 +24,7 @@ pub struct Retention {
     pub max_bytes: Option<u64>,
     /// Whether a named session may be deleted.
     ///
-    /// `[R-SESSION-081]`: off unless the caller asks, because a name is how
+    /// `[REQ-2254]`: off unless the caller asks, because a name is how
     /// somebody said this one matters.
     pub include_named: bool,
 }
@@ -41,8 +41,8 @@ pub struct Swept {
 impl Sessions {
     /// Delete what the retention policy no longer keeps.
     ///
-    /// Satisfies `[R-SESSION-080]` by deleting whole sessions and taking a
-    /// parent only together with its descendants, and `[R-SESSION-081]` by
+    /// Satisfies `[REQ-2252, REQ-2253]` by deleting whole sessions and taking a
+    /// parent only together with its descendants, and `[REQ-2254]` by
     /// protecting named sessions unless asked. `now` is an argument for the
     /// same reason an identifier is: a clock is input, and a sweep that reads
     /// one cannot be tested.
@@ -119,7 +119,7 @@ impl Sessions {
             }
 
             // A named session anywhere in the tree protects the whole tree:
-            // `[R-SESSION-080]` forbids deleting a parent without its
+            // `[REQ-2252, REQ-2253]` forbids deleting a parent without its
             // descendants, so keeping one descendant means keeping all of it.
             if !include_named {
                 let mut protected = None;

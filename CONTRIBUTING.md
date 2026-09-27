@@ -32,17 +32,17 @@ export ANTHROPIC_API_KEY=...   # and VOYAGE_API_KEY for the index
 
 No behaviour ships that a specification does not describe.
 
-`docs/spec/` holds ten areas of requirements, each with an identifier like
-`R-AGENT-013`. Before writing code whose behaviour no
-requirement covers, write the requirement. When an implementation would
-contradict one, amend the requirement in place, with the date and the reason,
-and say so in the pull request - never write the code first and reword the
-requirement afterwards.
+`project/requirements/` holds one requirement per file, each with an identifier
+like `REQ-1014`, and `project/specs/` states what each part of the binary does
+from them. Before writing code whose behaviour no requirement covers, write the
+requirement. When an implementation would contradict one, propose the change as
+its own pull request, with the reason, and say so in the pull request - never
+write the code first and reword the requirement afterwards.
 
 Every test that checks a requirement names it:
 
 ```rust
-/// [R-SESSION-014] compaction supersedes without deleting
+/// [REQ-2210] compaction supersedes without deleting
 #[test]
 fn compaction_preserves_superseded_events_for_export() { ... }
 ```
@@ -163,8 +163,9 @@ changelog is in `CHANGELOG.md`; do not paste it into the annotation.
 
 ## Where to look
 
-- `docs/spec/` - what the binary does, normatively
-- `docs/design/` - why, with the reasoning that produced each decision
+- `project/vision.md` - what meowg1k is for, and the goals it's held to
+- `project/specs/` and `project/requirements/` - what the binary does, normatively
+- `project/adrs/` - why, one decision per file with the alternatives it beat
 - `.meow/` - meowg1k configured to work on itself, which is the worked example
 - `CHANGELOG.md` - what changed between releases
 - `CLAUDE.md` - the working policy for this repository, in more detail than

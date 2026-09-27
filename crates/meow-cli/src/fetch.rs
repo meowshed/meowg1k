@@ -3,7 +3,7 @@
 
 //! Getting a package, which is the half that touches the network.
 //!
-//! The loader never does this - `[R-PKG-012]`. `meow pkg fetch` downloads what
+//! The loader never does this - `[REQ-1809, REQ-1810]`. `meow pkg fetch` downloads what
 //! the lockfile pins and changes nothing; `meow pkg update` re-resolves and
 //! rewrites it. Keeping them apart is what makes a run depend on the commit
 //! rather than on when it happened.
@@ -38,7 +38,7 @@ pub enum FetchError {
 
     /// What arrived is not what the lockfile pins.
     ///
-    /// `[R-PKG-011]` verifies at load; this verifies at fetch, so a mirror
+    /// `[REQ-1807, REQ-1808]` verifies at load; this verifies at fetch, so a mirror
     /// that served something else is caught when it is downloaded rather than
     /// the next time somebody runs a command.
     #[error("`{name}` hashes to {found}, and `meow.lock` pins {expected}")]
@@ -138,7 +138,7 @@ pub async fn fetch(
     }
 
     // Into a staging directory first, hashed there, then moved into place
-    // under its hash. `[R-PKG-022]`: an interrupted download leaves staging
+    // under its hash. `[REQ-1817, REQ-1818]`: an interrupted download leaves staging
     // behind and never something the next run mistakes for a package.
     let staging = config_dir
         .join(meow_star::package::CACHE)
@@ -167,7 +167,7 @@ pub async fn fetch(
 
     let destination = cached_at(config_dir, &hash);
     if destination.exists() {
-        // `[R-PKG-021]`: keyed by hash, so this is already the same bytes.
+        // `[REQ-1816]`: keyed by hash, so this is already the same bytes.
         let _ = std::fs::remove_dir_all(&staging);
         return Ok(hash);
     }
@@ -257,7 +257,7 @@ fn unpack(bytes: &[u8], into: &Path) -> Result<(), FetchError> {
 
 /// Fetch every declared package and write the lockfile.
 ///
-/// `[R-PKG-013]`: `update` re-resolves and rewrites; `fetch` downloads what is
+/// `[REQ-1811, REQ-1812, REQ-1813]`: `update` re-resolves and rewrites; `fetch` downloads what is
 /// already pinned and leaves the lockfile alone.
 ///
 /// # Errors

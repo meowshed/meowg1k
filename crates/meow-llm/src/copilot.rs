@@ -7,7 +7,7 @@
 //! parser. What differs is two things: the address, and that the credential a
 //! person approved is not what is sent. A GitHub OAuth grant is exchanged for
 //! a short-lived Copilot token, which expires and is renewed without asking
-//! anybody again - `[R-LLM-004]` and `[R-AUTH-022]`.
+//! anybody again - `[REQ-1604, REQ-1605, REQ-1606]` and `[REQ-1217, REQ-1218, REQ-1219, REQ-1220]`.
 
 use std::sync::Arc;
 
@@ -52,7 +52,7 @@ pub fn build<T: Transport>(transport: T, grant: impl Into<String>) -> Result<Ope
         .with_name("copilot")
         // Copilot takes the OpenAI body and does not honour
         // `response_format`, so a schema is asked for in the prompt and
-        // checked here - `[R-LLM-050]`.
+        // checked here - `[REQ-1641, REQ-1642, REQ-1643]`.
         .with_emulated_schema()
         .with_headers(identity()))
 }

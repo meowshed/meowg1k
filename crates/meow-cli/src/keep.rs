@@ -9,7 +9,7 @@ use serde_json::Value;
 
 /// The workspace's durable key-value table.
 ///
-/// `[R-STAR-026]`: the table is the workspace's rather than a session's, so
+/// `[REQ-2463, REQ-2464, REQ-2465]`: the table is the workspace's rather than a session's, so
 /// `meow session gc` cannot take it with them. `meow-store` already keeps it
 /// in a separate table for exactly that reason, and this is the thin layer
 /// that turns bytes into the values a handler put in.
@@ -63,7 +63,7 @@ impl Keep for Durable {
 
     fn delete(&self, key: &str) -> Result<bool, String> {
         let store = self.held()?;
-        // `[R-STAR-028]`: the caller wants to know whether it was there, and
+        // `[REQ-2468, REQ-2469, REQ-2470, REQ-2471]`: the caller wants to know whether it was there, and
         // `kv_delete` does not say, so ask first. Both statements run on one
         // connection, so nothing can slip between them.
         let was = store.kv_get(key).map_err(|e| e.to_string())?.is_some();

@@ -12,7 +12,7 @@ pub const DEFAULT_LINES: usize = 60;
 
 /// How many lines two neighbouring chunks share.
 ///
-/// `[R-INDEX-012]`: in lines rather than tokens, because a boundary is a line
+/// `[REQ-1412]`: in lines rather than tokens, because a boundary is a line
 /// and the two units cannot both be exact. A definition that straddles a
 /// boundary is retrievable from either side.
 pub const DEFAULT_OVERLAP: usize = 10;
@@ -42,7 +42,7 @@ pub struct Chunk {
     pub last_line: usize,
     /// Whether a single line had to be cut to fit.
     ///
-    /// `[R-INDEX-014]`: reported, so a minified file does not make the
+    /// `[REQ-1414, REQ-1415, REQ-1416, REQ-1417]`: reported, so a minified file does not make the
     /// line-boundary rule and the size rule quietly unsatisfiable.
     pub split_line: bool,
 }
@@ -79,7 +79,7 @@ impl Chunking {
     /// The parameters as text, for the hash that decides whether a file is
     /// stale.
     ///
-    /// `[R-INDEX-030]`: the hash covers the parameters as well as the
+    /// `[REQ-1423, REQ-1424]`: the hash covers the parameters as well as the
     /// content, so changing the chunk size does not leave chunks that look
     /// current and were built by different rules.
     pub fn fingerprint(&self) -> String {
@@ -91,11 +91,11 @@ impl Chunking {
 
     /// Split a file's text.
     ///
-    /// Satisfies `[R-INDEX-010]` by depending on nothing but the text and
-    /// these parameters; `[R-INDEX-011]` by carrying the path, the byte
-    /// range, and the line range; `[R-INDEX-012]` through the overlap;
-    /// `[R-INDEX-013]` by never emitting a chunk over the limit; and
-    /// `[R-INDEX-014]` by cutting only on line boundaries, except for a line
+    /// Satisfies `[REQ-1409, REQ-1410]` by depending on nothing but the text and
+    /// these parameters; `[REQ-1411]` by carrying the path, the byte
+    /// range, and the line range; `[REQ-1412]` through the overlap;
+    /// `[REQ-1413]` by never emitting a chunk over the limit; and
+    /// `[REQ-1414, REQ-1415, REQ-1416, REQ-1417]` by cutting only on line boundaries, except for a line
     /// that is longer than the whole limit, which is cut and reported.
     ///
     /// # Errors
@@ -160,7 +160,7 @@ impl Chunking {
             let length = text[line.start..line.end].chars().count();
 
             // A line longer than the whole limit cannot go in any chunk
-            // whole, which is the one case [R-INDEX-014] allows a cut inside
+            // whole, which is the one case [REQ-1414, REQ-1415, REQ-1416, REQ-1417] allows a cut inside
             // a line - and requires it to be reported.
             if length > self.max_chars {
                 if let Some((start, end, first, last)) = pending.take() {

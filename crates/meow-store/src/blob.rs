@@ -36,12 +36,12 @@ impl std::fmt::Display for BlobHash {
 impl Store {
     /// Store a payload and return its address.
     ///
-    /// Satisfies `[R-STORE-010]`, `[R-STORE-011]`, and `[R-STORE-012]`.
+    /// Satisfies `[REQ-2613, REQ-2614, REQ-2615, REQ-2616]`, `[REQ-2617, REQ-2618]`, and `[REQ-2619, REQ-2620]`.
     /// Writing a payload that is already present stores no second copy and
     /// does not fail; it raises the reference count, because a second referent
     /// now exists.
     ///
-    /// `[R-STORE-010]` permits inlining a payload under
+    /// `[REQ-2613, REQ-2614, REQ-2615, REQ-2616]` permits inlining a payload under
     /// [`crate::INLINE_LIMIT`] rather than putting it in the blob table, and
     /// this store does not take that permission: every payload goes in the
     /// same table. A `BLOB` column already stores small values in the row
@@ -60,7 +60,7 @@ impl Store {
 
     /// Read a payload back.
     ///
-    /// Satisfies `[R-STORE-013]`: a hash with no row is an error naming the
+    /// Satisfies `[REQ-2621, REQ-2622]`: a hash with no row is an error naming the
     /// hash. Returning empty content would let a lost payload read as an empty
     /// one, which is the failure a content-addressed store exists to prevent.
     pub fn get_blob(&self, hash: &BlobHash) -> Result<Vec<u8>> {
@@ -101,7 +101,7 @@ impl Store {
 
     /// Drop one referent, deleting the payload when the last one goes.
     ///
-    /// Satisfies `[R-STORE-012]`.
+    /// Satisfies `[REQ-2619, REQ-2620]`.
     pub fn release_blob(&self, hash: &BlobHash) -> Result<()> {
         let conn = self.conn();
         conn.execute(
@@ -117,7 +117,7 @@ impl Store {
 
     /// Store many payloads, committing in batches.
     ///
-    /// Satisfies `[R-STORE-024]`: an index build writes tens of thousands of
+    /// Satisfies `[REQ-2629, REQ-2630]`: an index build writes tens of thousands of
     /// chunks, and holding the one write lock for the whole of it would block
     /// every agent run in the workspace. Committing every [`crate::BULK_BATCH`]
     /// rows lets another writer in between batches.

@@ -82,13 +82,13 @@ stream and the export say the same thing.
 
 ## Documentation
 
-[`docs/vision.md`](docs/vision.md) is what meowg1k is and who it is for.
-[`docs/philosophy.md`](docs/philosophy.md) is the eleven principles behind it,
-and says plainly where the code does not yet meet one.
+[`project/vision.md`](project/vision.md) is what meowg1k is, who it is for, and the
+eleven goals it's held to, with where the code doesn't yet meet one.
 
-[`docs/`](docs/README.md) has three kinds of document: the specifications in
-`docs/spec/` are normative and every behaviour traces to one, `docs/design/`
-records the decisions and the reasoning, and `.meow/` in this repository is
+[`project/`](project/README.md) holds the record: the specifications in `project/specs/`
+are normative, every behaviour traces to a requirement in `project/requirements/`,
+the decisions and their alternatives are in `project/adrs/`, and `.meow/` in this
+repository is
 meowg1k configured to work on itself - the worked example that has to keep
 working.
 
@@ -96,7 +96,7 @@ working.
 
 [`CONTRIBUTING.md`](CONTRIBUTING.md) has the workflow. In short: `mise install`,
 then `mise run all` before you open a pull request, and a requirement in
-`docs/spec/` before you write behaviour that none of them describes.
+`project/requirements/` before you write behaviour that none of them describes.
 
 ## Versions
 

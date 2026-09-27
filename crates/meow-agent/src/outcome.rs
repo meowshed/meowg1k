@@ -19,7 +19,7 @@ pub struct Step {
 
 /// What a run produced.
 ///
-/// `[R-AGENT-001]`: every run that starts returns one of these. v0.2.x
+/// `[REQ-1000]`: every run that starts returns one of these. v0.2.x
 /// returned a bare string, so a caller could not tell "the model finished"
 /// from "we exhausted max_iterations" from "the model returned empty text" -
 /// and the last two arrived as the same error, with the transcript discarded.
@@ -29,7 +29,7 @@ pub struct Outcome {
     pub stop: StopReason,
     /// What bound it: which budget axis, which tool, which rule.
     ///
-    /// `[R-AGENT-004]`. Without it, `budget` says a run stopped and not what
+    /// `[REQ-1003]`. Without it, `budget` says a run stopped and not what
     /// to raise to let it finish.
     pub detail: Option<String>,
     /// The model's last text, whatever the stop reason.

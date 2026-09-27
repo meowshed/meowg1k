@@ -3,7 +3,7 @@
 
 //! One event stream, for every renderer and for the export.
 //!
-//! `[R-TUI-032]` asks the live stream and `meow session export --format json`
+//! `[REQ-2826, REQ-2827]` asks the live stream and `meow session export --format json`
 //! to share one schema and one version, and every persisted kind to serialise
 //! identically in both. The cheapest way to promise that and keep it is to
 //! make the live stream a superset of the log rather than a parallel
@@ -18,7 +18,7 @@ use crate::usage::Usage;
 
 /// The schema version every stream begins with.
 ///
-/// One number for the live stream and the export together, by `[R-TUI-032]`.
+/// One number for the live stream and the export together, by `[REQ-2826, REQ-2827]`.
 /// It goes up when a kind is added, removed, or has a field change meaning -
 /// never for a field added at the end, which a reader that ignores unknown
 /// keys survives.
@@ -30,7 +30,7 @@ pub const SCHEMA_VERSION: u32 = 1;
 pub enum ViewEvent {
     /// Something the session log also holds.
     ///
-    /// `[R-TUI-034]`: an export emits only these, and the live stream can emit
+    /// `[REQ-2830, REQ-2831]`: an export emits only these, and the live stream can emit
     /// all of them, so neither can carry a kind the other cannot.
     Logged(EventKind),
     /// Something that exists only while a run is in flight.
@@ -62,7 +62,7 @@ impl ViewEvent {
 pub enum LiveKind {
     /// The version of everything that follows.
     ///
-    /// `[R-TUI-031]`: first, always, so a reader knows what it is parsing
+    /// `[REQ-2825]`: first, always, so a reader knows what it is parsing
     /// before it has to parse anything.
     Schema {
         /// See [`SCHEMA_VERSION`].
@@ -116,7 +116,7 @@ pub enum LiveKind {
     Output(Output),
     /// Where the run has got to.
     ///
-    /// `[R-TUI-012]`: the live region shows the current tool, the elapsed
+    /// `[REQ-2810, REQ-2811]`: the live region shows the current tool, the elapsed
     /// time, the step count, and the budget consumed, and this is where all
     /// four come from.
     Progress {
@@ -182,7 +182,7 @@ impl LiveKind {
 
 /// What a handler said.
 ///
-/// `[R-TUI-040]` fixes this set at ten, and `[R-TUI-041]` is why there is
+/// `[REQ-2832]` fixes this set at ten, and `[REQ-2833]` is why there is
 /// nothing here that positions a cursor, draws a frame, or paginates: a script
 /// says what a thing is and each renderer decides how it looks. v0.2.x had
 /// twenty-two layout builtins, which put presentation in userland where it

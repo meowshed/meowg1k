@@ -80,7 +80,7 @@ impl<T: Transport> Anthropic<T> {
             match m.role {
                 Role::System => {
                     // A cache hint becomes an explicit breakpoint, which is
-                    // what [R-LLM-015] means by translating it. The content is
+                    // what [REQ-1613, REQ-1614, REQ-1615, REQ-1616] means by translating it. The content is
                     // untouched either way.
                     let mut block = json!({ "type": "text", "text": m.content });
                     if m.cache_hint {
@@ -100,7 +100,7 @@ impl<T: Transport> Anthropic<T> {
                 Role::Assistant => {
                     let mut blocks = Vec::new();
                     // Thinking goes back first, in the order the API expects.
-                    // [R-LLM-024] keeps it on the message for exactly this.
+                    // [REQ-1622, REQ-1623] keeps it on the message for exactly this.
                     if let Some(t) = &m.thinking {
                         blocks.push(json!({ "type": "thinking", "thinking": t }));
                     }
@@ -156,7 +156,7 @@ impl<T: Transport> Anthropic<T> {
     /// Turn a status and a body into a classified error.
     ///
     /// The quota signal is the API's own `error.type`, never text matched out
-    /// of a message. `[R-LLM-037]`: matching text is what v0.2.x did, and it
+    /// of a message. `[REQ-1634, REQ-1635]`: matching text is what v0.2.x did, and it
     /// broke whenever a provider reworded an error.
     fn error_from(&self, response: &HttpResponse) -> LlmError {
         let parsed: Option<Value> = serde_json::from_str(&response.body).ok();
@@ -205,7 +205,7 @@ impl<T: Transport> Anthropic<T> {
                 }
                 Some("tool_use") => {
                     let id = block["id"].as_str().unwrap_or_default().to_owned();
-                    // [R-LLM-014]: a repeated identifier is one call, not two.
+                    // [REQ-1612]: a repeated identifier is one call, not two.
                     // v0.2.x deduplicated only when sessions were on, so with
                     // them off the same tool ran twice.
                     if calls.iter().any(|c| c.id == id) {
@@ -240,8 +240,8 @@ impl<T: Transport> Anthropic<T> {
 
 /// Read the usage block.
 ///
-/// `[R-LLM-040]`: cached tokens stay absent when the provider does not report
-/// them, never zero. `[R-LLM-041]`: no usage block at all is `None`, which is
+/// `[REQ-1637, REQ-1638, REQ-1639]`: cached tokens stay absent when the provider does not report
+/// them, never zero. `[REQ-1640]`: no usage block at all is `None`, which is
 /// a different fact from a block of zeroes.
 fn usage_from(v: Option<&Value>) -> Option<Usage> {
     let u = v?;
@@ -267,7 +267,7 @@ impl<T: Transport> Provider for Anthropic<T> {
             streaming: true,
             tools: true,
             // Anthropic has no schema parameter, so the schema is asked for in
-            // the prompt and checked here. [R-LLM-050] makes that a way of
+            // the prompt and checked here. [REQ-1641, REQ-1642, REQ-1643] makes that a way of
             // satisfying the request, not a reason to refuse it.
             structured: Structured::Emulated,
             embeddings: false,
@@ -283,7 +283,7 @@ impl<T: Transport> Provider for Anthropic<T> {
         let mut request = request.clone();
         let mut last_error = String::new();
 
-        // [R-LLM-051]: ask again with the validation error in the follow-up,
+        // [REQ-1644, REQ-1645]: ask again with the validation error in the follow-up,
         // so the model is told what was wrong rather than guessing.
         for attempt in 1..=schema_attempts(&request) {
             if attempt > 1 {
@@ -360,7 +360,7 @@ impl<T: Transport> Provider for Anthropic<T> {
             };
 
             for event in events_from(&v, &mut open) {
-                // [R-LLM-023]: the consumer's error aborts the request and
+                // [REQ-1620, REQ-1621]: the consumer's error aborts the request and
                 // reaches the caller unchanged.
                 sink.event(event.clone())?;
                 agg.push(event);

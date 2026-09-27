@@ -372,7 +372,7 @@ async fn fails(runtime: &Arc<Runtime>, name: &str) -> String {
         .to_string()
 }
 
-/// [R-STAR-020] the context has exactly six members and `cancelled()`
+/// [REQ-2445] the context has exactly six members and `cancelled()`
 #[tokio::test(flavor = "multi_thread")]
 async fn the_context_has_six_members_and_cancelled() {
     let h = harness(
@@ -400,7 +400,7 @@ meow.command(meow.tool(name = "probe", about = "look at ctx", run = handler))
     );
 }
 
-/// [R-STAR-020] each member does what it says
+/// [REQ-2445] each member does what it says
 #[tokio::test(flavor = "multi_thread")]
 async fn every_context_member_works() {
     let h = harness(
@@ -446,7 +446,7 @@ meow.command(meow.tool(
     assert!(Path::new(&returned).is_absolute(), "{returned}");
 }
 
-/// [R-STAR-021] a capability is reached with `load`, not off the context
+/// [REQ-2446] a capability is reached with `load`, not off the context
 #[tokio::test(flavor = "multi_thread")]
 async fn a_capability_is_loaded_rather_than_a_context_member() {
     let h = harness(
@@ -471,7 +471,7 @@ meow.command(meow.tool(name = "probe", about = "use a module", run = handler))
     assert_eq!(h.out.lines(), ["write: c.star"]);
 }
 
-/// [R-STAR-030] a declaration inside a handler fails
+/// [REQ-2475, REQ-2476] a declaration inside a handler fails
 #[tokio::test(flavor = "multi_thread")]
 async fn a_handler_may_not_declare_anything() {
     let h = harness(
@@ -499,7 +499,7 @@ meow.command(meow.tool(name = "probe", about = "declare late", run = handler))
     assert!(h.runtime.registry().provider("sneaky").is_none());
 }
 
-/// [R-STAR-011] a tool inside an agent loop sees the same modules, behaving the
+/// [REQ-2416] a tool inside an agent loop sees the same modules, behaving the
 /// same way, as a handler called from the command line
 #[tokio::test(flavor = "multi_thread")]
 async fn a_tool_in_an_agent_loop_sees_the_same_modules() {
@@ -554,7 +554,7 @@ meow.command(meow.agent(
     assert_eq!(looped.provider.tool_names_offered(), ["shorten"]);
 }
 
-/// [R-STAR-041] an agent goes in another agent's tools list, and is offered to
+/// [REQ-2490, REQ-2491] an agent goes in another agent's tools list, and is offered to
 /// the model the same way a tool is
 #[tokio::test(flavor = "multi_thread")]
 async fn an_agent_is_usable_where_a_tool_is() {
@@ -586,7 +586,7 @@ meow.command(meow.agent(
     );
 }
 
-/// [R-STAR-042] a run returns the whole outcome, not a bare string
+/// [REQ-2492] a run returns the whole outcome, not a bare string
 #[tokio::test(flavor = "multi_thread")]
 async fn a_run_returns_text_stop_and_usage() {
     let h = harness(
@@ -628,7 +628,7 @@ meow.command(meow.tool(name = "probe", about = "run an agent", run = handler))
     );
 }
 
-/// [R-STAR-043] `call` builds an invocation, and `meow.parallel` takes a list
+/// [REQ-2493, REQ-2494] `call` builds an invocation, and `meow.parallel` takes a list
 /// of them, in order
 #[tokio::test(flavor = "multi_thread")]
 async fn parallel_takes_invocations_and_keeps_their_order() {
@@ -656,7 +656,7 @@ meow.command(meow.tool(name = "probe", about = "fan out", run = handler))
     assert_eq!(h.out.lines(), ["write: first", "write: second"]);
 }
 
-/// [R-STAR-044] a Starlark function is refused, with the reason
+/// [REQ-2495] a Starlark function is refused, with the reason
 #[tokio::test(flavor = "multi_thread")]
 async fn parallel_refuses_a_starlark_function() {
     let h = harness(
@@ -686,7 +686,7 @@ meow.command(meow.tool(name = "probe", about = "fan out wrongly", run = handler)
     );
 }
 
-/// [R-STAR-081] a builtin that runs an agent blocks and returns a value, with
+/// [REQ-2520, REQ-2521] a builtin that runs an agent blocks and returns a value, with
 /// no future or callback in sight
 #[tokio::test(flavor = "multi_thread")]
 async fn a_blocking_builtin_returns_a_value_not_a_future() {
@@ -749,7 +749,7 @@ meow.command(meow.tool(name = "probe", about = "call a tool", run = handler))
     assert_eq!(h.out.lines(), ["write: 42"]);
 }
 
-/// [R-TUI-050] ctx.ask has exactly text, confirm, and select
+/// [REQ-2835] ctx.ask has exactly text, confirm, and select
 #[tokio::test(flavor = "multi_thread")]
 async fn ctx_ask_has_exactly_three_calls() {
     let h = harness(
@@ -772,7 +772,7 @@ meow.command(meow.tool(name = "probe", about = "look at ask", run = handler))
     assert_eq!(h.out.lines(), ["write: confirm,select,text"]);
 }
 
-/// [R-TUI-041] ctx.out has exactly the ten calls the spec fixes it at
+/// [REQ-2833] ctx.out has exactly the ten calls the spec fixes it at
 #[tokio::test(flavor = "multi_thread")]
 async fn ctx_out_has_exactly_ten_calls() {
     let h = harness(
@@ -1010,7 +1010,7 @@ meow.command(meow.tool(name = "probe", about = "hang", run = handler))
     assert!(error.contains("did not finish in 1 seconds"), "{error}");
 }
 
-/// [R-STAR-084] a capability module is loadable during declaration and
+/// [REQ-2524, REQ-2525] a capability module is loadable during declaration and
 /// refuses to be called there
 #[tokio::test(flavor = "multi_thread")]
 async fn fs_and_shell_refuse_to_run_during_declaration() {
@@ -1247,7 +1247,7 @@ meow.command(meow.tool(name = "probe", about = "empty message", run = handler))
     assert!(error.contains("needs a message"), "{error}");
 }
 
-/// [R-STAR-012] `re` and `time` are in the table and resolve like any module
+/// [REQ-2417, REQ-2418] `re` and `time` are in the table and resolve like any module
 #[tokio::test(flavor = "multi_thread")]
 async fn re_and_time_resolve_from_the_table() {
     let h = harness(
@@ -1278,7 +1278,7 @@ meow.command(meow.tool(name = "probe", about = "load both", run = handler))
     );
 }
 
-/// [R-STAR-013] a match is a list of groups, and a group that did not
+/// [REQ-2419, REQ-2420, REQ-2421, REQ-2422, REQ-2423] a match is a list of groups, and a group that did not
 /// participate is `None`
 #[tokio::test(flavor = "multi_thread")]
 async fn match_returns_groups_and_none_for_the_ones_that_did_not_take_part() {
@@ -1313,7 +1313,7 @@ meow.command(meow.tool(name = "probe", about = "match", run = handler))
     );
 }
 
-/// [R-STAR-013] no match is `None`, which is how it is told from matching empty
+/// [REQ-2419, REQ-2420, REQ-2421, REQ-2422, REQ-2423] no match is `None`, which is how it is told from matching empty
 #[tokio::test(flavor = "multi_thread")]
 async fn no_match_is_none_and_an_empty_match_is_a_list() {
     let h = harness(
@@ -1344,7 +1344,7 @@ meow.command(meow.tool(name = "probe", about = "match", run = handler))
     );
 }
 
-/// [R-STAR-013] `find_all`, `replace`, and `split` over the same pattern
+/// [REQ-2419, REQ-2420, REQ-2421, REQ-2422, REQ-2423] `find_all`, `replace`, and `split` over the same pattern
 #[tokio::test(flavor = "multi_thread")]
 async fn find_all_replace_and_split_agree_about_what_matched() {
     let h = harness(
@@ -1382,7 +1382,7 @@ meow.command(meow.tool(name = "probe", about = "the rest", run = handler))
     );
 }
 
-/// [R-STAR-013] `limit` bounds `find_all`, which a pattern matching empty needs
+/// [REQ-2419, REQ-2420, REQ-2421, REQ-2422, REQ-2423] `limit` bounds `find_all`, which a pattern matching empty needs
 #[tokio::test(flavor = "multi_thread")]
 async fn find_all_stops_at_the_limit_it_was_given() {
     let h = harness(
@@ -1413,7 +1413,7 @@ meow.command(meow.tool(name = "probe", about = "limit", run = handler))
     );
 }
 
-/// [R-STAR-013] a pattern that will not compile fails at the call, and says why
+/// [REQ-2419, REQ-2420, REQ-2421, REQ-2422, REQ-2423] a pattern that will not compile fails at the call, and says why
 #[tokio::test(flavor = "multi_thread")]
 async fn a_pattern_that_does_not_compile_names_itself_and_the_reason() {
     let h = harness(
@@ -1441,7 +1441,7 @@ meow.command(meow.tool(name = "probe", about = "bad pattern", run = handler))
     );
 }
 
-/// [R-STAR-014] `time` round-trips an instant through text without moving it
+/// [REQ-2424, REQ-2425, REQ-2426] `time` round-trips an instant through text without moving it
 #[tokio::test(flavor = "multi_thread")]
 async fn parse_and_format_round_trip_in_utc() {
     let h = harness(
@@ -1478,7 +1478,7 @@ meow.command(meow.tool(name = "probe", about = "time", run = handler))
     );
 }
 
-/// [R-STAR-014] `since` measures forwards and backwards from an instant
+/// [REQ-2424, REQ-2425, REQ-2426] `since` measures forwards and backwards from an instant
 #[tokio::test(flavor = "multi_thread")]
 async fn since_is_negative_for_an_instant_that_has_not_happened() {
     let h = harness(
@@ -1510,7 +1510,7 @@ meow.command(meow.tool(name = "probe", about = "since", run = handler))
     );
 }
 
-/// [R-STAR-014] text that is not a timestamp fails at the call, and says why
+/// [REQ-2424, REQ-2425, REQ-2426] text that is not a timestamp fails at the call, and says why
 #[tokio::test(flavor = "multi_thread")]
 async fn text_that_is_not_a_timestamp_names_itself() {
     let h = harness(
@@ -1538,7 +1538,7 @@ meow.command(meow.tool(name = "probe", about = "bad time", run = handler))
     );
 }
 
-/// [R-STAR-084] neither module may be called while `.meow/` is being evaluated
+/// [REQ-2524, REQ-2525] neither module may be called while `.meow/` is being evaluated
 #[tokio::test(flavor = "multi_thread")]
 async fn re_and_time_are_refused_during_declaration() {
     for (module, call) in [("re", r#"match("a", "a")"#), ("time", "now()")] {
@@ -1564,7 +1564,7 @@ async fn re_and_time_are_refused_during_declaration() {
     }
 }
 
-/// [R-STAR-015] the four encoders are in the table and resolve
+/// [REQ-2427, REQ-2428, REQ-2429, REQ-2430] the four encoders are in the table and resolve
 #[tokio::test(flavor = "multi_thread")]
 async fn the_encoders_resolve_from_the_table() {
     let h = harness(
@@ -1598,7 +1598,7 @@ meow.command(meow.tool(name = "probe", about = "load them", run = handler))
     );
 }
 
-/// [R-STAR-016] the same data through three formats is the same value
+/// [REQ-2431, REQ-2432, REQ-2433] the same data through three formats is the same value
 #[tokio::test(flavor = "multi_thread")]
 async fn yaml_toml_and_json_agree_about_the_same_data() {
     let h = harness(
@@ -1639,7 +1639,7 @@ meow.command(meow.tool(name = "probe", about = "three formats", run = handler))
     );
 }
 
-/// [R-STAR-016] a value read as one format encodes as another
+/// [REQ-2431, REQ-2432, REQ-2433] a value read as one format encodes as another
 #[tokio::test(flavor = "multi_thread")]
 async fn a_document_read_as_yaml_writes_as_toml() {
     let h = harness(
@@ -1670,7 +1670,7 @@ meow.command(meow.tool(name = "probe", about = "cross", run = handler))
     );
 }
 
-/// [R-STAR-015] TOML's top level is a table, and anything else is refused
+/// [REQ-2427, REQ-2428, REQ-2429, REQ-2430] TOML's top level is a table, and anything else is refused
 #[tokio::test(flavor = "multi_thread")]
 async fn toml_refuses_a_top_level_that_is_not_a_table() {
     let h = harness(
@@ -1698,7 +1698,7 @@ meow.command(meow.tool(name = "probe", about = "bad toml", run = handler))
     );
 }
 
-/// [R-STAR-015] text the format rejects fails at the call, with the reason
+/// [REQ-2427, REQ-2428, REQ-2429, REQ-2430] text the format rejects fails at the call, with the reason
 #[tokio::test(flavor = "multi_thread")]
 async fn text_the_format_rejects_fails_rather_than_returning_a_partial_value() {
     for (module, bad) in [
@@ -1731,7 +1731,7 @@ meow.command(meow.tool(name = "probe", about = "bad input", run = handler))
     }
 }
 
-/// [R-STAR-017] a header makes rows dicts, and no header makes them lists
+/// [REQ-2434, REQ-2435, REQ-2436] a header makes rows dicts, and no header makes them lists
 #[tokio::test(flavor = "multi_thread")]
 async fn csv_shape_follows_whether_the_first_record_names_the_columns() {
     let h = harness(
@@ -1765,7 +1765,7 @@ meow.command(meow.tool(name = "probe", about = "csv", run = handler))
     );
 }
 
-/// [R-STAR-017] a record that disagrees with the header names its own number
+/// [REQ-2434, REQ-2435, REQ-2436] a record that disagrees with the header names its own number
 #[tokio::test(flavor = "multi_thread")]
 async fn a_short_csv_record_names_which_record_it_was() {
     let h = harness(
@@ -1793,7 +1793,7 @@ meow.command(meow.tool(name = "probe", about = "ragged", run = handler))
     );
 }
 
-/// [R-STAR-017] `encode` takes either shape back
+/// [REQ-2434, REQ-2435, REQ-2436] `encode` takes either shape back
 #[tokio::test(flavor = "multi_thread")]
 async fn csv_encode_round_trips_both_shapes() {
     let h = harness(
@@ -1824,7 +1824,7 @@ meow.command(meow.tool(name = "probe", about = "round trip", run = handler))
     );
 }
 
-/// [R-STAR-018] an element is a tag, attributes, ordered children, and text
+/// [REQ-2437, REQ-2438, REQ-2439, REQ-2440] an element is a tag, attributes, ordered children, and text
 #[tokio::test(flavor = "multi_thread")]
 async fn xml_parse_keeps_what_a_dictionary_would_lose() {
     let h = harness(
@@ -1863,7 +1863,7 @@ meow.command(meow.tool(name = "probe", about = "xml", run = handler))
     );
 }
 
-/// [R-STAR-018] `encode` escapes, so text cannot close a tag nobody opened
+/// [REQ-2437, REQ-2438, REQ-2439, REQ-2440] `encode` escapes, so text cannot close a tag nobody opened
 #[tokio::test(flavor = "multi_thread")]
 async fn xml_encode_escapes_text_and_attributes() {
     let h = harness(
@@ -1902,7 +1902,7 @@ meow.command(meow.tool(name = "probe", about = "escape", run = handler))
     );
 }
 
-/// [R-STAR-018] a tree survives the round trip
+/// [REQ-2437, REQ-2438, REQ-2439, REQ-2440] a tree survives the round trip
 #[tokio::test(flavor = "multi_thread")]
 async fn xml_round_trips_a_tree() {
     let h = harness(
@@ -1933,7 +1933,7 @@ meow.command(meow.tool(name = "probe", about = "round trip", run = handler))
     );
 }
 
-/// [R-STAR-084] no encoder may be called while `.meow/` is being evaluated
+/// [REQ-2524, REQ-2525] no encoder may be called while `.meow/` is being evaluated
 #[tokio::test(flavor = "multi_thread")]
 async fn the_encoders_are_refused_during_declaration() {
     for module in ["yaml", "toml", "csv", "xml"] {
@@ -1958,7 +1958,7 @@ parse("")
     }
 }
 
-/// [R-STAR-027] what a handler put in is what it gets back, of the same type
+/// [REQ-2466, REQ-2467] what a handler put in is what it gets back, of the same type
 #[tokio::test(flavor = "multi_thread")]
 async fn a_value_survives_the_store_unchanged() {
     let h = harness(
@@ -2005,7 +2005,7 @@ meow.command(meow.tool(name = "probe", about = "store", run = handler))
     );
 }
 
-/// [R-STAR-027] an absent key gives the caller's default, and `None` for none
+/// [REQ-2466, REQ-2467] an absent key gives the caller's default, and `None` for none
 #[tokio::test(flavor = "multi_thread")]
 async fn an_absent_key_gives_the_default_the_caller_named() {
     let h = harness(
@@ -2040,7 +2040,7 @@ meow.command(meow.tool(name = "probe", about = "defaults", run = handler))
     );
 }
 
-/// [R-STAR-028] `delete` says whether the key was there, and never fails
+/// [REQ-2468, REQ-2469, REQ-2470, REQ-2471] `delete` says whether the key was there, and never fails
 #[tokio::test(flavor = "multi_thread")]
 async fn delete_says_whether_the_key_was_there() {
     let h = harness(
@@ -2074,7 +2074,7 @@ meow.command(meow.tool(name = "probe", about = "delete", run = handler))
     );
 }
 
-/// [R-STAR-028] `keys` is sorted, and takes a prefix
+/// [REQ-2468, REQ-2469, REQ-2470, REQ-2471] `keys` is sorted, and takes a prefix
 #[tokio::test(flavor = "multi_thread")]
 async fn keys_are_sorted_and_a_prefix_narrows_them() {
     let h = harness(
@@ -2112,7 +2112,7 @@ meow.command(meow.tool(name = "probe", about = "keys", run = handler))
     );
 }
 
-/// [R-STAR-084] the store may not be reached while `.meow/` is being evaluated
+/// [REQ-2524, REQ-2525] the store may not be reached while `.meow/` is being evaluated
 #[tokio::test(flavor = "multi_thread")]
 async fn the_store_is_refused_during_declaration() {
     let dir = tempfile::tempdir().unwrap();
@@ -2135,7 +2135,7 @@ get("anything")
 
 /// A server on a loopback port, scripted with what to answer.
 ///
-/// A real socket rather than a mocked client: `[R-STAR-023]` is a claim about
+/// A real socket rather than a mocked client: `[REQ-2452, REQ-2453, REQ-2454, REQ-2455]` is a claim about
 /// what comes back from a server, and a fake that returns a struct would be
 /// asserting that this test builds the struct correctly.
 struct Server {
@@ -2202,7 +2202,7 @@ impl Drop for Server {
     }
 }
 
-/// [R-STAR-022] a response carries the status, the headers, and the body
+/// [REQ-2447, REQ-2448, REQ-2449, REQ-2450, REQ-2451] a response carries the status, the headers, and the body
 #[tokio::test(flavor = "multi_thread")]
 async fn a_response_carries_what_the_server_sent() {
     let server = Server::answering(200, r#"{"ok": true}"#);
@@ -2236,7 +2236,7 @@ meow.command(meow.tool(name = "probe", about = "get", run = handler))
     );
 }
 
-/// [R-STAR-023] a status the server chose is an answer, not a failure
+/// [REQ-2452, REQ-2453, REQ-2454, REQ-2455] a status the server chose is an answer, not a failure
 #[tokio::test(flavor = "multi_thread")]
 async fn a_404_is_a_response_rather_than_an_error() {
     let server = Server::answering(404, "nothing here");
@@ -2269,7 +2269,7 @@ meow.command(meow.tool(name = "probe", about = "404", run = handler))
     );
 }
 
-/// [R-STAR-023] a request that never reached a response does fail
+/// [REQ-2452, REQ-2453, REQ-2454, REQ-2455] a request that never reached a response does fail
 #[tokio::test(flavor = "multi_thread")]
 async fn a_connection_that_is_refused_fails() {
     // A host that cannot resolve, rather than a port nothing is listening on.
@@ -2301,7 +2301,7 @@ meow.command(meow.tool(name = "probe", about = "refused", run = handler))
     );
 }
 
-/// [R-STAR-022] a dict body goes as JSON, and a string goes as it is
+/// [REQ-2447, REQ-2448, REQ-2449, REQ-2450, REQ-2451] a dict body goes as JSON, and a string goes as it is
 #[tokio::test(flavor = "multi_thread")]
 async fn a_dict_body_is_json_and_a_string_body_is_itself() {
     let server = Server::answering(201, "made");
@@ -2346,7 +2346,7 @@ meow.command(meow.tool(name = "probe", about = "bodies", run = handler))
     );
 }
 
-/// [R-STAR-022] `max_bytes` cuts the body rather than failing
+/// [REQ-2447, REQ-2448, REQ-2449, REQ-2450, REQ-2451] `max_bytes` cuts the body rather than failing
 #[tokio::test(flavor = "multi_thread")]
 async fn max_bytes_cuts_a_body_that_is_too_long() {
     let server = Server::answering(200, "0123456789");
@@ -2378,7 +2378,7 @@ meow.command(meow.tool(name = "probe", about = "cap", run = handler))
     );
 }
 
-/// [R-STAR-022] a scheme this module cannot speak is refused before the call
+/// [REQ-2447, REQ-2448, REQ-2449, REQ-2450, REQ-2451] a scheme this module cannot speak is refused before the call
 #[tokio::test(flavor = "multi_thread")]
 async fn a_scheme_that_is_not_http_is_refused() {
     let h = harness(
@@ -2405,7 +2405,7 @@ meow.command(meow.tool(name = "probe", about = "scheme", run = handler))
     );
 }
 
-/// [R-STAR-084] the network may not be reached while `.meow/` is evaluated
+/// [REQ-2524, REQ-2525] the network may not be reached while `.meow/` is evaluated
 #[tokio::test(flavor = "multi_thread")]
 async fn http_is_refused_during_declaration() {
     let dir = tempfile::tempdir().unwrap();
@@ -2426,7 +2426,7 @@ get("http://example.com/")
     );
 }
 
-/// [R-STAR-019] `search.text` reports the path and the line of every hit
+/// [REQ-2441, REQ-2442, REQ-2443, REQ-2444] `search.text` reports the path and the line of every hit
 #[tokio::test(flavor = "multi_thread")]
 async fn search_text_reports_where_each_hit_was() {
     let h = harness(
@@ -2462,7 +2462,7 @@ meow.command(meow.tool(name = "probe", about = "text", run = handler))
     );
 }
 
-/// [R-STAR-019] the same call takes a regular expression when asked
+/// [REQ-2441, REQ-2442, REQ-2443, REQ-2444] the same call takes a regular expression when asked
 #[tokio::test(flavor = "multi_thread")]
 async fn search_text_takes_a_regular_expression_when_asked() {
     let h = harness(
@@ -2492,7 +2492,7 @@ meow.command(meow.tool(name = "probe", about = "regex", run = handler))
     );
 }
 
-/// [R-STAR-019] `search.files` answers with paths and nothing else
+/// [REQ-2441, REQ-2442, REQ-2443, REQ-2444] `search.files` answers with paths and nothing else
 #[tokio::test(flavor = "multi_thread")]
 async fn search_files_answers_with_paths() {
     let h = harness(
@@ -2523,7 +2523,7 @@ meow.command(meow.tool(name = "probe", about = "files", run = handler))
     assert_eq!(h.index.calls(), ["files src/**/*.rs 500"]);
 }
 
-/// [R-STAR-024] `build` and `update` report what changed as counts
+/// [REQ-2456, REQ-2457, REQ-2458] `build` and `update` report what changed as counts
 #[tokio::test(flavor = "multi_thread")]
 async fn build_and_update_report_counts_rather_than_a_sentence() {
     let h = harness(
@@ -2561,7 +2561,7 @@ meow.command(meow.tool(name = "probe", about = "index", run = handler))
     );
 }
 
-/// [R-STAR-024] `stats` says how much is indexed and by which model
+/// [REQ-2456, REQ-2457, REQ-2458] `stats` says how much is indexed and by which model
 #[tokio::test(flavor = "multi_thread")]
 async fn stats_says_how_much_is_indexed_and_by_what() {
     let h = harness(
@@ -2588,7 +2588,7 @@ meow.command(meow.tool(name = "probe", about = "stats", run = handler))
     assert_eq!(h.out.lines(), ["write: 39/40 by embed"]);
 }
 
-/// [R-STAR-024] `query` carries the floor, and `search.code` is it at zero
+/// [REQ-2456, REQ-2457, REQ-2458] `query` carries the floor, and `search.code` is it at zero
 #[tokio::test(flavor = "multi_thread")]
 async fn query_carries_the_floor_and_code_is_the_same_call_without_one() {
     let h = harness(
@@ -2631,7 +2631,7 @@ meow.command(meow.tool(name = "probe", about = "query", run = handler))
     );
 }
 
-/// [R-STAR-025] with no index, every call says so rather than answering
+/// [REQ-2459, REQ-2460, REQ-2461, REQ-2462] with no index, every call says so rather than answering
 #[tokio::test(flavor = "multi_thread")]
 async fn no_index_is_told_apart_from_no_results() {
     for call in ["build()", "update()", "stats()", r#"query("anything")"#] {
@@ -2662,7 +2662,7 @@ meow.command(meow.tool(name = "probe", about = "no index", run = handler))
     }
 }
 
-/// [R-STAR-084] neither module may be called while `.meow/` is being evaluated
+/// [REQ-2524, REQ-2525] neither module may be called while `.meow/` is being evaluated
 #[tokio::test(flavor = "multi_thread")]
 async fn search_and_index_are_refused_during_declaration() {
     for (module, name, call) in [
@@ -2690,7 +2690,7 @@ async fn search_and_index_are_refused_during_declaration() {
     }
 }
 
-/// [R-STAR-029] `path` speaks one separator, and it is `/`
+/// [REQ-2472, REQ-2473, REQ-2474] `path` speaks one separator, and it is `/`
 ///
 /// The native separator is the obvious choice and the wrong one:
 /// `search.files` and `fs.glob` report `/`, so a handler that built a path
@@ -2737,7 +2737,7 @@ meow.command(meow.tool(name = "probe", about = "paths", run = handler))
     );
 }
 
-/// [R-STAR-029] a path given with the native separator is understood
+/// [REQ-2472, REQ-2473, REQ-2474] a path given with the native separator is understood
 #[tokio::test(flavor = "multi_thread")]
 async fn a_path_given_with_a_backslash_is_understood() {
     let h = harness(

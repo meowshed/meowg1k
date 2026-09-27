@@ -18,7 +18,7 @@ use crate::theme::{Role, Theme};
 
 /// How tall the live region is, for the life of the process.
 ///
-/// `[R-TUI-016]`. Fixed, because a region that grows with content reflows the
+/// `[REQ-2817, REQ-2818, REQ-2819, REQ-2820]`. Fixed, because a region that grows with content reflows the
 /// terminal while you are reading it. It does not grow for a prompt either:
 /// the prompt goes into the transcript, which costs no reflow and leaves the
 /// question where somebody can find it after answering.
@@ -39,10 +39,10 @@ struct Live {
 
 /// An inline viewport over the bottom rows of the terminal.
 ///
-/// Satisfies `[R-TUI-010]` by never switching to the alternate screen, and
-/// `[R-TUI-011]` by committing each finalized line into scrollback with
+/// Satisfies `[REQ-2806, REQ-2807]` by never switching to the alternate screen, and
+/// `[REQ-2808, REQ-2809]` by committing each finalized line into scrollback with
 /// `insert_before` and never touching it again. That is also what makes
-/// `[R-TUI-013]`'s second half hold: an exit the process cannot observe still
+/// `[REQ-2812, REQ-2813]`'s second half hold: an exit the process cannot observe still
 /// leaves a valid transcript, because every line above the live region was
 /// already written.
 pub struct Tty<B: Backend>
@@ -54,7 +54,7 @@ where
     live: Live,
     /// Whether a question is waiting for an answer.
     ///
-    /// `[R-TUI-016]`: the live region says so while one is, because the
+    /// `[REQ-2817, REQ-2818, REQ-2819, REQ-2820]`: the live region says so while one is, because the
     /// transcript above has scrolled and a reader needs to know the run is
     /// waiting for them rather than for a model.
     waiting: bool,
@@ -123,7 +123,7 @@ where
 
     /// Put a finalized line into scrollback.
     ///
-    /// `[R-TUI-011]` and `[R-TUI-015]`: a diagnostic from the logging layer
+    /// `[REQ-2808, REQ-2809]` and `[REQ-2815, REQ-2816]`: a diagnostic from the logging layer
     /// comes through here too, which is what keeps it in order with the
     /// transcript instead of tearing through the live region.
     ///
@@ -165,8 +165,8 @@ where
 
     /// Redraw the live region, and only the live region.
     ///
-    /// `[R-TUI-012]`: the current tool, the elapsed time, the step count, and
-    /// the budget consumed. `[R-TUI-014]`: a resize reflows this and nothing
+    /// `[REQ-2810, REQ-2811]`: the current tool, the elapsed time, the step count, and
+    /// the budget consumed. `[REQ-2814]`: a resize reflows this and nothing
     /// above it, because nothing above it is ours any more.
     fn redraw(&mut self) -> std::io::Result<()> {
         if self.finished {
@@ -347,7 +347,7 @@ where
                     self.commit_text(pending.trim_end(), Role::Plain)?;
                 }
 
-                // `[R-TUI-013]`: the live region becomes a final line naming
+                // `[REQ-2812, REQ-2813]`: the live region becomes a final line naming
                 // the stop reason, and that line is committed rather than
                 // drawn, so it survives whatever happens next.
                 let role = if *stop == StopReason::Finished {
@@ -399,7 +399,7 @@ where
     }
 
     fn prompt_open(&mut self, lines: &[String]) -> std::io::Result<()> {
-        // `[R-TUI-060]`: committed, so it appears below everything already in
+        // `[REQ-2838, REQ-2839]`: committed, so it appears below everything already in
         // the transcript and stays there once it is answered. A permission
         // decision that vanishes when the prompt closes cannot be checked
         // afterwards.

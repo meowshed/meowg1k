@@ -11,8 +11,8 @@ use crate::stream::Sink;
 
 /// How a provider satisfies a request for structured output.
 ///
-/// `[R-LLM-001]` asks a provider to declare this rather than simply whether it
-/// supports schemas, because `[R-LLM-050]` says schema support is never
+/// `[REQ-1600, REQ-1601]` asks a provider to declare this rather than simply whether it
+/// supports schemas, because `[REQ-1641, REQ-1642, REQ-1643]` says schema support is never
 /// refused - only satisfied two different ways.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Structured {
@@ -23,14 +23,14 @@ pub enum Structured {
     /// It produces no text, so there is nothing for a schema to describe.
     ///
     /// An embedding-only provider. Saying `Emulated` instead would claim it
-    /// asks for JSON in a prompt it never sends, and `[R-LLM-002]` would then
+    /// asks for JSON in a prompt it never sends, and `[REQ-1602]` would then
     /// accept a schema it cannot satisfy.
     None,
 }
 
 /// What a provider can do.
 ///
-/// `[R-LLM-001]`. Declared up front so that `[R-LLM-002]` can refuse before a
+/// `[REQ-1600, REQ-1601]`. Declared up front so that `[REQ-1602]` can refuse before a
 /// request is sent, rather than after a caller has been billed for finding out.
 #[derive(Debug, Clone, Copy)]
 pub struct Capabilities {
@@ -57,12 +57,12 @@ pub trait Provider: Send + Sync {
     ///
     /// # Errors
     ///
-    /// Any [`LlmError`]. Classified per `[R-LLM-030]`.
+    /// Any [`LlmError`]. Classified per `[REQ-1624]`.
     async fn generate(&self, request: &Request, cancel: &CancellationToken) -> Result<Response>;
 
     /// Ask for an answer, reporting progress as it arrives.
     ///
-    /// The default refuses, which is what `[R-LLM-022]` requires of a provider
+    /// The default refuses, which is what `[REQ-1619]` requires of a provider
     /// with no native streaming endpoint: declaring streaming unsupported is
     /// honest, and synthesising events from a completed response reports
     /// progress that never happened.
@@ -99,7 +99,7 @@ pub trait Provider: Send + Sync {
 
 /// Refuse a request that asks for something the provider did not declare.
 ///
-/// `[R-LLM-002]`: before any request is sent.
+/// `[REQ-1602]`: before any request is sent.
 ///
 /// # Errors
 ///

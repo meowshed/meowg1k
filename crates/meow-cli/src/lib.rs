@@ -90,9 +90,9 @@ pub fn run() -> Ending {
         None => return Ending::Config,
     };
 
-    // `[R-AUTH-030]`: between loading and running, which is the only place it
+    // `[REQ-1222, REQ-1223]`: between loading and running, which is the only place it
     // can go. Earlier and there is nothing to describe; later and the scripts
-    // have already run. Loading reached nothing, by `[R-STAR-084]`, so asking
+    // have already run. Loading reached nothing, by `[REQ-2524, REQ-2525]`, so asking
     // here costs only the question.
     if let Some(ending) = wire::gate_on_trust(&matches, &workspace, &loaded) {
         return ending;

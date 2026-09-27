@@ -19,7 +19,7 @@ fn meow() -> Command {
     Command::new(env!("CARGO_BIN_EXE_meow"))
 }
 
-/// Run `meow`, having first agreed to the workspace - `[R-AUTH-030]`.
+/// Run `meow`, having first agreed to the workspace - `[REQ-1222, REQ-1223]`.
 fn run(dir: &Path, args: &[&str]) -> Output {
     let _ = bare(dir, &["trust"]);
     bare(dir, args)
@@ -120,7 +120,7 @@ meow.provider(name = "anthropic", kind = "anthropic", api_key = "k")
 meow.model(name = "fast", provider = "anthropic", id = "i", context = 1000, max_output = 10)
 "#;
 
-/// [R-PKG-013] update pins, fetch is a no-op after it, and the package loads
+/// [REQ-1811, REQ-1812, REQ-1813] update pins, fetch is a no-op after it, and the package loads
 #[test]
 fn update_then_load_is_the_whole_story() {
     let server = Serving::new(archive(&[(
@@ -164,7 +164,7 @@ load("@acme//models.star", "setup")
     );
 }
 
-/// [R-PKG-020] a workspace that has fetched once loads with no network
+/// [REQ-1814, REQ-1815] a workspace that has fetched once loads with no network
 #[test]
 fn a_fetched_workspace_loads_offline() {
     let server = Serving::new(archive(&[(
@@ -192,7 +192,7 @@ load("@acme//models.star", "setup")
     );
 }
 
-/// [R-PKG-013] `list` says what is declared and whether it is pinned
+/// [REQ-1811, REQ-1812, REQ-1813] `list` says what is declared and whether it is pinned
 #[test]
 fn list_says_what_is_declared_and_what_is_pinned() {
     let server = Serving::new(archive(&[("models.star", PRELUDE)]));
@@ -216,7 +216,7 @@ fn list_says_what_is_declared_and_what_is_pinned() {
     );
 }
 
-/// [R-PKG-032] a package cannot pull in a package the workspace did not declare
+/// [REQ-1823] a package cannot pull in a package the workspace did not declare
 ///
 /// Dependencies are the workspace's to state, so that `meow.lock` is the whole
 /// list of what runs. A package that could name its own would make the
@@ -248,7 +248,7 @@ load("@acme//models.star", "setup")
     );
 }
 
-/// [R-PKG-013] `pkg` in a workspace with no packages says so rather than
+/// [REQ-1811, REQ-1812, REQ-1813] `pkg` in a workspace with no packages says so rather than
 /// failing
 #[test]
 fn a_workspace_with_no_packages_says_so() {

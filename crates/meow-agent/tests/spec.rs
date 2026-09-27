@@ -1,7 +1,7 @@
 // Copyright © 2025 The meowg1k Authors
 // SPDX-License-Identifier: Apache-2.0
 
-//! Every requirement in `docs/spec/agent.md` that M4 covers.
+//! Every requirement in `SPC-1000` that M4 covers.
 //!
 //! Compaction, sub-agents, and concurrency are M6; policy is M5.
 
@@ -172,8 +172,8 @@ async fn run(spec: &AgentSpec, provider: Arc<dyn Provider>) -> meow_agent::Outco
         .await
 }
 
-/// [R-AGENT-001] every run returns an outcome, never an error
-/// [R-AGENT-003] the text survives whatever the stop reason
+/// [REQ-1000] every run returns an outcome, never an error
+/// [REQ-1002] the text survives whatever the stop reason
 #[tokio::test]
 async fn a_budget_stop_keeps_the_text_instead_of_discarding_it() {
     let provider = Scripted::new(vec![
@@ -194,7 +194,7 @@ async fn a_budget_stop_keeps_the_text_instead_of_discarding_it() {
     assert_eq!(outcome.steps.len(), 2, "the transcript survives the stop");
 }
 
-/// [R-AGENT-002] the six stop reasons
+/// [REQ-1001] the six stop reasons
 #[test]
 fn there_are_exactly_six_stop_reasons() {
     let all = [
@@ -216,7 +216,7 @@ fn there_are_exactly_six_stop_reasons() {
     }
 }
 
-/// [R-AGENT-004] the outcome names what bound the run
+/// [REQ-1003] the outcome names what bound the run
 #[tokio::test]
 async fn the_outcome_says_which_axis_bound_it() {
     for (budget, want) in [
@@ -252,7 +252,7 @@ async fn the_outcome_says_which_axis_bound_it() {
     }
 }
 
-/// [R-AGENT-005] a response with no tool calls finishes, even with empty text
+/// [REQ-1004, REQ-1005, REQ-1006] a response with no tool calls finishes, even with empty text
 #[tokio::test]
 async fn an_empty_answer_finishes_and_says_it_was_empty() {
     let outcome = run(&AgentSpec::new("a", "m"), Scripted::new(vec![says("")])).await;
@@ -268,8 +268,8 @@ async fn an_empty_answer_finishes_and_says_it_was_empty() {
     );
 }
 
-/// [R-AGENT-010] four axes
-/// [R-AGENT-012] an unset axis is unbounded, and no budget takes the default
+/// [REQ-1009] four axes
+/// [REQ-1012, REQ-1013] an unset axis is unbounded, and no budget takes the default
 #[test]
 fn an_unset_axis_is_unbounded_and_the_default_is_bounded() {
     let none = Budget::unbounded();
@@ -285,7 +285,7 @@ fn an_unset_axis_is_unbounded_and_the_default_is_bounded() {
     );
 }
 
-/// [R-AGENT-011] the run stops as soon as an axis is reached
+/// [REQ-1010, REQ-1011] the run stops as soon as an axis is reached
 #[test]
 fn a_reached_axis_refuses_the_next_step() {
     let l = Ledger::new(Budget {
@@ -297,8 +297,8 @@ fn a_reached_axis_refuses_the_next_step() {
     assert_eq!(l.reserve_step(), Err(Axis::Steps));
 }
 
-/// [R-AGENT-013] a child's spend reaches its caller
-/// [R-AGENT-014] a child cannot be given more than its caller has left
+/// [REQ-1014] a child's spend reaches its caller
+/// [REQ-1017] a child cannot be given more than its caller has left
 #[test]
 fn a_child_spends_its_callers_budget_and_cannot_exceed_it() {
     let parent = Ledger::new(Budget {
@@ -343,7 +343,7 @@ fn a_child_spends_its_callers_budget_and_cannot_exceed_it() {
     );
 }
 
-/// [R-AGENT-015] the budget is checked before a call, not only after
+/// [REQ-1018] the budget is checked before a call, not only after
 #[tokio::test]
 async fn the_budget_is_checked_before_the_call_not_after_it() {
     let provider = Scripted::new(vec![says("never asked")]);
@@ -363,7 +363,7 @@ async fn the_budget_is_checked_before_the_call_not_after_it() {
     );
 }
 
-/// [R-AGENT-016] the default budget
+/// [REQ-1019] the default budget
 #[test]
 fn the_default_budget_is_the_one_the_specification_names() {
     let d = Budget::default();
@@ -376,7 +376,7 @@ fn the_default_budget_is_the_one_the_specification_names() {
     );
 }
 
-/// [R-AGENT-017] budget is reserved, so concurrent runs cannot overspend it
+/// [REQ-1015, REQ-1016] budget is reserved, so concurrent runs cannot overspend it
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn concurrent_runs_cannot_each_spend_the_same_remaining_budget() {
     let ledger = Ledger::new(Budget {
@@ -397,8 +397,8 @@ async fn concurrent_runs_cannot_each_spend_the_same_remaining_budget() {
     assert_eq!(granted, 5, "exactly the budget, whatever the interleaving");
 }
 
-/// [R-AGENT-020] arguments are checked against the schema first
-/// [R-AGENT-021] a missing required argument is a correction, never a zero
+/// [REQ-1020] arguments are checked against the schema first
+/// [REQ-1021, REQ-1022, REQ-1023, REQ-1024] a missing required argument is a correction, never a zero
 #[test]
 fn a_missing_required_argument_is_corrected_rather_than_invented() {
     let schema = json!({
@@ -420,7 +420,7 @@ fn a_missing_required_argument_is_corrected_rather_than_invented() {
     ));
 }
 
-/// [R-AGENT-021] a correction never aborts, whatever the error policy
+/// [REQ-1021, REQ-1022, REQ-1023, REQ-1024] a correction never aborts, whatever the error policy
 #[tokio::test]
 async fn an_argument_correction_does_not_abort_an_aborting_agent() {
     let provider = Scripted::new(vec![calls("probe", "{}"), says("fixed it")]);
@@ -437,7 +437,7 @@ async fn an_argument_correction_does_not_abort_an_aborting_agent() {
     assert_eq!(outcome.text, "fixed it");
 }
 
-/// [R-AGENT-022] an absent optional argument stays absent, or takes its default
+/// [REQ-1025, REQ-1026] an absent optional argument stays absent, or takes its default
 #[test]
 fn an_absent_optional_argument_is_absent_rather_than_zero() {
     let schema = json!({
@@ -458,7 +458,7 @@ fn an_absent_optional_argument_is_absent_rather_than_zero() {
     );
 }
 
-/// [R-AGENT-023] a tool the agent was not given stays unreachable
+/// [REQ-1027, REQ-1028] a tool the agent was not given stays unreachable
 #[tokio::test]
 async fn a_tool_the_agent_was_not_given_is_not_found_anywhere() {
     let ran = Arc::new(AtomicU32::new(0));
@@ -473,7 +473,7 @@ async fn a_tool_the_agent_was_not_given_is_not_found_anywhere() {
     assert_eq!(ran.load(Ordering::SeqCst), 0);
 }
 
-/// [R-AGENT-024] report continues, abort stops
+/// [REQ-1029, REQ-1030, REQ-1031] report continues, abort stops
 #[tokio::test]
 async fn a_failing_tool_reports_or_aborts_as_declared() {
     let provider = Scripted::new(vec![calls("probe", "{}"), says("recovered")]);
@@ -496,7 +496,7 @@ async fn a_failing_tool_reports_or_aborts_as_declared() {
     assert_eq!(outcome.detail.as_deref(), Some("probe"));
 }
 
-/// [R-AGENT-025] tool calls run in the order the model returned them
+/// [REQ-1032] tool calls run in the order the model returned them
 #[tokio::test]
 async fn tool_calls_run_in_the_order_they_arrived() {
     let mut reply = calls("first", "{}");
@@ -529,8 +529,8 @@ async fn tool_calls_run_in_the_order_they_arrived() {
     assert_eq!(order, vec!["first", "second"]);
 }
 
-/// [R-AGENT-030] cancellation is checked before a call
-/// [R-AGENT-031] a cancelled run stops, says so, and keeps its transcript
+/// [REQ-1033, REQ-1034] cancellation is checked before a call
+/// [REQ-1035, REQ-1036, REQ-1037] a cancelled run stops, says so, and keeps its transcript
 #[tokio::test]
 async fn a_cancelled_run_stops_and_keeps_what_it_had() {
     let provider = Scripted::new(vec![calls("probe", "{}"), says("never reached")]);
@@ -576,7 +576,7 @@ impl meow_agent::Sink for CancelAfter {
     }
 }
 
-/// [R-AGENT-032] cancelling a parent cancels what is running inside it
+/// [REQ-1038] cancelling a parent cancels what is running inside it
 #[test]
 fn cancelling_a_parent_cancels_its_children() {
     let parent = CancellationToken::new();
@@ -589,7 +589,7 @@ fn cancelling_a_parent_cancels_its_children() {
     );
 }
 
-/// [R-AGENT-070] every transition reaches the sink
+/// [REQ-1060] every transition reaches the sink
 #[tokio::test]
 async fn the_sink_sees_every_transition() {
     let provider = Scripted::new(vec![calls("probe", "{}"), says("done")]);
@@ -630,7 +630,7 @@ async fn the_sink_sees_every_transition() {
     }
 }
 
-/// [R-AGENT-071] a broken sink stops receiving, and the run carries on
+/// [REQ-1063, REQ-1064, REQ-1065, REQ-1066, REQ-1067, REQ-1068] a broken sink stops receiving, and the run carries on
 #[tokio::test]
 async fn a_broken_sink_does_not_destroy_the_run() {
     struct Breaks(u32);
@@ -661,7 +661,7 @@ async fn a_broken_sink_does_not_destroy_the_run() {
     assert_eq!(sink.0, 1, "and a sink that failed stops being called");
 }
 
-/// [R-AGENT-072] the engine works with nothing attached
+/// [REQ-1069] the engine works with nothing attached
 #[tokio::test]
 async fn the_engine_runs_with_no_sink() {
     let outcome = run(
@@ -672,7 +672,7 @@ async fn the_engine_runs_with_no_sink() {
     assert_eq!(outcome.text, "alone");
 }
 
-/// [R-AGENT-073] a sink may decline deltas and get the step's text once
+/// [REQ-1061, REQ-1062] a sink may decline deltas and get the step's text once
 #[tokio::test]
 async fn a_sink_that_declines_deltas_gets_the_text_once_per_step() {
     let provider = Scripted::new(vec![says("a whole answer")]);
@@ -694,7 +694,7 @@ async fn a_sink_that_declines_deltas_gets_the_text_once_per_step() {
     );
 }
 
-/// [R-AGENT-080] a parsed value is present when the run finished, absent otherwise
+/// [REQ-1070, REQ-1071] a parsed value is present when the run finished, absent otherwise
 #[tokio::test]
 async fn a_parsed_value_arrives_only_with_a_finished_run() {
     let schema =
@@ -725,7 +725,7 @@ async fn a_parsed_value_arrives_only_with_a_finished_run() {
     );
 }
 
-/// [R-AGENT-081] a response the provider could not make fit fails the run
+/// [REQ-1072] a response the provider could not make fit fails the run
 #[tokio::test]
 async fn a_schema_the_provider_gave_up_on_fails_the_run() {
     struct AlwaysWrong;
@@ -743,7 +743,7 @@ async fn a_schema_the_provider_gave_up_on_fails_the_run() {
             }
         }
         async fn generate(&self, _: &Request, _: &CancellationToken) -> meow_llm::Result<Response> {
-            // The provider has already retried per R-LLM-051 and given up.
+            // The provider has already retried per REQ-1644, REQ-1645 and given up.
             Err(LlmError::Schema {
                 attempts: 3,
                 message: "missing `n`".into(),
@@ -758,10 +758,10 @@ async fn a_schema_the_provider_gave_up_on_fails_the_run() {
     assert_eq!(outcome.value, None);
 }
 
-/// [R-POLICY-040] the policy decides before the tool runs
-/// [R-POLICY-041] a denied call tells the model which tool and why
-/// [R-POLICY-042] every evaluation produces an event
-/// [R-AGENT-006] `denied` is the stop reason when policy refused
+/// [REQ-2037, REQ-2038] the policy decides before the tool runs
+/// [REQ-2039] a denied call tells the model which tool and why
+/// [REQ-2040] every evaluation produces an event
+/// [REQ-1007, REQ-1008] `denied` is the stop reason when policy refused
 #[tokio::test]
 async fn policy_stops_a_tool_before_it_runs_and_says_so() {
     use meow_policy::{Access, Call, Decision, Policy, Rule};
@@ -800,7 +800,7 @@ async fn policy_stops_a_tool_before_it_runs_and_says_so() {
     );
 }
 
-/// [R-AGENT-006] denied and tool_aborted are told apart
+/// [REQ-1007, REQ-1008] denied and tool_aborted are told apart
 #[tokio::test]
 async fn a_denial_stops_with_denied_and_a_failure_with_tool_aborted() {
     use meow_policy::{Access, Call, Decision, Policy, Rule};
@@ -836,8 +836,8 @@ fn long_message(n: usize) -> meow_llm::Message {
     meow_llm::Message::new(meow_llm::Role::User, "x".repeat(n))
 }
 
-/// [R-AGENT-040] compaction happens before the call that would not fit
-/// [R-AGENT-041] the most recent messages stay verbatim
+/// [REQ-1039] compaction happens before the call that would not fit
+/// [REQ-1040] the most recent messages stay verbatim
 #[test]
 fn compaction_triggers_on_the_threshold_and_keeps_the_recent_ones() {
     use meow_agent::{Compaction, estimate_tokens, range_to_compact};
@@ -863,8 +863,8 @@ fn compaction_triggers_on_the_threshold_and_keeps_the_recent_ones() {
     assert_eq!(range.end, messages.len() - 2, "the two most recent stay");
 }
 
-/// [R-AGENT-042] compaction records the range and deletes nothing
-/// [R-AGENT-044] it summarises rather than dropping, and says what it saved
+/// [REQ-1041, REQ-1042] compaction records the range and deletes nothing
+/// [REQ-1044, REQ-1045, REQ-1046] it summarises rather than dropping, and says what it saved
 #[tokio::test]
 async fn compaction_summarises_and_records_what_it_replaced() {
     use meow_agent::Compaction;
@@ -915,7 +915,7 @@ async fn compaction_summarises_and_records_what_it_replaced() {
     assert!(saved > 0, "and what it saved, so the cost is visible");
 }
 
-/// [R-AGENT-043] a compaction that fails stops the run
+/// [REQ-1043] a compaction that fails stops the run
 #[tokio::test]
 async fn a_failed_compaction_fails_the_run_rather_than_sending_an_over_long_context() {
     use meow_agent::Compaction;
@@ -941,7 +941,7 @@ async fn a_failed_compaction_fails_the_run_rather_than_sending_an_over_long_cont
     );
 }
 
-/// [R-AGENT-045] compaction may name its own model
+/// [REQ-1047, REQ-1048] compaction may name its own model
 #[tokio::test]
 async fn compaction_uses_its_own_model_when_given_one() {
     use meow_agent::Compaction;
@@ -1003,8 +1003,8 @@ async fn compaction_uses_its_own_model_when_given_one() {
     );
 }
 
-/// [R-AGENT-050] a sub-agent runs on its own, under the caller's budget
-/// [R-AGENT-051] its outcome comes back with text, stop reason, and value
+/// [REQ-1049] a sub-agent runs on its own, under the caller's budget
+/// [REQ-1050] its outcome comes back with text, stop reason, and value
 #[tokio::test]
 async fn a_sub_agent_returns_its_text_and_its_stop_reason() {
     use meow_agent::SubAgent;
@@ -1028,7 +1028,7 @@ async fn a_sub_agent_returns_its_text_and_its_stop_reason() {
     );
 }
 
-/// [R-AGENT-052] nesting too deep is a tool error, not a panic
+/// [REQ-1051, REQ-1052] nesting too deep is a tool error, not a panic
 #[tokio::test]
 async fn nesting_past_the_limit_is_reported_rather_than_fatal() {
     use meow_agent::SubAgent;
@@ -1046,7 +1046,7 @@ async fn nesting_past_the_limit_is_reported_rather_than_fatal() {
     assert!(err.to_string().contains("limit"), "got {err}");
 }
 
-/// [R-AGENT-053] a sub-agent does not see its caller's messages
+/// [REQ-1053, REQ-1054] a sub-agent does not see its caller's messages
 #[tokio::test]
 async fn a_sub_agent_starts_from_its_task_and_nothing_else() {
     use meow_agent::SubAgent;
@@ -1092,8 +1092,8 @@ async fn a_sub_agent_starts_from_its_task_and_nothing_else() {
     );
 }
 
-/// [R-AGENT-060] results come back in the order given
-/// [R-AGENT-061] one failure does not abort the others
+/// [REQ-1055] results come back in the order given
+/// [REQ-1056, REQ-1057] one failure does not abort the others
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn a_fan_out_returns_in_order_and_survives_one_failure() {
     use meow_agent::{Invocation, run_parallel};
@@ -1156,7 +1156,7 @@ async fn a_fan_out_returns_in_order_and_survives_one_failure() {
     assert_eq!(out[2].text, "answered c", "and the third still ran");
 }
 
-/// [R-AGENT-062] a fan-out shares the caller's budget
+/// [REQ-1058, REQ-1059] a fan-out shares the caller's budget
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn a_fan_out_cannot_spend_more_than_the_caller_has() {
     use meow_agent::{Invocation, run_parallel};
@@ -1195,7 +1195,7 @@ async fn a_fan_out_cannot_spend_more_than_the_caller_has() {
     );
 }
 
-/// [R-AGENT-014] [R-AGENT-062] a branch made after its siblings spent is
+/// [REQ-1017] [REQ-1058, REQ-1059] a branch made after its siblings spent is
 /// bounded by what is left, not by what the counter already reads
 ///
 /// The bug this catches: a child's budget is what its caller had left, which
@@ -1236,7 +1236,7 @@ fn a_branch_made_later_still_gets_what_is_left() {
     assert_eq!(caller.reserve_step(), Err(Axis::Steps));
 }
 
-/// [R-AGENT-013] a sub-agent numbers its own steps, not its caller's
+/// [REQ-1014] a sub-agent numbers its own steps, not its caller's
 #[test]
 fn a_sub_agent_counts_its_own_steps() {
     let caller = Ledger::new(Budget {
@@ -1259,7 +1259,7 @@ fn a_sub_agent_counts_its_own_steps() {
     assert_eq!(caller.steps_taken(), 3);
 }
 
-/// [R-AGENT-014] a child still cannot outspend its caller, however generous
+/// [REQ-1017] a child still cannot outspend its caller, however generous
 /// its own declaration
 #[test]
 fn a_child_cannot_outspend_its_caller() {
@@ -1281,7 +1281,7 @@ fn a_child_cannot_outspend_its_caller() {
     );
 }
 
-/// [R-AGENT-014] a child never gets more than the caller had, however the
+/// [REQ-1017] a child never gets more than the caller had, however the
 /// creation of children interleaves with the spending of steps
 ///
 /// The failure this pins is not theoretical: it turned up on a macOS runner as

@@ -128,7 +128,7 @@ fn config() -> tempfile::TempDir {
     dir
 }
 
-/// [R-PKG-013] `update` fetches and pins what it got
+/// [REQ-1811, REQ-1812, REQ-1813] `update` fetches and pins what it got
 #[tokio::test(flavor = "multi_thread")]
 async fn update_writes_a_pin_for_what_arrived() {
     let server = Serving::new(200, archive(&[("models.star", "x = 1\n")]));
@@ -152,7 +152,7 @@ async fn update_writes_a_pin_for_what_arrived() {
     );
 }
 
-/// [R-PKG-020] a package already in the cache needs no network
+/// [REQ-1814, REQ-1815] a package already in the cache needs no network
 #[tokio::test(flavor = "multi_thread")]
 async fn a_cached_package_is_not_downloaded_again() {
     let server = Serving::new(200, archive(&[("models.star", "x = 1\n")]));
@@ -172,7 +172,7 @@ async fn a_cached_package_is_not_downloaded_again() {
     assert_eq!(got, 0, "a cached package was downloaded again");
 }
 
-/// [R-PKG-011] what arrives is checked against the pin at fetch, not only at
+/// [REQ-1807, REQ-1808] what arrives is checked against the pin at fetch, not only at
 /// load
 #[tokio::test(flavor = "multi_thread")]
 async fn a_server_that_serves_something_else_is_caught() {
@@ -201,7 +201,7 @@ async fn a_server_that_serves_something_else_is_caught() {
     );
 }
 
-/// [R-PKG-022] an archive that writes outside the package is refused
+/// [REQ-1817, REQ-1818] an archive that writes outside the package is refused
 ///
 /// The oldest vulnerability in the format. An entry named `../../x` unpacked
 /// without checking writes wherever the attacker chose.
@@ -230,7 +230,7 @@ async fn an_archive_that_escapes_is_refused() {
     );
 }
 
-/// [R-PKG-022] an interrupted fetch leaves nothing that looks like a package
+/// [REQ-1817, REQ-1818] an interrupted fetch leaves nothing that looks like a package
 #[tokio::test(flavor = "multi_thread")]
 async fn a_failed_fetch_leaves_no_half_package() {
     let server = Serving::new(200, b"this is not a gzip stream".to_vec());
@@ -251,7 +251,7 @@ async fn a_failed_fetch_leaves_no_half_package() {
     );
 }
 
-/// [R-PKG-013] a source that answers with a status is reported, not retried
+/// [REQ-1811, REQ-1812, REQ-1813] a source that answers with a status is reported, not retried
 #[tokio::test(flavor = "multi_thread")]
 async fn a_source_that_refuses_says_what_it_answered() {
     let server = Serving::new(404, Vec::new());
@@ -268,7 +268,7 @@ async fn a_source_that_refuses_says_what_it_answered() {
     );
 }
 
-/// [R-PKG-010] the version is substituted into the source
+/// [REQ-1805, REQ-1806] the version is substituted into the source
 #[test]
 fn a_version_is_put_into_the_source() {
     let with = package("acme", "https://x.invalid/acme-{version}.tar.gz", "2.1.0");
@@ -286,7 +286,7 @@ fn a_version_is_put_into_the_source() {
     );
 }
 
-/// [R-PKG-021] two packages with the same contents share one cache entry
+/// [REQ-1816] two packages with the same contents share one cache entry
 #[tokio::test(flavor = "multi_thread")]
 async fn identical_contents_share_a_cache_entry() {
     let body = archive(&[("models.star", "x = 1\n")]);
@@ -360,7 +360,7 @@ impl Drop for Silent {
     }
 }
 
-/// [R-PKG-023] a fetch already cancelled makes no request
+/// [REQ-1819, REQ-1820] a fetch already cancelled makes no request
 #[tokio::test(flavor = "multi_thread")]
 async fn a_cancelled_fetch_does_not_start() {
     let server = Silent::new();
@@ -387,7 +387,7 @@ async fn a_cancelled_fetch_does_not_start() {
     );
 }
 
-/// [R-PKG-023] a fetch in flight stops when the run is cancelled
+/// [REQ-1819, REQ-1820] a fetch in flight stops when the run is cancelled
 #[tokio::test(flavor = "multi_thread")]
 async fn a_fetch_in_flight_is_interrupted() {
     let server = Silent::new();

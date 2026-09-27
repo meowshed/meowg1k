@@ -7,10 +7,10 @@
 //! the error classification, and the retry policy. Each provider implements
 //! [`Provider`] over one vendor's API.
 //!
-//! No vendor type crosses the trait. That is `[R-LLM-003]`, and it is what
+//! No vendor type crosses the trait. That is `[REQ-1603]`, and it is what
 //! lets the engine be written once instead of once per provider.
 //!
-//! `docs/spec/llm.md` is normative.
+//! `SPC-1600` is normative.
 
 mod anthropic;
 mod bearer;
@@ -43,8 +43,8 @@ pub use crate::voyage::Voyage;
 
 /// Read a usage block written the way most APIs write one.
 ///
-/// `[R-LLM-040]`: cached tokens stay absent when the provider does not report
-/// them, never zero. `[R-LLM-041]`: no usage block at all is `None`, which is
+/// `[REQ-1637, REQ-1638, REQ-1639]`: cached tokens stay absent when the provider does not report
+/// them, never zero. `[REQ-1640]`: no usage block at all is `None`, which is
 /// a different fact from a block of zeroes.
 pub(crate) fn usage_of(v: Option<&serde_json::Value>) -> Option<meow_core::Usage> {
     use serde_json::Value;

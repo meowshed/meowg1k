@@ -13,7 +13,7 @@ use meow_star::{Args, Registry};
 
 /// Built-in commands that stay at the top level.
 ///
-/// `[R-TUI-071]`. These are the ones somebody types before they have anything
+/// `[REQ-2844]`. These are the ones somebody types before they have anything
 /// declared, or while something is wrong: putting `doctor` under a group means
 /// finding out what to type while the thing you are diagnosing is broken.
 pub const TOP_LEVEL: &[&str] = &[
@@ -33,7 +33,7 @@ pub const GROUPS: &[&str] = &["session", "auth", "index", "pkg", "policy"];
 
 /// Build the command line for a workspace.
 ///
-/// Satisfies `[R-TUI-070]`: everything the workspace declares is a top-level
+/// Satisfies `[REQ-2843]`: everything the workspace declares is a top-level
 /// subcommand with no prefix. `registry` is `None` before a workspace has been
 /// found, which is what `meow init` and `meow --help` outside a project get.
 pub fn build(registry: Option<&Registry>) -> Command {
@@ -123,7 +123,7 @@ fn builtins() -> Vec<Command> {
                 "powershell",
             ])),
         Command::new("version").about("Print the version"),
-        // `[R-TUI-071]`: a group, beside `session`, `index`, and `policy`.
+        // `[REQ-2844]`: a group, beside `session`, `index`, and `policy`.
         Command::new("auth")
             .about("Credentials for the providers this machine talks to")
             .subcommand_required(true)
@@ -148,7 +148,7 @@ fn builtins() -> Vec<Command> {
                     .arg(Arg::new("provider").required(true).help("Which provider")),
             )
             .subcommand(Command::new("list").about("Say which providers have a credential")),
-        // `[R-TUI-071]`: top level, beside `init` and `doctor`, because it is
+        // `[REQ-2844]`: top level, beside `init` and `doctor`, because it is
         // answered once per workspace rather than being a group of things.
         Command::new("trust")
             .about("Agree to run the scripts this workspace declares")
@@ -306,7 +306,7 @@ fn builtins() -> Vec<Command> {
 
 /// One declared command, with the flags its arguments describe.
 ///
-/// `[R-STAR-061]`: the flag, the help text, and the model's schema come out of
+/// `[REQ-2511]`: the flag, the help text, and the model's schema come out of
 /// one declaration, so a flag here cannot describe something the tool does not
 /// accept.
 fn declared(registry: &Registry, name: &str) -> Command {

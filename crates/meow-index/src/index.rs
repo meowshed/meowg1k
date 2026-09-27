@@ -18,13 +18,13 @@ const MODEL_KEY: &str = "index.model";
 
 /// How many chunks are embedded before the vectors are written.
 ///
-/// `[R-INDEX-022]` wants an interrupted build to keep what it paid for, and a
+/// `[REQ-1421, REQ-1422]` wants an interrupted build to keep what it paid for, and a
 /// build that wrote nothing until the end would keep nothing.
 const COMMIT_EVERY: usize = 64;
 
 /// What a build or an update did.
 ///
-/// `[R-INDEX-032]`: added, changed, removed, and unchanged. Unchanged is the
+/// `[REQ-1426]`: added, changed, removed, and unchanged. Unchanged is the
 /// number that tells somebody the incremental path is working.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Built {
@@ -66,7 +66,7 @@ pub struct Query {
     pub min_score: f32,
     /// Globs a result's path must match, when there are any.
     ///
-    /// `[R-INDEX-044]`: applied before ranking, so a limit of ten returns the
+    /// `[REQ-1433, REQ-1434]`: applied before ranking, so a limit of ten returns the
     /// best ten inside the filter rather than whatever survives it.
     pub paths: Vec<String>,
 }
@@ -153,10 +153,10 @@ impl Index {
 
     /// Bring the index up to date with the workspace.
     ///
-    /// Satisfies `[R-INDEX-030]` by re-chunking only a file whose hash
-    /// changed, where the hash covers the chunking parameters; `[R-INDEX-031]`
-    /// by removing a file that is gone or newly excluded; `[R-INDEX-032]` by
-    /// counting all four outcomes; and `[R-INDEX-022]` by leaving the
+    /// Satisfies `[REQ-1423, REQ-1424]` by re-chunking only a file whose hash
+    /// changed, where the hash covers the chunking parameters; `[REQ-1425]`
+    /// by removing a file that is gone or newly excluded; `[REQ-1426]` by
+    /// counting all four outcomes; and `[REQ-1421, REQ-1422]` by leaving the
     /// embedding to whatever runs next, so an interrupted build resumes.
     ///
     /// # Errors
@@ -218,7 +218,7 @@ impl Index {
                 .map_err(store_failed)?;
         }
 
-        // [R-INDEX-031]: a file that is gone, or that an ignore rule now
+        // [REQ-1425]: a file that is gone, or that an ignore rule now
         // excludes, leaves nothing behind. The two cases are the same here,
         // which is right: both mean the walk no longer sees it.
         for stored in self.store.index_paths().map_err(store_failed)? {
@@ -235,13 +235,13 @@ impl Index {
 
     /// Embed whatever is still waiting.
     ///
-    /// Satisfies `[R-INDEX-022]`: only the chunks with no vector, committed in
+    /// Satisfies `[REQ-1421, REQ-1422]`: only the chunks with no vector, committed in
     /// batches, so an interrupted build keeps what it paid for.
     ///
     /// # Errors
     ///
     /// [`IndexError::ChunkTooLarge`] naming the file and the lines when one
-    /// chunk is refused on its own, per `[R-INDEX-021]`.
+    /// chunk is refused on its own, per `[REQ-1420]`.
     pub fn embed(&mut self, embedder: &dyn Embed, batch: usize) -> Result<usize> {
         self.store
             .kv_put(MODEL_KEY, embedder.model().as_bytes())
@@ -293,11 +293,11 @@ impl Index {
 
     /// Answer a query.
     ///
-    /// Satisfies `[R-INDEX-040]` by ranking on descending similarity with the
-    /// path, the lines, the text, and the score; `[R-INDEX-041]` by saying the
-    /// index is empty rather than building one; `[R-INDEX-042]` by applying
-    /// both the limit and the minimum; `[R-INDEX-044]` by filtering before
-    /// ranking; and `[R-INDEX-051]` by refusing when the model that built the
+    /// Satisfies `[REQ-1427]` by ranking on descending similarity with the
+    /// path, the lines, the text, and the score; `[REQ-1428, REQ-1429]` by saying the
+    /// index is empty rather than building one; `[REQ-1430, REQ-1431]` by applying
+    /// both the limit and the minimum; `[REQ-1433, REQ-1434]` by filtering before
+    /// ranking; and `[REQ-1436, REQ-1437]` by refusing when the model that built the
     /// index is not the model asking.
     ///
     /// # Errors
@@ -307,7 +307,7 @@ impl Index {
     pub fn query(&self, embedder: &dyn Embed, text: &str, query: &Query) -> Result<Vec<Hit>> {
         let built_by = self.model()?.ok_or(IndexError::Empty)?;
         if built_by != embedder.model() {
-            // [R-INDEX-051]: two models put different meanings in the same
+            // [REQ-1436, REQ-1437]: two models put different meanings in the same
             // coordinates, so comparing across them produces numbers that look
             // like scores and are not.
             return Err(IndexError::WrongModel {
@@ -322,14 +322,14 @@ impl Index {
         }
         let signature = ann::Signature { chunks, max_id };
 
-        // [R-INDEX-044]: the filter decides which nodes the walk may visit,
+        // [REQ-1433, REQ-1434]: the filter decides which nodes the walk may visit,
         // so it narrows the search rather than narrowing its results. A
         // filter applied afterwards would return the best ten overall and
         // then throw most of them away.
         let allowed = self.allowed(&query.paths)?;
 
         // The query's own embedding is cached, so asking the same thing twice
-        // costs one request. `[R-INDEX-043]`.
+        // costs one request. `[REQ-1432]`.
         let vector = self.query_vector(embedder, text)?;
 
         let found = self.nearest(&signature, &vector, query.limit, allowed.as_deref())?;
@@ -371,7 +371,7 @@ impl Index {
 
     /// Search the graph, building it first when it is missing or stale.
     ///
-    /// `[R-INDEX-022]`'s neighbour in spirit: the graph is a cache over the
+    /// `[REQ-1421, REQ-1422]`'s neighbour in spirit: the graph is a cache over the
     /// rows, so losing it costs a rebuild and never an answer. A stale one is
     /// noticed by its stamp rather than trusted.
     fn nearest(
@@ -486,7 +486,7 @@ impl Index {
 
     /// What decides whether a file is stale.
     ///
-    /// `[R-INDEX-030]`: the content and the chunking parameters together.
+    /// `[REQ-1423, REQ-1424]`: the content and the chunking parameters together.
     /// Hashing the content alone would leave chunks that look current after
     /// somebody changed the chunk size, and those chunks answer queries.
     fn fingerprint(&self, text: &str) -> String {

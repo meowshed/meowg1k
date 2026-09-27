@@ -4,7 +4,7 @@
 //! Building JSON Schema, and checking values against it.
 //!
 //! One representation serves three readers: the command line, the help text,
-//! and the model. `[R-STAR-061]` asks for exactly that, because v0.2.x
+//! and the model. `[REQ-2511]` asks for exactly that, because v0.2.x
 //! declared a flag in one place and the model-facing schema in another, and
 //! the two drifted.
 //!
@@ -22,7 +22,7 @@ pub const EXT: &str = "x-meow";
 
 /// Strip the command-line annotations, leaving plain JSON Schema.
 ///
-/// `[R-STAR-061]`: the model sees the same declaration the flag came from,
+/// `[REQ-2511]`: the model sees the same declaration the flag came from,
 /// minus the parts that mean nothing to it.
 pub fn for_model(node: &Value) -> Value {
     match node {
@@ -48,7 +48,7 @@ pub fn ext<'a>(node: &'a Value, key: &str) -> Option<&'a Value> {
 
 /// Build an object schema, checking that `required` names fields it declares.
 ///
-/// Satisfies `[R-STAR-070]` and `[R-STAR-071]`. Checking at build time rather
+/// Satisfies `[REQ-2515, REQ-2516]` and `[REQ-2517]`. Checking at build time rather
 /// than at validation time is the whole point: a schema that requires a field
 /// it never declared rejects every value, and finding that out from a model
 /// that cannot satisfy it is an expensive way to learn about a typo.
@@ -92,10 +92,10 @@ impl std::fmt::Display for Violation {
 
 /// Check one value against one schema node.
 ///
-/// Satisfies `[R-STAR-063]`: the command line and the model reach the same
+/// Satisfies `[REQ-2514]`: the command line and the model reach the same
 /// function, so a constraint cannot hold on one path and not the other. This
 /// is not a general JSON Schema validator; it covers what `meow.arg` can
-/// build, which is the set `[R-STAR-060]` names.
+/// build, which is the set `[REQ-2506, REQ-2507, REQ-2508, REQ-2509, REQ-2510]` names.
 pub fn check(field: &str, node: &Value, value: &Value) -> Vec<Violation> {
     let mut out = Vec::new();
     check_into(field, node, value, &mut out);

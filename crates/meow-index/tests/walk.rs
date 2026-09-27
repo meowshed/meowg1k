@@ -41,7 +41,7 @@ fn relative(root: &Path, paths: &[PathBuf]) -> Vec<String> {
     out
 }
 
-/// [R-INDEX-001] .gitignore is respected
+/// [REQ-1400, REQ-1401, REQ-1402] .gitignore is respected
 #[test]
 fn a_gitignored_file_is_not_indexed() {
     let dir = tree(&[
@@ -54,7 +54,7 @@ fn a_gitignored_file_is_not_indexed() {
     assert_eq!(indexed(&dir), [".gitignore", "src/main.rs"]);
 }
 
-/// [R-INDEX-001] .meowignore can bring back something .gitignore excludes
+/// [REQ-1400, REQ-1401, REQ-1402] .meowignore can bring back something .gitignore excludes
 #[test]
 fn meowignore_can_re_include_what_git_excludes() {
     let dir = tree(&[
@@ -75,7 +75,7 @@ fn meowignore_can_re_include_what_git_excludes() {
     );
 }
 
-/// [R-INDEX-001] .meow/.data/ is never indexed, whatever an ignore file says
+/// [REQ-1400, REQ-1401, REQ-1402] .meow/.data/ is never indexed, whatever an ignore file says
 #[test]
 fn the_data_directory_cannot_be_re_included() {
     let dir = tree(&[
@@ -91,7 +91,7 @@ fn the_data_directory_cannot_be_re_included() {
     );
 }
 
-/// [R-INDEX-002] a binary file is skipped and counted
+/// [REQ-1403, REQ-1404] a binary file is skipped and counted
 #[test]
 fn a_binary_file_is_skipped_and_recorded() {
     let dir = tree(&[
@@ -106,7 +106,7 @@ fn a_binary_file_is_skipped_and_recorded() {
     assert_eq!(walked.skipped(), 1);
 }
 
-/// [R-INDEX-003] a file over the limit is skipped and reported by name
+/// [REQ-1405, REQ-1406] a file over the limit is skipped and reported by name
 #[test]
 fn a_large_file_is_skipped_and_named() {
     let big = vec![b'x'; 200];
@@ -125,7 +125,7 @@ fn a_large_file_is_skipped_and_named() {
     assert_eq!(walked.too_large[0].1, 200, "the size is what explains it");
 }
 
-/// [R-INDEX-004] a symbolic link out of the workspace is not followed
+/// [REQ-1407] a symbolic link out of the workspace is not followed
 #[cfg(unix)]
 #[test]
 fn a_link_out_of_the_workspace_is_refused() {
@@ -144,7 +144,7 @@ fn a_link_out_of_the_workspace_is_refused() {
     assert_eq!(relative(dir.path(), &walked.escaping), ["link.txt"]);
 }
 
-/// [R-INDEX-005] prose is indexed on the same terms as code
+/// [REQ-1408] prose is indexed on the same terms as code
 #[test]
 fn prose_is_indexed_alongside_code() {
     let dir = tree(&[
@@ -160,7 +160,7 @@ fn prose_is_indexed_alongside_code() {
     );
 }
 
-/// [R-INDEX-010] the same content produces the same chunks every time
+/// [REQ-1409, REQ-1410] the same content produces the same chunks every time
 #[test]
 fn chunking_is_deterministic() {
     let text: String = (1..=200).map(|n| format!("line {n}\n")).collect();
@@ -173,7 +173,7 @@ fn chunking_is_deterministic() {
     assert!(first.len() > 1, "one chunk proves nothing about boundaries");
 }
 
-/// [R-INDEX-011] a chunk can be cited: path, bytes, and lines
+/// [REQ-1411] a chunk can be cited: path, bytes, and lines
 #[test]
 fn a_chunk_carries_where_it_came_from() {
     let text = "alpha\nbravo\ncharlie\ndelta\n";
@@ -195,7 +195,7 @@ fn a_chunk_carries_where_it_came_from() {
     assert_eq!(&text[chunks[1].start..chunks[1].end], "charlie\ndelta\n");
 }
 
-/// [R-INDEX-012] neighbouring chunks share the configured number of lines
+/// [REQ-1412] neighbouring chunks share the configured number of lines
 #[test]
 fn neighbouring_chunks_overlap() {
     let text: String = (1..=10).map(|n| format!("line {n}\n")).collect();
@@ -219,7 +219,7 @@ fn neighbouring_chunks_overlap() {
     assert!(chunks[1].text.contains("line 5"));
 }
 
-/// [R-INDEX-013] no chunk exceeds the limit
+/// [REQ-1413] no chunk exceeds the limit
 #[test]
 fn no_chunk_exceeds_the_limit() {
     let text: String = (1..=100)
@@ -243,7 +243,7 @@ fn no_chunk_exceeds_the_limit() {
     }
 }
 
-/// [R-INDEX-014] a chunk begins and ends on a line boundary
+/// [REQ-1414, REQ-1415, REQ-1416, REQ-1417] a chunk begins and ends on a line boundary
 #[test]
 fn chunks_fall_on_line_boundaries() {
     let text: String = (1..=50).map(|n| format!("line {n}\n")).collect();
@@ -266,7 +266,7 @@ fn chunks_fall_on_line_boundaries() {
     }
 }
 
-/// [R-INDEX-014] a line longer than the whole limit is split, and says so
+/// [REQ-1414, REQ-1415, REQ-1416, REQ-1417] a line longer than the whole limit is split, and says so
 #[test]
 fn an_overlong_line_is_split_and_reported() {
     let text = format!("short\n{}\nshort\n", "y".repeat(500));
@@ -298,7 +298,7 @@ fn an_overlong_line_is_split_and_reported() {
     assert_eq!(rebuilt, format!("{}\n", "y".repeat(500)));
 }
 
-/// [R-INDEX-030] the fingerprint changes when the parameters do
+/// [REQ-1423, REQ-1424] the fingerprint changes when the parameters do
 #[test]
 fn the_fingerprint_covers_the_parameters() {
     let a = Chunking::default();

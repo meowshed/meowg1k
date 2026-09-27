@@ -3,14 +3,14 @@
 
 //! What goes to a model and what comes back.
 //!
-//! No type here names a vendor. That is `[R-LLM-003]`, and it is what lets the
+//! No type here names a vendor. That is `[REQ-1603]`, and it is what lets the
 //! engine be written once instead of once per provider.
 
 use meow_core::Usage;
 
 /// Who a message is from.
 ///
-/// `[R-LLM-010]` fixes the set at four, and a message carries exactly one.
+/// `[REQ-1607]` fixes the set at four, and a message carries exactly one.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Role {
@@ -44,24 +44,24 @@ pub struct Message {
     pub content: String,
     /// The tools the model asked to run.
     ///
-    /// `[R-LLM-011]`: an assistant message carries text and tool calls in the
+    /// `[REQ-1608]`: an assistant message carries text and tool calls in the
     /// same message, because a model that explains itself before calling a
     /// tool produces both at once and splitting them loses the order.
     pub tool_calls: Vec<ToolCall>,
     /// Which call this message answers.
     ///
-    /// `[R-LLM-012]` requires it on a tool result. Without it a provider
+    /// `[REQ-1609]` requires it on a tool result. Without it a provider
     /// cannot match an answer to its question when several ran at once.
     pub tool_call_id: Option<String>,
     /// The model's own reasoning, when it produced any.
     ///
-    /// `[R-LLM-024]` keeps this on the message rather than discarding it after
+    /// `[REQ-1622, REQ-1623]` keeps this on the message rather than discarding it after
     /// the stream, because a provider can require it back on a later turn that
     /// continues a tool call.
     pub thinking: Option<String>,
     /// A hint that the prefix up to here is worth caching.
     ///
-    /// `[R-LLM-015]`: a provider with explicit cache breakpoints turns this
+    /// `[REQ-1613, REQ-1614, REQ-1615, REQ-1616]`: a provider with explicit cache breakpoints turns this
     /// into one, a provider that caches on its own ignores it, and either way
     /// the content of the message is unchanged.
     pub cache_hint: bool,
@@ -131,7 +131,7 @@ pub struct Request {
     pub max_output_tokens: u32,
     /// How much to explore, when the provider takes one.
     pub temperature: Option<f32>,
-    /// A schema the answer must satisfy, per `[R-LLM-050]`.
+    /// A schema the answer must satisfy, per `[REQ-1641, REQ-1642, REQ-1643]`.
     pub output_schema: Option<serde_json::Value>,
 }
 
@@ -160,11 +160,11 @@ pub struct Response {
     pub tool_calls: Vec<ToolCall>,
     /// What the call cost.
     ///
-    /// `None` when the provider reported nothing at all, which `[R-LLM-041]`
+    /// `None` when the provider reported nothing at all, which `[REQ-1640]`
     /// keeps distinct from reporting zeroes.
     pub usage: Option<Usage>,
     /// The parsed answer, when the request carried a schema.
     ///
-    /// `[R-LLM-052]`: parsed, not a string the caller has to parse again.
+    /// `[REQ-1646]`: parsed, not a string the caller has to parse again.
     pub value: Option<serde_json::Value>,
 }
