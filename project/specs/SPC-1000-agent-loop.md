@@ -4,7 +4,7 @@ artifact: spec
 status: live
 revised: 2026-09-27
 checked-at:
-states: [REQ-1000, REQ-1001, REQ-1002, REQ-1003, REQ-1004, REQ-1005, REQ-1006, REQ-1007, REQ-1008, REQ-1009, REQ-1010, REQ-1011, REQ-1012, REQ-1013, REQ-1014, REQ-1015, REQ-1016, REQ-1017, REQ-1018, REQ-1019, REQ-1020, REQ-1021, REQ-1022, REQ-1023, REQ-1024, REQ-1025, REQ-1026, REQ-1027, REQ-1028, REQ-1029, REQ-1030, REQ-1031, REQ-1032, REQ-1033, REQ-1034, REQ-1035, REQ-1036, REQ-1037, REQ-1038, REQ-1039, REQ-1040, REQ-1041, REQ-1042, REQ-1043, REQ-1044, REQ-1045, REQ-1046, REQ-1047, REQ-1048, REQ-1049, REQ-1050, REQ-1051, REQ-1052, REQ-1053, REQ-1054, REQ-1055, REQ-1056, REQ-1057, REQ-1058, REQ-1059, REQ-1060, REQ-1061, REQ-1062, REQ-1063, REQ-1064, REQ-1065, REQ-1066, REQ-1067, REQ-1068, REQ-1069, REQ-1070, REQ-1071, REQ-1072, REQ-1078]
+states: [REQ-1000, REQ-1001, REQ-1002, REQ-1003, REQ-1004, REQ-1005, REQ-1006, REQ-1007, REQ-1008, REQ-1009, REQ-1010, REQ-1011, REQ-1012, REQ-1013, REQ-1014, REQ-1015, REQ-1016, REQ-1017, REQ-1018, REQ-1019, REQ-1020, REQ-1021, REQ-1022, REQ-1023, REQ-1024, REQ-1025, REQ-1026, REQ-1027, REQ-1028, REQ-1029, REQ-1030, REQ-1031, REQ-1032, REQ-1033, REQ-1034, REQ-1035, REQ-1036, REQ-1037, REQ-1038, REQ-1039, REQ-1040, REQ-1041, REQ-1042, REQ-1043, REQ-1044, REQ-1045, REQ-1046, REQ-1047, REQ-1048, REQ-1049, REQ-1050, REQ-1051, REQ-1052, REQ-1053, REQ-1054, REQ-1055, REQ-1056, REQ-1057, REQ-1058, REQ-1059, REQ-1060, REQ-1061, REQ-1062, REQ-1063, REQ-1064, REQ-1065, REQ-1066, REQ-1067, REQ-1068, REQ-1069, REQ-1070, REQ-1071, REQ-1072, REQ-1073, REQ-1074, REQ-1075, REQ-1076, REQ-1077, REQ-1078]
 ---
 
 # The agent loop in meow-agent
@@ -72,6 +72,21 @@ vendor API. `meow-star` declares agents to it, `meow-ui` observes it and
   [R-AGENT-017], high).
 - The engine checks the budget before each model call and after each tool result
   [REQ-1018] (from docs/spec/agent.md [R-AGENT-015], high).
+- A budget can cap cost only when something supplies the price of the calls it
+  bounds [REQ-1077], and that price is the model's declared one [REQ-1078]
+  (from https://github.com/meowshed/meowg1k/issues/168, high).
+
+### Request ceilings
+
+- A provider or a model declaration accepts a ceiling of requests per minute
+  and a ceiling of requests per day [REQ-1073] (from
+  https://github.com/meowshed/meowg1k/issues/167, high).
+- Requests are counted in the workspace database, so every invocation in the
+  workspace counts against the same ceiling, whichever process it runs in
+  [REQ-1074] (from https://github.com/meowshed/meowg1k/issues/167, high).
+- A request that would exceed a ceiling is refused before the call is made
+  [REQ-1075], and the refusal names the limit it hit and when that limit frees
+  up [REQ-1076] (from https://github.com/meowshed/meowg1k/issues/167, high).
 
 ### Tool calls
 
@@ -166,5 +181,7 @@ vendor API. `meow-star` declares agents to it, `meow-ui` observes it and
 | One concurrent invocation fails | The others continue, and its result is an outcome with a stop reason other than `finished` [REQ-1056] [REQ-1057] (from docs/spec/agent.md [R-AGENT-061], high) |
 | The shared budget is exhausted during concurrent invocations | The engine starts no new invocation [REQ-1059] (from docs/spec/agent.md [R-AGENT-062], high) |
 | The sink returns an error | For every event kind alike, the engine stops delivering to that sink, records a `Note` event naming the error and continues the run [REQ-1063] [REQ-1064] [REQ-1065] [REQ-1066] [REQ-1067] [REQ-1068] (from docs/spec/agent.md [R-AGENT-071], high) |
-| A budget caps cost for an agent whose model declares no price | The workspace fails to load [REQ-1078] (from https://github.com/meowshed/meowg1k/issues/168, high) |
+| A budget caps cost for an agent whose model declares no price | The workspace fails to load [REQ-1077] [REQ-1078] (from https://github.com/meowshed/meowg1k/issues/168, high) |
+| A request would exceed a declared ceiling | The call isn't made, and the refusal names the ceiling and when it frees up [REQ-1075] [REQ-1076] (from https://github.com/meowshed/meowg1k/issues/167, high) |
+| An earlier process in the workspace spent the ceiling | A request in the next process is refused, because the count lives in the workspace database [REQ-1074] [REQ-1075] (from https://github.com/meowshed/meowg1k/issues/167, high) |
 | The final response fails schema validation | The engine retries it per [R-LLM-051], then stops with `failed` [REQ-1072] (from docs/spec/agent.md [R-AGENT-081], high) |
