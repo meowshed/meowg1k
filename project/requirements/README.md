@@ -5,9 +5,9 @@ on 2026-09-27 and is a draft until the owner approves it.
 
 <!-- The generated topic lines list every identifier on one line. -->
 <!-- markdownlint-disable MD013 -->
-<!-- meow-method index -->
+<!-- meow-flow index -->
 
-626 requirements in all: 626 approved.
+626 requirements in all: 625 approved, 1 superseded.
 
 | Identifier | What it requires | Status |
 | --- | --- | --- |
@@ -94,7 +94,7 @@ on 2026-09-27 and is a draft until the owner approves it.
 | [REQ-1201](REQ-1201-missing-credential-names-three-places.md) | A provider with no credential from any of the three MUST fail naming all three places, with the environment variable spelled out, so the reader can act without consulting a document. | approved |
 | [REQ-1202](REQ-1202-no-resolution-during-declaration.md) | Resolution MUST NOT happen while `.meow/` is being evaluated beyond what `[R-STAR-084]` already allows: a declaration may call `env.get`, and the store is read when a provider is built rather than when it is declared. | approved |
 | [REQ-1203](REQ-1203-no-module-exposes-credential-store.md) | A runtime module MUST NOT expose the credential store. A handler that wants a secret reads it from the environment, which is a decision the person running the command made. | approved |
-| [REQ-1204](REQ-1204-credentials-live-in-auth-json.md) | Credentials MUST live in one file at `~/.meow/auth.json`, outside every workspace, so that a repository cannot carry one and a contributor cannot commit one. | approved |
+| [REQ-1204](REQ-1204-credentials-live-in-auth-json.md) | Credentials MUST live in one file at `~/.meow/auth.json`, outside every workspace, so that a repository cannot carry one and a contributor cannot commit one. | superseded |
 | [REQ-1205](REQ-1205-store-created-owner-only.md) | The credential store file MUST be created with owner-only permissions. | approved |
 | [REQ-1206](REQ-1206-auth-refuses-readable-store.md) | `meow auth` MUST refuse to read a credential store file that is readable by anyone else, naming the file and the permission it expects. | approved |
 | [REQ-1207](REQ-1207-store-write-is-atomic.md) | Writing the store MUST be atomic. | approved |
@@ -651,5 +651,5 @@ By topic:
 - star: REQ-2400, REQ-2401, REQ-2402, REQ-2403, REQ-2404, REQ-2405, REQ-2406, REQ-2407, REQ-2408, REQ-2409, REQ-2410, REQ-2411, REQ-2412, REQ-2413, REQ-2414, REQ-2415, REQ-2416, REQ-2417, REQ-2418, REQ-2419, REQ-2420, REQ-2421, REQ-2422, REQ-2423, REQ-2424, REQ-2425, REQ-2426, REQ-2427, REQ-2428, REQ-2429, REQ-2430, REQ-2431, REQ-2432, REQ-2433, REQ-2434, REQ-2435, REQ-2436, REQ-2437, REQ-2438, REQ-2439, REQ-2440, REQ-2441, REQ-2442, REQ-2443, REQ-2444, REQ-2445, REQ-2446, REQ-2447, REQ-2448, REQ-2449, REQ-2450, REQ-2451, REQ-2452, REQ-2453, REQ-2454, REQ-2455, REQ-2456, REQ-2457, REQ-2458, REQ-2459, REQ-2460, REQ-2461, REQ-2462, REQ-2463, REQ-2464, REQ-2465, REQ-2466, REQ-2467, REQ-2468, REQ-2469, REQ-2470, REQ-2471, REQ-2472, REQ-2473, REQ-2474, REQ-2475, REQ-2476, REQ-2477, REQ-2478, REQ-2479, REQ-2480, REQ-2481, REQ-2482, REQ-2483, REQ-2484, REQ-2485, REQ-2486, REQ-2487, REQ-2488, REQ-2489, REQ-2490, REQ-2491, REQ-2492, REQ-2493, REQ-2494, REQ-2495, REQ-2496, REQ-2497, REQ-2498, REQ-2499, REQ-2500, REQ-2501, REQ-2502, REQ-2503, REQ-2504, REQ-2505, REQ-2506, REQ-2507, REQ-2508, REQ-2509, REQ-2510, REQ-2511, REQ-2512, REQ-2513, REQ-2514, REQ-2515, REQ-2516, REQ-2517, REQ-2518, REQ-2519, REQ-2520, REQ-2521, REQ-2522, REQ-2523, REQ-2524, REQ-2525, REQ-2526, REQ-2527, REQ-2528, REQ-2529, REQ-2530, REQ-2531, REQ-2532, REQ-2533, REQ-2534, REQ-2535, REQ-2536, REQ-2537, REQ-2538, REQ-2539, REQ-2540, REQ-2541, REQ-2542, REQ-2543, REQ-2544, REQ-2545, REQ-2546, REQ-2547, REQ-2548, REQ-2549, REQ-2550, REQ-2551, REQ-2552, REQ-2553
 - store: REQ-2600, REQ-2601, REQ-2602, REQ-2603, REQ-2604, REQ-2605, REQ-2606, REQ-2607, REQ-2608, REQ-2609, REQ-2610, REQ-2611, REQ-2612, REQ-2613, REQ-2614, REQ-2615, REQ-2616, REQ-2617, REQ-2618, REQ-2619, REQ-2620, REQ-2621, REQ-2622, REQ-2623, REQ-2624, REQ-2625, REQ-2626, REQ-2627, REQ-2628, REQ-2629, REQ-2630, REQ-2631, REQ-2632, REQ-2633, REQ-2634, REQ-2635, REQ-2636, REQ-2637, REQ-2638, REQ-2639, REQ-2640, REQ-2641, REQ-2642, REQ-2643
 - tui: REQ-2800, REQ-2801, REQ-2802, REQ-2803, REQ-2804, REQ-2805, REQ-2806, REQ-2807, REQ-2808, REQ-2809, REQ-2810, REQ-2811, REQ-2812, REQ-2813, REQ-2814, REQ-2815, REQ-2816, REQ-2817, REQ-2818, REQ-2819, REQ-2820, REQ-2821, REQ-2822, REQ-2823, REQ-2824, REQ-2825, REQ-2826, REQ-2827, REQ-2828, REQ-2829, REQ-2830, REQ-2831, REQ-2832, REQ-2833, REQ-2834, REQ-2835, REQ-2836, REQ-2837, REQ-2838, REQ-2839, REQ-2840, REQ-2841, REQ-2842, REQ-2843, REQ-2844, REQ-2845, REQ-2846, REQ-2847, REQ-2848, REQ-2849, REQ-2850, REQ-2851, REQ-2852, REQ-2853, REQ-2854, REQ-2855, REQ-2856, REQ-2857, REQ-2858, REQ-2859
-<!-- /meow-method index -->
+<!-- /meow-flow index -->
 <!-- markdownlint-enable MD013 -->

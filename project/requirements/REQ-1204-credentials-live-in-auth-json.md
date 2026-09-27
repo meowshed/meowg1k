@@ -3,7 +3,7 @@ id: REQ-1204
 artifact: requirement
 topic: auth
 class: functional
-status: approved
+status: superseded
 revised: 2026-09-27
 elaborates:
 verification: behavioural
