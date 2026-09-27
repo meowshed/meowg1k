@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1213
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 250
 ---
 
 # A `copilot` provider declared under another name can't log in by device code

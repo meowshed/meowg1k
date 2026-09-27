@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 207
 ---
 
 # `csv.parse` silently drops a column whose header name repeats

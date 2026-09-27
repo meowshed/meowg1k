@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 210
 ---
 
 # Two decisions name a `meow session resume` subcommand the binary doesn't have

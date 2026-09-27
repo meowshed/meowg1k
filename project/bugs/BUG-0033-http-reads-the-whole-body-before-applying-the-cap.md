@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2450
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 206
 ---
 
 # `http` reads the whole response body before cutting it to `max_bytes`

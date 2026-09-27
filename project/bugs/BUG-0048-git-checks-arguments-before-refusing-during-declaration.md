@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2525
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 221
 ---
 
 # `@std//git` checks its arguments before refusing a call during declaration

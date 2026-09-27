@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1052
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 223
 ---
 
 # A sub-agent at the depth limit is silently left out of its caller's tools

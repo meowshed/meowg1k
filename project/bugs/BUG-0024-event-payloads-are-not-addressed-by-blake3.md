@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2613
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 197
 ---
 
 # Event payloads are stored inline, not addressed by their BLAKE3 hash

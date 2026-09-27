@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2250
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 231
 ---
 
 # The `Policy` event omits the rule and records the decision before the answer

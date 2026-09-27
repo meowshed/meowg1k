@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2442
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 246
 ---
 
 # No test checks that `search.text` and `search.files` obey the ignore files

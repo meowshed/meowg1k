@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1630
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 216
 ---
 
 # A `Retry-After` in HTTP-date form is ignored, and Gemini then reads a rate limit as a spent quota

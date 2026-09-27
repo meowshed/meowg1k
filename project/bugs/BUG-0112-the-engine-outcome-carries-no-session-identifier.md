@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1003
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 235
 ---
 
 # The engine's `Outcome` carries no session identifier

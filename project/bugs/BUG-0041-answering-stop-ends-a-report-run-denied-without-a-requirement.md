@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 214
 ---
 
 # Answering "stop" ends a run `denied` under a `report` policy, and no requirement says so

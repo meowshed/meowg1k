@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2823
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 222
 ---
 
 # The plain renderer prints none of the model's text in a live run

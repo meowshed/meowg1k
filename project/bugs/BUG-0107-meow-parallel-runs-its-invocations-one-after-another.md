@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1055
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 230
 ---
 
 # `meow.parallel` runs its invocations one after another

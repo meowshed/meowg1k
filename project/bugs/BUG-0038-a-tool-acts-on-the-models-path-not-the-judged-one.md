@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2006
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 211
 ---
 
 # A tool acts on the model's raw path, not the path the policy judged

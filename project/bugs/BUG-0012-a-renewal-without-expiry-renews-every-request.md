@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1605
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 185
 ---
 
 # A renewal answer without `expires_at` makes every request renew

@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2604
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 198
 ---
 
 # `meow doctor` doesn't report that the database is unencrypted, or its path

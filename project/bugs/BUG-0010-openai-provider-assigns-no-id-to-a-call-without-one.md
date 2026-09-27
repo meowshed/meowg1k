@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1610
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 183
 ---
 
 # The OpenAI-shaped provider assigns no identifier to a tool call without one

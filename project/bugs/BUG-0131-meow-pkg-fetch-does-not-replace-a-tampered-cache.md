@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1812
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 254
 ---
 
 # `meow pkg fetch` doesn't replace a cached package whose contents changed

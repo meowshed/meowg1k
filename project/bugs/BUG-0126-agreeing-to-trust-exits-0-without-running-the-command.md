@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2852
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 249
 ---
 
 # Agreeing to trust exits 0 without running the command or saying so

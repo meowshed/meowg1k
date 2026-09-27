@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1821
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 187
 ---
 
 # A package loads its own sibling by package name, not by a relative path

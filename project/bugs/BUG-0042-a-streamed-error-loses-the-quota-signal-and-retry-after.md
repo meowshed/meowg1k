@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1634
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 215
 ---
 
 # A streamed request's HTTP error loses the provider's quota signal and `Retry-After`

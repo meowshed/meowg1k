@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1439
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 177
 ---
 
 # `meow index clear` deletes the `index.model` entry from the key-value store

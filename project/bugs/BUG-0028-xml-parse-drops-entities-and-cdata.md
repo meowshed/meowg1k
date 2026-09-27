@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2437
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 201
 ---
 
 # `xml.parse` drops entity references and CDATA from an element's text

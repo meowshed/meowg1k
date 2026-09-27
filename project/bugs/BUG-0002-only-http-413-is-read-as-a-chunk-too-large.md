@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1420
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 175
 ---
 
 # Only HTTP 413 is read as a chunk too large, so other refusals don't name the file

@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2550
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 260
 ---
 
 # `fs.glob` follows linked directories and doesn't finish on two ancestor links

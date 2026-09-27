@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1223
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 248
 ---
 
 # `meow pkg update` contacts a host an untrusted workspace names

@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1644
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 234
 ---
 
 # The schema retry count is a constant, not a configured value

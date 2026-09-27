@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 218
 ---
 
 # Compaction estimates tokens from bytes, and the chunker counts characters

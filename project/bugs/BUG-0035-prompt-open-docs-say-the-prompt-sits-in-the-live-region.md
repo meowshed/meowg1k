@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 208
 ---
 
 # `Renderer::prompt_open`'s documentation says the prompt occupies the live region

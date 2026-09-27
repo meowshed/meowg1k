@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1207
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 252
 ---
 
 # Two processes writing the credential store share one temporary file

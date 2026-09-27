@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2231
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 193
 ---
 
 # The session heartbeat is written only when the session starts

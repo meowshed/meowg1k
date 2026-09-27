@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1625
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 251
 ---
 
 # A throttled or unavailable credential renewal is fatal and blames the grant

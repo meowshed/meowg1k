@@ -6,7 +6,7 @@ severity: minor
 violates: [REQ-3000, REQ-3002, REQ-3003, REQ-3004, REQ-3005, REQ-3006, REQ-3007, REQ-3008, REQ-3009, REQ-3010]
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 258
 ---
 
 # Nothing enforces the crate dependency graph

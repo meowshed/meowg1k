@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1828
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 259
 ---
 
 # A package fetch reads the whole body into memory before checking the cap

@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1401
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 236
 ---
 
 # A negation in a nested `.meowignore` can't re-include a git-ignored file

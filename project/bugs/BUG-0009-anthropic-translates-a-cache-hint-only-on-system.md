@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1614
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 182
 ---
 
 # Anthropic translates a cache hint only on a system message

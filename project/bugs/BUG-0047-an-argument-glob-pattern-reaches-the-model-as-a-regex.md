@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 220
 ---
 
 # An argument's glob `pattern` reaches the model as a JSON Schema regular expression

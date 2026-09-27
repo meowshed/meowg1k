@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1420
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 176
 ---
 
 # A chunk too large reports the chunker's limit as the model's

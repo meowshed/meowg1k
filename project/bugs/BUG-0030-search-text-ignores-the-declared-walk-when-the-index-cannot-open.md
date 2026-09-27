@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2442
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 203
 ---
 
 # `search.text` walks with defaults when the declared index can't be built

@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2029
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 192
 ---
 
 # An approval prompt's timeout can't be configured

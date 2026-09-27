@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2526
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 219
 ---
 
 # A reference to an undeclared name fails with no file, line or column

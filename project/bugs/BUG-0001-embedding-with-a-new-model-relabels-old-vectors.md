@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1437
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 174
 ---
 
 # Embedding with a new model relabels the old vectors as the new model's

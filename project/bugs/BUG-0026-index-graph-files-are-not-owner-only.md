@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2605
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 199
 ---
 
 # The index's graph files are created readable by everyone

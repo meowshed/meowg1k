@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1016
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 212
 ---
 
 # Tokens and cost are checked before a call and charged after, so concurrent calls can overspend

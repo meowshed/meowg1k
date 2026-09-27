@@ -6,7 +6,7 @@ severity: major
 violates: [REQ-2480, REQ-2481]
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 226
 ---
 
 # A workspace command named `pkg` or `help` panics the binary

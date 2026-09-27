@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2011
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 189
 ---
 
 # An explicit deny on one path denies a whole read

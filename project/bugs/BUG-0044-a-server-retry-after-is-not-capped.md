@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 217
 ---
 
 # A server's `Retry-After` is used without a ceiling

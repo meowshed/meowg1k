@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 240
 ---
 
 # The session identifier repeats 16 bits it counts as entropy

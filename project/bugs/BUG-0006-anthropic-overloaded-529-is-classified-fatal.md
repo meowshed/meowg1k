@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 179
 ---
 
 # Anthropic's 529 "overloaded" is classified `Fatal`

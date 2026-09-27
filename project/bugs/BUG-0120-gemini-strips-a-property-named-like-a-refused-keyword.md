@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2511
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 243
 ---
 
 # Gemini's schema filter strips a property named `default`

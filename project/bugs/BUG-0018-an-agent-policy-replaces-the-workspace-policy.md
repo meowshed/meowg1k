@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2033
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 191
 ---
 
 # An agent's policy replaces the workspace's, so it can allow what the workspace denies

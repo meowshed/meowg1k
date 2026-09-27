@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2008
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 242
 ---
 
 # A `command` argument given as a list escapes every `commands` rule

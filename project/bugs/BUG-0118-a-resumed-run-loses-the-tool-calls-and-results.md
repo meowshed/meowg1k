@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2238
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 241
 ---
 
 # A resumed run loses the earlier run's tool calls and results

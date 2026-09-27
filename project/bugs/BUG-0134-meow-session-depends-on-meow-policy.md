@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-3003
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 257
 ---
 
 # `meow-session` depends on `meow-policy` for one constant

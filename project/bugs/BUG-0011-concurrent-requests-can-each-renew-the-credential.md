@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1605
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 184
 ---
 
 # Concurrent requests can each renew an expired exchanged credential

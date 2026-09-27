@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2255
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 228
 ---
 
 # A retention size limit deletes every unprotected session

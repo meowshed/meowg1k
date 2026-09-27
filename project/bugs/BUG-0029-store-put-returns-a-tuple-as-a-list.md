@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-2466
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 202
 ---
 
 # `store.put` of a tuple comes back from `store.get` as a list

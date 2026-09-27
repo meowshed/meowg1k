@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2234
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 194
 ---
 
 # A session whose process died is never finished

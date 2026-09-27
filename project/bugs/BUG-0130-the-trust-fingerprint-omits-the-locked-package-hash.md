@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1229
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 253
 ---
 
 # The trust fingerprint omits the locked package hash

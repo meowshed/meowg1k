@@ -6,7 +6,7 @@ severity: critical
 violates: REQ-2043
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 238
 ---
 
 # A sensitive argument is written to the session log in the clear

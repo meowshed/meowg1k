@@ -6,7 +6,7 @@ severity: major
 violates: [REQ-1201, REQ-2852]
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 225
 ---
 
 # A missing credential on the agent path reads as an undeclared provider and exits 9

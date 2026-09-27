@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2209
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 195
 ---
 
 # A compaction records message positions, not the sequence numbers it supersedes

@@ -6,7 +6,7 @@ severity: critical
 violates: REQ-2260
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 239
 ---
 
 # `meow session export` and `show` never redact a sensitive value

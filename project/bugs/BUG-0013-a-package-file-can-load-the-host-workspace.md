@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1822
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 186
 ---
 
 # A package file can load the host workspace's files with `//`

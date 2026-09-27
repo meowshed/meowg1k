@@ -5,7 +5,7 @@ status: approved
 severity: minor
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 229
 ---
 
 # A dry run states its divergence once per planned tool, not once per run

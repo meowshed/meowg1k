@@ -6,7 +6,7 @@ severity: major
 violates: REQ-1629
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 178
 ---
 
 # No provider call is retried, so a 429 or 503 fails the run at once

@@ -6,7 +6,7 @@ severity: minor
 violates: REQ-1623
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 181
 ---
 
 # Anthropic sends thinking back without its signature

@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2013
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 188
 ---
 
 # The engine ignores the paths a policy verdict denied

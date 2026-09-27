@@ -6,7 +6,7 @@ severity: minor
 violates: [REQ-1065, REQ-1068]
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 232
 ---
 
 # A broken sink's error is kept and never reported

@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2046
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 204
 ---
 
 # `meow policy explain` doesn't exist

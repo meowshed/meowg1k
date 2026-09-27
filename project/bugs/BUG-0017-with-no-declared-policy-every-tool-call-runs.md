@@ -6,7 +6,7 @@ severity: critical
 violates: REQ-2018
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 190
 ---
 
 # With no declared policy, every tool call runs unchecked

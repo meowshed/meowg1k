@@ -6,7 +6,7 @@ severity: major
 violates: REQ-2852
 found: 2026-09-27
 revised: 2026-09-27
-issue:
+issue: 200
 ---
 
 # A workspace command exits only 0, 1 or 9, whatever the agent's stop reason
