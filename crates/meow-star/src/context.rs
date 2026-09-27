@@ -3,8 +3,8 @@
 
 //! The handler context.
 //!
-//! `[R-STAR-020]`: six members and `cancelled()`, against v0.2.x's twenty-six.
-//! `[R-STAR-021]`: the other twenty were runtime capabilities, and a handler
+//! `[REQ-2445]`: six members and `cancelled()`, against v0.2.x's twenty-six.
+//! `[REQ-2446]`: the other twenty were runtime capabilities, and a handler
 //! now reaches those with `load`. The difference matters beyond tidiness -
 //! a capability on the context is invisible to `meow policy explain`, because
 //! nothing in the file says the handler is going to use it.
@@ -104,7 +104,7 @@ fn top_level(builder: &mut GlobalsBuilder) {
 
 /// `ctx.out`: the ten semantic calls.
 ///
-/// `[R-TUI-040]` fixes the set, and `[R-TUI-041]` is why nothing here
+/// `[REQ-2832]` fixes the set, and `[REQ-2833]` is why nothing here
 /// positions a cursor, draws a frame, or paginates: a script says what a thing
 /// is and each renderer decides how it looks. v0.2.x had twenty-two layout
 /// builtins, so presentation was decided in userland and could not be fixed

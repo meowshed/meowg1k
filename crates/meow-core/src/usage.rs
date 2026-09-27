@@ -5,7 +5,7 @@
 
 /// Tokens and money for one model call.
 ///
-/// `[R-SESSION-020]` requires these as separate typed fields rather than the
+/// `[REQ-2215]` requires these as separate typed fields rather than the
 /// metadata strings v0.2.x wrote, which could not be summed without parsing a
 /// key and then a value.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, serde::Serialize, serde::Deserialize)]
@@ -17,13 +17,13 @@ pub struct Usage {
     /// Prompt tokens the provider served from its cache.
     ///
     /// `None` when the provider does not report caching, which
-    /// `[R-LLM-040]` keeps distinct from a reported zero: "no cache hits" and
+    /// `[REQ-1637, REQ-1638, REQ-1639]` keeps distinct from a reported zero: "no cache hits" and
     /// "this provider does not say" are different facts, and prompt caching is
     /// the largest cost lever a long agent run has.
     pub cached: Option<u32>,
     /// What the call cost, in millionths of a unit of currency.
     ///
-    /// `None` when the model has no price in the table. `[R-SESSION-021]`
+    /// `None` when the model has no price in the table. `[REQ-2216, REQ-2217, REQ-2218]`
     /// forbids recording that as zero, because an unpriced model would then
     /// read as a free one. Integer micros rather than a float, so that summing
     /// a thousand events does not drift.

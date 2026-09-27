@@ -10,8 +10,8 @@ use crate::usage::Usage;
 
 /// Why a run stopped.
 ///
-/// `[R-AGENT-002]` fixes this set at six. `[R-SESSION-040]` reuses it as the
-/// terminal state of a session, and `[R-TUI-080]` maps each to its own exit
+/// `[REQ-1001]` fixes this set at six. `[REQ-2228]` reuses it as the
+/// terminal state of a session, and `[REQ-2852]` maps each to its own exit
 /// code, so adding a variant is a change to three specifications at once.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -65,13 +65,13 @@ impl fmt::Display for StopReason {
 
 /// What kind of thing an event records.
 ///
-/// `[R-SESSION-003]` fixes this set at ten. A closed set is the point: adding
+/// `[REQ-2203]` fixes this set at ten. A closed set is the point: adding
 /// one is a schema migration and a specification amendment, which is the cost
 /// that stops the log growing an eleventh meaning by accident.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(tag = "type")]
 pub enum EventKind {
-    /// A run began. A session holds one or more, per `[R-SESSION-005]`.
+    /// A run began. A session holds one or more, per `[REQ-2205, REQ-2206, REQ-2207]`.
     Started {
         /// The task the run was given.
         task: String,
@@ -110,7 +110,7 @@ pub enum EventKind {
         /// What went wrong, when something did.
         error: Option<String>,
     },
-    /// Policy decided about a call, per `[R-SESSION-070]`.
+    /// Policy decided about a call, per `[REQ-2250]`.
     Policy {
         /// The call it decided about.
         id: String,
@@ -123,7 +123,7 @@ pub enum EventKind {
     },
     /// What a model call cost.
     Usage(Usage),
-    /// A range of earlier events was summarised, per `[R-SESSION-010]`.
+    /// A range of earlier events was summarised, per `[REQ-2209, REQ-2210]`.
     Compaction {
         /// The inclusive range this supersedes. Those events stay.
         supersedes: RangeInclusive<u64>,
@@ -139,7 +139,7 @@ pub enum EventKind {
         /// What happened.
         message: String,
     },
-    /// A run ended, per `[R-SESSION-005]`.
+    /// A run ended, per `[REQ-2205, REQ-2206, REQ-2207]`.
     Finished {
         /// Why it stopped.
         stop: StopReason,

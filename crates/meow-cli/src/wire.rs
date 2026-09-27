@@ -30,7 +30,7 @@ pub fn without_workspace(matches: &ArgMatches) -> Option<Ending> {
         Some(("completions", sub)) => Some(completions(sub)),
         Some(("init", _)) => Some(init()),
         // A credential belongs to the machine, so managing one needs no
-        // workspace - `[R-AUTH-010]`. Being able to log in from anywhere is
+        // workspace - `[REQ-1204]`. Being able to log in from anywhere is
         // also what lets somebody fix a missing credential without first
         // having a workspace that loads.
         Some(("auth", sub)) => Some(auth(sub)),
@@ -54,7 +54,7 @@ fn auth(matches: &ArgMatches) -> Ending {
                 println!("no credentials stored");
                 return Ending::Passed;
             }
-            // `[R-AUTH-014]`: the name, the kind, and when. Never the secret.
+            // `[REQ-1212]`: the name, the kind, and when. Never the secret.
             for (name, credential) in store.list() {
                 println!(
                     "{name}\t{}\tstored {}",
@@ -90,7 +90,7 @@ fn auth(matches: &ArgMatches) -> Ending {
                 return Ending::Usage;
             };
 
-            // `[R-AUTH-020]`: a kind that authenticates by OAuth takes a
+            // `[REQ-1213]`: a kind that authenticates by OAuth takes a
             // different path. Which kind a name is comes from the workspace
             // when there is one, and from the name itself when there is not -
             // logging in should not require a workspace that loads.
@@ -140,7 +140,7 @@ fn auth(matches: &ArgMatches) -> Ending {
 
 /// Stop a command that a workspace has not been trusted to run.
 ///
-/// `[R-AUTH-030]`. Returns `Some` when the run must not continue, and `None`
+/// `[REQ-1222, REQ-1223]`. Returns `Some` when the run must not continue, and `None`
 /// when it may.
 ///
 /// The commands that only describe a workspace are exempt. `meow check`,
@@ -164,7 +164,7 @@ pub fn gate_on_trust(
                 | "version"
                 // `pkg` prepares rather than runs: it downloads an archive and
                 // writes a lockfile, and evaluating the workspace to learn
-                // what to download reaches nothing, by `[R-STAR-084]`. It is
+                // what to download reaches nothing, by `[REQ-2524, REQ-2525]`. It is
                 // also how a person sees what a workspace would pull in
                 // before deciding whether to trust it.
                 | "pkg"
@@ -207,7 +207,7 @@ fn ask_to_trust(
         eprintln!("  {line}");
     }
 
-    // `[R-AUTH-031]`: no terminal means no answer, and proceeding or blocking
+    // `[REQ-1224, REQ-1225]`: no terminal means no answer, and proceeding or blocking
     // are both worse than stopping. Naming the command is the whole of what
     // an unattended run needs from this message.
     if !std::io::IsTerminal::is_terminal(&std::io::stdin()) {
@@ -333,7 +333,7 @@ fn oauth_kind(provider: &str) -> bool {
 
 /// `meow auth login <oauth provider>`: show a code, wait, store the result.
 fn login_by_device(provider: &str, store: &mut crate::auth::Store) -> Ending {
-    // `[R-AUTH-023]`: nobody to read the code means nobody to type it into a
+    // `[REQ-1221]`: nobody to read the code means nobody to type it into a
     // browser either, so this is refused rather than left waiting.
     if !std::io::IsTerminal::is_terminal(&std::io::stdin()) {
         eprintln!(
@@ -760,7 +760,7 @@ fn index(matches: &ArgMatches, workspace: &Workspace, registry: &Registry) -> En
     let (model_id, chunking, walk) = match crate::index::configure(registry) {
         Ok(configured) => configured,
         Err(message) => {
-            // [R-STAR-035]: a workspace that declares no index is told to
+            // [REQ-2484, REQ-2485, REQ-2486, REQ-2487]: a workspace that declares no index is told to
             // declare one rather than having a model chosen for it.
             eprintln!("{message}");
             return Ending::Config;
@@ -1121,7 +1121,7 @@ fn invoke(
     // fails, and it says why.
     let search = searcher(&workspace, &loaded.registry, &built, runtime.handle());
 
-    // `[R-STAR-026]`: the store is the workspace's database, which every
+    // `[REQ-2463, REQ-2464, REQ-2465]`: the store is the workspace's database, which every
     // command already opens. When it will not open, every `store` call says
     // so - an in-memory fallback would let a handler write a value, read it
     // back inside the run, and find it gone next time with nothing explaining
@@ -1181,7 +1181,7 @@ fn invoke(
 
 /// Open the session this run writes to.
 ///
-/// `[R-TUI-074]`: `--continue` resumes the most recent session of the command
+/// `[REQ-2850, REQ-2851]`: `--continue` resumes the most recent session of the command
 /// being invoked and fails when there is none, rather than quietly starting a
 /// fresh run somebody thought they were adding to.
 fn open_session(
@@ -1226,7 +1226,7 @@ enum Opening {
 
 /// What a handler's return value says about the run.
 ///
-/// `[R-TUI-080]` distinguishes `false` from everything else: a handler
+/// `[REQ-2852]` distinguishes `false` from everything else: a handler
 /// returning a string is reporting a result, not a verdict.
 fn verdict(returned: &str) -> Option<bool> {
     match returned.trim() {
@@ -1252,7 +1252,7 @@ fn searcher(
     providers: &HashMap<String, Arc<dyn Provider>>,
     handle: &tokio::runtime::Handle,
 ) -> Arc<dyn meow_star::port::Search> {
-    // `[R-STAR-019]`: `search.text` and `search.files` need no index, so a
+    // `[REQ-2441, REQ-2442, REQ-2443, REQ-2444]`: `search.text` and `search.files` need no index, so a
     // workspace without one still searches. Only the calls that rank need a
     // model and a built graph, and those are the ones that say why they
     // cannot run. Handing back a port that answered everything with an empty
@@ -1322,7 +1322,7 @@ pub const KINDS: &[&str] = &[
 ///
 /// # Errors
 ///
-/// A message naming the kind and what there is, per `[R-STAR-091]`'s spirit:
+/// A message naming the kind and what there is, per `[REQ-2527]`'s spirit:
 /// a typo in a kind should say what the kinds are.
 fn build_provider(declared: &meow_star::Provider, key: &str) -> Result<Arc<dyn Provider>, String> {
     let transport = Http::new(declared.name.clone()).map_err(|e| e.to_string())?;
@@ -1344,7 +1344,7 @@ fn build_provider(declared: &meow_star::Provider, key: &str) -> Result<Arc<dyn P
             Arc::new(provider)
         }
         // The grant a person approved, exchanged for a short-lived token by
-        // the provider itself - `[R-LLM-004]`. There is no base to override:
+        // the provider itself - `[REQ-1604, REQ-1605, REQ-1606]`. There is no base to override:
         // Copilot is one address, and pointing it elsewhere would be pointing
         // it at something that is not Copilot.
         "copilot" => Arc::new(meow_llm::copilot::build(transport, key).map_err(|e| e.to_string())?),
@@ -1415,7 +1415,7 @@ fn engines(registry: &Registry) -> Result<HashMap<String, Arc<Engine>>, String> 
 /// author decided the key should be. The conventional variable is the fallback
 /// so a workspace that says nothing still works.
 fn credential(provider: &meow_star::Provider) -> Option<String> {
-    // `[R-AUTH-001]`: one order, always. The declaration first, because a
+    // `[REQ-1200]`: one order, always. The declaration first, because a
     // workspace that says where its key comes from has said it deliberately;
     // then the store, which is where `meow auth` puts one; then the
     // environment, which is the escape hatch.
@@ -1449,7 +1449,7 @@ fn credential(provider: &meow_star::Provider) -> Option<String> {
 
 /// What to say when a provider has no credential anywhere.
 ///
-/// `[R-AUTH-002]`: all three places, with the variable spelled out, so the
+/// `[REQ-1201]`: all three places, with the variable spelled out, so the
 /// reader can act without consulting a document. One function, because a
 /// message that lists the places differently from where the lookup looked is
 /// a message that sends people to the wrong one.
@@ -1480,7 +1480,7 @@ fn served_by(registry: &Registry, model_id: &str) -> String {
 
 /// The environment variable a provider kind reads.
 ///
-/// Named rather than inlined because `[R-AUTH-002]` asks the error to spell it
+/// Named rather than inlined because `[REQ-1201]` asks the error to spell it
 /// out, and a message that computes the name differently from the lookup is a
 /// message that sends people to the wrong variable.
 pub fn variable_for(kind: &str) -> String {

@@ -4,13 +4,13 @@
 //! Whether this machine has agreed to run the scripts in a workspace.
 //!
 //! A `.meow/` directory in a repository you just cloned is executable code
-//! with tool access - `[R-AUTH-030]`. Nothing about `git clone` asks whether
+//! with tool access - `[REQ-1222, REQ-1223]`. Nothing about `git clone` asks whether
 //! you meant to run it, so the first invocation does.
 //!
-//! Asking is safe because asking costs nothing: `[R-STAR-084]` refuses every
+//! Asking is safe because asking costs nothing: `[REQ-2524, REQ-2525]` refuses every
 //! module during declaration, so loading `.meow/` far enough to say what it
 //! declares reaches no file, no program, and no network. That is what makes
-//! `[R-AUTH-033]` true rather than aspirational.
+//! `[REQ-1228]` true rather than aspirational.
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -23,7 +23,7 @@ use crate::auth::AuthError;
 /// What a workspace declares, as one line per thing.
 ///
 /// This is both what the person is shown and what is remembered, which is the
-/// point: `[R-AUTH-034]` says a workspace whose declarations changed asks
+/// point: `[REQ-1229]` says a workspace whose declarations changed asks
 /// again, and the only honest way to mean that is to record what was shown.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Declared(Vec<String>);
@@ -123,7 +123,7 @@ pub enum Standing {
     Trusted,
     /// Never agreed to.
     Unknown,
-    /// Agreed to, but it declares something else now - `[R-AUTH-034]`.
+    /// Agreed to, but it declares something else now - `[REQ-1229]`.
     Changed,
 }
 
@@ -189,7 +189,7 @@ impl Trust {
         );
     }
 
-    /// Withdraw it, and say whether there was one - `[R-AUTH-032]`.
+    /// Withdraw it, and say whether there was one - `[REQ-1226, REQ-1227]`.
     pub fn withdraw(&mut self, root: &Path) -> bool {
         self.entries.remove(&key(root)).is_some()
     }

@@ -48,7 +48,7 @@ pub struct Pin {
 
 /// The lockfile.
 ///
-/// `[R-PKG-010]`: deterministic, because a diff should show a dependency
+/// `[REQ-1805, REQ-1806]`: deterministic, because a diff should show a dependency
 /// change and nothing else. A `BTreeMap` and a trailing newline are the whole
 /// of what that takes.
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -95,7 +95,7 @@ impl Lock {
 
 /// Where a package's contents sit once fetched.
 ///
-/// `[R-PKG-021]`: keyed by the hash rather than by name and version. A version
+/// `[REQ-1816]`: keyed by the hash rather than by name and version. A version
 /// is a label upstream controls and can move; a hash is the bytes. Two
 /// workspaces that pinned the same hash are provably running the same code.
 pub fn cached_at(config_dir: &Path, hash: &str) -> PathBuf {
@@ -106,7 +106,7 @@ pub fn cached_at(config_dir: &Path, hash: &str) -> PathBuf {
 ///
 /// Over the sorted relative paths and the bytes at each, so a file that moves
 /// changes the hash and the order a filesystem happens to return entries in
-/// does not. This is what `[R-PKG-011]` verifies, and it is recomputed at load
+/// does not. This is what `[REQ-1807, REQ-1808]` verifies, and it is recomputed at load
 /// rather than trusted from a stamp file: a stamp is written by the same
 /// process that would have been fooled.
 ///
@@ -151,7 +151,7 @@ fn collect(root: &Path, at: &Path, out: &mut Vec<String>) -> Result<()> {
 
 /// Where a `@<pkg>//<path>` load should read from, or why it cannot.
 ///
-/// `[R-PKG-012]`: this never fetches. A load that reached the network without
+/// `[REQ-1809, REQ-1810]`: this never fetches. A load that reached the network without
 /// being asked is a load that can behave differently between two runs of the
 /// same commit.
 ///
@@ -166,7 +166,7 @@ pub fn resolve(
     name: &str,
     path: &str,
 ) -> Result<PathBuf> {
-    // `[R-PKG-001]`: undeclared is refused before anything else, so a typo
+    // `[REQ-1800, REQ-1801, REQ-1802]`: undeclared is refused before anything else, so a typo
     // reads as a typo rather than as a missing download.
     let Some(declared) = declared else {
         return Err(StarError::Load {
@@ -196,7 +196,7 @@ pub fn resolve(
         });
     }
 
-    // `[R-PKG-011]`: before anything is evaluated, and recomputed rather than
+    // `[REQ-1807, REQ-1808]`: before anything is evaluated, and recomputed rather than
     // read from a marker. A cache somebody edited is the case this exists for.
     let found = hash_tree(&root)?;
     if found != pin.hash {
@@ -222,7 +222,7 @@ pub fn resolve(
     }
 
     let file = root.join(path);
-    // `[R-PKG-031]`: a package's own files and nothing else. A `..` that
+    // `[REQ-1822]`: a package's own files and nothing else. A `..` that
     // happens to land back inside is still a mistake worth reporting.
     if path.contains("..") || !file.starts_with(&root) {
         return Err(StarError::Load {

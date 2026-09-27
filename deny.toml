@@ -54,8 +54,7 @@ allow = [
     "Zlib",
 ]
 confidence-threshold = 0.9
-# The list above covers the licences the dependencies in
-# `docs/design/0.3.0-architecture.md` carry, so most entries match nothing
+# The list above covers the licences the workspace's dependencies carry, so most entries match nothing
 # while the workspace is still small. Warning about each one would train
 # everybody to ignore the output of this check.
 unused-allowed-license = "allow"

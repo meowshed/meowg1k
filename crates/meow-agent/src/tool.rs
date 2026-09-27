@@ -58,7 +58,7 @@ impl ToolSet {
 
     /// Find one by name.
     ///
-    /// Only within this set. `[R-AGENT-023]` forbids reaching into a wider
+    /// Only within this set. `[REQ-1027, REQ-1028]` forbids reaching into a wider
     /// registry: a tool the agent was not given must stay unreachable, however
     /// convincingly the model asks for it.
     pub fn get(&self, name: &str) -> Option<&dyn Tool> {
@@ -102,14 +102,14 @@ pub enum Checked {
 
 /// Check the model's arguments against the tool's schema.
 ///
-/// Satisfies `[R-AGENT-021]`: a required argument the model omitted is never
+/// Satisfies `[REQ-1021, REQ-1022, REQ-1023, REQ-1024]`: a required argument the model omitted is never
 /// replaced with a default or a zero. v0.2.x filled it with the zero value for
 /// its type, so a model that forgot a required integer received `0` and
 /// returned a confident wrong answer. The correction names the argument and
 /// its type, because a model told what is missing fixes it on the next turn
 /// and a model told nothing repeats itself.
 ///
-/// Satisfies `[R-AGENT-022]`: an optional argument the model omitted takes its
+/// Satisfies `[REQ-1025, REQ-1026]`: an optional argument the model omitted takes its
 /// declared default, and one with no default stays absent rather than zeroed,
 /// so absent is distinguishable from zero, empty, and false all the way
 /// through.
@@ -146,7 +146,7 @@ pub fn check(args: &Value, schema: &Value) -> Checked {
                 continue;
             }
             // Absent and optional: take the declared default, or stay absent.
-            // Never a zero value, which is the whole of R-AGENT-022.
+            // Never a zero value, which is the whole of REQ-1025, REQ-1026.
             if let Some(default) = sub.get("default") {
                 obj.insert(name.clone(), default.clone());
             }

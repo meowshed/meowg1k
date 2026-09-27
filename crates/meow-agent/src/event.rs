@@ -7,7 +7,7 @@ use meow_core::{StopReason, Usage};
 
 /// Something the engine did.
 ///
-/// `[R-AGENT-070]` requires every observable transition. The renderer draws
+/// `[REQ-1060]` requires every observable transition. The renderer draws
 /// from these, a script callback receives these, and a test collects these, so
 /// none of the three needs to know about the others.
 #[derive(Debug, Clone, PartialEq)]
@@ -67,7 +67,7 @@ pub enum AgentEvent {
     },
     /// A range of the conversation was summarised.
     ///
-    /// `[R-AGENT-042]`: the engine emits it and whoever persists writes the
+    /// `[REQ-1041, REQ-1042]`: the engine emits it and whoever persists writes the
     /// session event. The engine does not know the store exists.
     Compacted {
         /// The messages this replaces, by position.
@@ -94,12 +94,12 @@ pub trait Sink: Send {
     ///
     /// Whatever the consumer decides. The engine does not interpret it: it
     /// stops delivering to this sink, records a note, and carries on, per
-    /// `[R-AGENT-071]`.
+    /// `[REQ-1063, REQ-1064, REQ-1065, REQ-1066, REQ-1067, REQ-1068]`.
     fn event(&mut self, event: AgentEvent) -> Result<(), String>;
 
     /// Whether this sink wants text and thinking a token at a time.
     ///
-    /// `[R-AGENT-073]`. A sink backed by a script callback pays one call per
+    /// `[REQ-1061, REQ-1062]`. A sink backed by a script callback pays one call per
     /// token otherwise, which is a cost nobody asked for. Declining gets
     /// [`AgentEvent::StepText`] once per step instead.
     fn wants_deltas(&self) -> bool {
@@ -147,7 +147,7 @@ impl Sink for Collect {
 
 /// A sink that ignores everything, for a caller that wants no events.
 ///
-/// `[R-AGENT-072]`: the engine works with nothing attached.
+/// `[REQ-1069]`: the engine works with nothing attached.
 #[derive(Debug, Default)]
 pub struct Discard;
 

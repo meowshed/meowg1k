@@ -48,12 +48,12 @@ impl Retry {
 
 /// Run an operation, retrying only what is worth retrying.
 ///
-/// Satisfies `[R-LLM-033]` by retrying `Transient` and nothing else: a `Fatal`
-/// error surfaces on its first occurrence with no delay, and `[R-LLM-035]`
-/// keeps a spent quota from being retried at all. Satisfies `[R-LLM-034]` by
+/// Satisfies `[REQ-1627, REQ-1628]` by retrying `Transient` and nothing else: a `Fatal`
+/// error surfaces on its first occurrence with no delay, and `[REQ-1632, REQ-1633]`
+/// keeps a spent quota from being retried at all. Satisfies `[REQ-1629, REQ-1630, REQ-1631]` by
 /// honouring `Retry-After` when the provider sent one, since a server that
 /// says how long to wait knows better than an exponent. Satisfies
-/// `[R-LLM-036]` by checking cancellation before each sleep and before each
+/// `[REQ-1636]` by checking cancellation before each sleep and before each
 /// attempt, so stopping a run does not first wait out a backoff.
 pub async fn with_retry<T, F, Fut>(
     provider: &str,

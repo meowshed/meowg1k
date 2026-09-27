@@ -26,7 +26,7 @@ use crate::run::Runtime;
 
 /// Which half of a run is executing.
 ///
-/// `[R-STAR-030]` and `[R-STAR-084]` both turn on this one distinction: a
+/// `[REQ-2475, REQ-2476]` and `[REQ-2524, REQ-2525]` both turn on this one distinction: a
 /// declaration call is refused outside the declaration phase, and a runtime
 /// module's builtins are refused inside it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

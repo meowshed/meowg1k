@@ -7,7 +7,7 @@
 //! answers a query with ranked chunks. It does not decide what to do with a
 //! result and does not call a generation model.
 //!
-//! `docs/spec/index.md` is normative.
+//! `SPC-1400` is normative.
 
 pub mod ann;
 pub mod chunk;

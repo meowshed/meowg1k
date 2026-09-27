@@ -19,7 +19,7 @@ fn sessions() -> (TempDir, Sessions) {
     (dir, Sessions::new(store))
 }
 
-/// [R-SESSION-050] resuming appends to the same session and the same sequence
+/// [REQ-2236, REQ-2237] resuming appends to the same session and the same sequence
 #[test]
 fn resuming_grows_one_session_rather_than_making_another() {
     let (_dir, sessions) = sessions();
@@ -53,7 +53,7 @@ fn resuming_grows_one_session_rather_than_making_another() {
     assert_eq!(after[before.len() - 1].kind, before[before.len() - 1].kind);
 }
 
-/// [R-SESSION-051] a resumed run sees the conversation the way the original
+/// [REQ-2238] a resumed run sees the conversation the way the original
 /// did, summarised ranges and all
 #[test]
 fn a_resumed_run_sees_what_the_original_saw() {
@@ -99,7 +99,7 @@ fn a_resumed_run_sees_what_the_original_saw() {
     assert_eq!(sessions.events(&session).unwrap().len(), 5);
 }
 
-/// [R-SESSION-054] nothing infers a continuation
+/// [REQ-2244, REQ-2245] nothing infers a continuation
 #[test]
 fn a_run_that_names_no_session_starts_one() {
     let (_dir, sessions) = sessions();

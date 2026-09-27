@@ -16,14 +16,14 @@ use serde_json::Value;
 
 /// Where everything a run produces goes.
 ///
-/// One stream and one method. `[R-TUI-042]` asks each `ctx.out` call to
+/// One stream and one method. `[REQ-2834]` asks each `ctx.out` call to
 /// produce a typed event that all three renderers handle, and the engine's own
 /// events travel the same way, so a renderer sees one vocabulary rather than
 /// two that have to be kept level. A trait with a method per call would let a
 /// renderer quietly handle nine of the ten.
 ///
 /// The ten script calls are the variants of [`Output`], fixed by
-/// `[R-TUI-040]`; `[R-TUI-041]` is why none of them positions a cursor, draws
+/// `[REQ-2832]`; `[REQ-2833]` is why none of them positions a cursor, draws
 /// a frame, or paginates.
 pub trait Events: Send + Sync + std::fmt::Debug {
     /// Take one event.
@@ -116,7 +116,7 @@ pub trait Session: Send + Sync + std::fmt::Debug {
 
     /// The conversation so far, for a run that is continuing one.
     ///
-    /// `[R-SESSION-051]`: rebuilt the way the original saw it, superseded
+    /// `[REQ-2238]`: rebuilt the way the original saw it, superseded
     /// ranges and all, because a resumed run that saw more than the original
     /// did would answer a different question.
     fn history(&self) -> Vec<Message> {
@@ -143,7 +143,7 @@ pub struct Found {
 ///
 /// A port for the same reason the terminal is one: the index lives in a crate
 /// beside this, and a script reaches it through `load("@std//search", ...)`
-/// rather than through a member of the handler context, per `[R-STAR-021]`.
+/// rather than through a member of the handler context, per `[REQ-2446]`.
 pub trait Search: Send + Sync + std::fmt::Debug {
     /// Rank the workspace against a question.
     ///
@@ -155,7 +155,7 @@ pub trait Search: Send + Sync + std::fmt::Debug {
 
     /// The same, with the floor below which a hit is not worth returning.
     ///
-    /// `[R-STAR-024]`: `search.code` is the call a handler usually wants and
+    /// `[REQ-2456, REQ-2457, REQ-2458]`: `search.code` is the call a handler usually wants and
     /// `index.query` is the one with the knobs, so the knobs live here and
     /// `code` is this with a floor of zero.
     ///
@@ -193,7 +193,7 @@ pub trait Search: Send + Sync + std::fmt::Debug {
 
     /// Find text in the workspace, with no index involved.
     ///
-    /// `[R-STAR-019]`: matching literal text is a walk and a comparison, so
+    /// `[REQ-2441, REQ-2442, REQ-2443, REQ-2444]`: matching literal text is a walk and a comparison, so
     /// this needs no embedding model and no built graph. It is a port anyway
     /// rather than a capability, because it must obey the same walk the index
     /// obeys and that walk lives beside the index.
@@ -219,7 +219,7 @@ pub trait Search: Send + Sync + std::fmt::Debug {
 
 /// What a walk changed.
 ///
-/// `[R-STAR-024]` asks for counts rather than text, because a handler that
+/// `[REQ-2456, REQ-2457, REQ-2458]` asks for counts rather than text, because a handler that
 /// reports progress and a handler that decides whether to keep going need a
 /// number, and parsing one back out of a sentence is how a report goes stale.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -249,11 +249,11 @@ pub struct Stats {
 
 /// What a handler keeps between runs.
 ///
-/// `[R-STAR-026]`. The table is the workspace's, not a session's, so
+/// `[REQ-2463, REQ-2464, REQ-2465]`. The table is the workspace's, not a session's, so
 /// collecting every session leaves it alone - which is the whole reason a
 /// handler would use it rather than `ctx.session`.
 ///
-/// Values rather than text, by `[R-STAR-027]`: a store that took strings would
+/// Values rather than text, by `[REQ-2466, REQ-2467]`: a store that took strings would
 /// put an encode on one side of every handler and a decode on the other, and
 /// the two would be written in different places and drift.
 pub trait Keep: Send + Sync + std::fmt::Debug {
@@ -454,12 +454,12 @@ pub mod quiet {
         }
     }
 
-    /// `[R-STAR-025]`: no index and no results are different answers, so every
+    /// `[REQ-2459, REQ-2460, REQ-2461, REQ-2462]`: no index and no results are different answers, so every
     /// call says which one this is rather than returning nothing.
     ///
     /// This is the double for a run wired with no search at all. A workspace
     /// that merely has no index built is a different thing, and the binary
-    /// gives it a port that still walks - see `[R-STAR-019]`.
+    /// gives it a port that still walks - see `[REQ-2441, REQ-2442, REQ-2443, REQ-2444]`.
     const NONE: &str = "this run has no search; run `meow index build` first";
 
     /// Keeps what a run stored, and forgets it afterwards.

@@ -18,7 +18,7 @@ use crate::tool::{Tool, ToolError};
 
 /// An agent offered to another agent as a tool.
 ///
-/// `[R-AGENT-050]`: it runs in its own session with the caller recorded as its
+/// `[REQ-1049]`: it runs in its own session with the caller recorded as its
 /// parent. The session identifier is the caller's to mint, so this carries the
 /// spec and the engine and leaves the recording to whoever owns the log.
 pub struct SubAgent {
@@ -41,7 +41,7 @@ impl SubAgent {
     /// Offer an agent as a tool inside a run.
     ///
     /// The ledger is the caller's, narrowed to the sub-agent's declared
-    /// budget, which is what makes `[R-AGENT-013]` and `[R-AGENT-014]` hold
+    /// budget, which is what makes `[REQ-1014]` and `[REQ-1017]` hold
     /// through nesting rather than only at the top.
     pub fn new(spec: Arc<AgentSpec>, engine: Arc<Engine>, caller: &Ledger, depth: u32) -> Self {
         let ledger = caller.child(spec.budget);
@@ -75,7 +75,7 @@ impl Tool for SubAgent {
     }
 
     async fn call(&self, args: &Value, cancel: &CancellationToken) -> Result<String, ToolError> {
-        // [R-AGENT-052]: refused as a tool error, so the caller's model is
+        // [REQ-1051, REQ-1052]: refused as a tool error, so the caller's model is
         // told and can do something else. A panic here would take the whole
         // run down over a mistake the model can recover from.
         if self.depth >= self.spec.max_depth {
@@ -87,7 +87,7 @@ impl Tool for SubAgent {
 
         let task = args.get("task").and_then(Value::as_str).unwrap_or_default();
 
-        // [R-AGENT-053]: the only things that cross are the task and the
+        // [REQ-1053, REQ-1054]: the only things that cross are the task and the
         // arguments. A sub-agent that inherited its caller's messages would
         // behave differently depending on who called it, which makes it
         // untestable and its budget unpredictable.
@@ -102,7 +102,7 @@ impl Tool for SubAgent {
 
 /// What a caller's model is told about a sub-agent's run.
 ///
-/// `[R-AGENT-051]`: the text, the stop reason, and the parsed value when the
+/// `[REQ-1050]`: the text, the stop reason, and the parsed value when the
 /// sub-agent declared a schema. The stop reason matters as much as the text: a
 /// caller that cannot tell a finished answer from a budget stop will treat a
 /// partial one as complete.
@@ -122,7 +122,7 @@ fn describe(outcome: &Outcome) -> String {
 
 /// One agent, one task, ready to run but not running.
 ///
-/// `[R-STAR-043]` builds these in Starlark, where a closure could not cross a
+/// `[REQ-2493, REQ-2494]` builds these in Starlark, where a closure could not cross a
 /// thread boundary but a declaration can.
 pub struct Invocation {
     /// Which agent.
@@ -142,10 +142,10 @@ impl std::fmt::Debug for Invocation {
 
 /// Run several agents at once.
 ///
-/// Satisfies `[R-AGENT-060]` by returning results in the order given, whatever
-/// order they finish in; `[R-AGENT-061]` by letting one failure be a result
+/// Satisfies `[REQ-1055]` by returning results in the order given, whatever
+/// order they finish in; `[REQ-1056, REQ-1057]` by letting one failure be a result
 /// with a non-finished stop reason rather than something that takes the others
-/// down; and `[R-AGENT-062]` by sharing the caller's ledger, so the fan-out
+/// down; and `[REQ-1058, REQ-1059]` by sharing the caller's ledger, so the fan-out
 /// stops starting new work once the budget is spent rather than each branch
 /// spending it in full.
 pub async fn run_parallel(

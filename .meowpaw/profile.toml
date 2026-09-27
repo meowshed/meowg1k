@@ -40,10 +40,9 @@ test = "none"
 trunk = "main"
 require_signatures = true
 
-# docs/spec holds the numbered requirements and docs/design the decisions
-# behind them.
+# The record: vision.md, requirements/, adrs/ and specs/ under project/.
 [record]
-root = "docs"
+root = "project"
 
 # /plan decomposes a spec into GitHub issues, and pull requests close them.
 [tracker]

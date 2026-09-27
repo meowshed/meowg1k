@@ -68,7 +68,7 @@ impl Embed for Embedder {
 ///
 /// # Errors
 ///
-/// A message naming what is missing, per `[R-STAR-035]`: a workspace that
+/// A message naming what is missing, per `[REQ-2484, REQ-2485, REQ-2486, REQ-2487]`: a workspace that
 /// declares no index gets told to declare one rather than having a model
 /// chosen for it.
 pub fn configure(registry: &Registry) -> Result<(String, Chunking, Walk), String> {
@@ -117,7 +117,7 @@ pub struct Searcher {
     /// happens to be on.
     index: std::sync::Mutex<Index>,
     embedder: Embedder,
-    /// `[R-STAR-019]`: `search.text` and `search.files` need no index, but
+    /// `[REQ-2441, REQ-2442, REQ-2443, REQ-2444]`: `search.text` and `search.files` need no index, but
     /// they must reach the same files it reaches, so they share its walk.
     walk: Walk,
     root: std::path::PathBuf,
@@ -158,7 +158,7 @@ impl Searcher {
     }
 }
 
-/// `[R-STAR-024]`: counts, not text.
+/// `[REQ-2456, REQ-2457, REQ-2458]`: counts, not text.
 fn counted(built: &meow_index::Built, files: usize) -> Indexed {
     Indexed {
         files,
@@ -254,7 +254,7 @@ impl Search for Searcher {
 
 /// `search.text` and `search.files`, with no index behind them.
 ///
-/// `[R-STAR-019]` asks both to work in a workspace where `meow index build`
+/// `[REQ-2441, REQ-2442, REQ-2443, REQ-2444]` asks both to work in a workspace where `meow index build`
 /// has never run, and to reach exactly the files the index reaches. So this
 /// needs the walk and the root and nothing else, and it is what a workspace
 /// that declares no index gets - the alternative, which this replaces, was a
@@ -381,7 +381,7 @@ impl Walker {
 /// A workspace with no index: the two searches that need none still work, and
 /// everything that needs one says so.
 ///
-/// `[R-STAR-025]`: no index and no results are different answers.
+/// `[REQ-2459, REQ-2460, REQ-2461, REQ-2462]`: no index and no results are different answers.
 #[derive(Debug)]
 pub struct Unindexed {
     walker: Walker,

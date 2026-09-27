@@ -15,7 +15,7 @@ pub enum SessionError {
 
     /// A short identifier matched more than one session.
     ///
-    /// `[R-SESSION-031]` forbids picking one: the candidates are listed and
+    /// `[REQ-2221, REQ-2222]` forbids picking one: the candidates are listed and
     /// the caller decides, because guessing which run someone meant is how a
     /// destructive command hits the wrong one.
     #[error("{needle} matches {} sessions: {}", .candidates.len(), .candidates.join(", "))]
@@ -37,7 +37,7 @@ pub enum SessionError {
 
     /// A fork was asked for at a sequence that cannot be forked at.
     ///
-    /// `[R-SESSION-053]`: the message names what would work, because "invalid
+    /// `[REQ-2243]`: the message names what would work, because "invalid
     /// sequence" leaves somebody guessing at a number they cannot see.
     #[error("cannot fork at {at}: {reason}")]
     ForkPoint {
@@ -49,7 +49,7 @@ pub enum SessionError {
 
     /// A compaction would supersede a range that is already superseded.
     ///
-    /// `[R-SESSION-013]`.
+    /// `[REQ-2214]`.
     #[error("sequences {from}..={to} are already superseded by the compaction at {existing}")]
     AlreadySuperseded {
         /// First sequence of the proposed range.

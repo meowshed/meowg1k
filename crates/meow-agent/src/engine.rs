@@ -47,7 +47,7 @@ impl Engine {
 
     /// Run an agent to its end.
     ///
-    /// Satisfies `[R-AGENT-001]`: every run that starts returns an outcome.
+    /// Satisfies `[REQ-1000]`: every run that starts returns an outcome.
     /// No stop condition is reported as an error, because an error discards
     /// the transcript the run already paid for - which is what v0.2.x did
     /// when it hit `max_iterations`.
@@ -65,7 +65,7 @@ impl Engine {
 
     /// Run an agent that already has a conversation behind it.
     ///
-    /// Satisfies `[R-SESSION-051]`: the caller supplies the message list, so a
+    /// Satisfies `[REQ-2238]`: the caller supplies the message list, so a
     /// resumed run sees compaction exactly as the original did. Rebuilding it
     /// here would mean the engine reading a log, and the engine does not know
     /// the store exists.
@@ -105,7 +105,7 @@ impl Engine {
             if cancel.is_cancelled() {
                 break (StopReason::Cancelled, None);
             }
-            // [R-AGENT-015] and [R-AGENT-017]: reserved before the call, so a
+            // [REQ-1018] and [REQ-1015, REQ-1016]: reserved before the call, so a
             // run cannot overshoot by a whole step and concurrent runs sharing
             // a ledger cannot both see the same remaining amount.
             if let Err(axis) = ledger.reserve_step() {
@@ -146,7 +146,7 @@ impl Engine {
         Outcome {
             stop,
             detail,
-            // [R-AGENT-003]: the last text, whatever the stop reason. A budget
+            // [REQ-1002]: the last text, whatever the stop reason. A budget
             // stop is a result to inspect, not work to throw away.
             text: run.state.text,
             value,
@@ -158,11 +158,11 @@ impl Engine {
     /// Summarise the older part of the conversation, when it has grown too
     /// long for the model to hold.
     ///
-    /// Satisfies `[R-AGENT-040]` by acting before the next call rather than
-    /// after a provider rejects one; `[R-AGENT-044]` by summarising rather
+    /// Satisfies `[REQ-1039]` by acting before the next call rather than
+    /// after a provider rejects one; `[REQ-1044, REQ-1045, REQ-1046]` by summarising rather
     /// than dropping, because a silent drop leaves the model confidently wrong
-    /// about what it already knows; `[R-AGENT-042]` by emitting the event that
-    /// records the range, without deleting anything; and `[R-AGENT-043]` by
+    /// about what it already knows; `[REQ-1041, REQ-1042]` by emitting the event that
+    /// records the range, without deleting anything; and `[REQ-1043]` by
     /// failing the run when the summary cannot be produced, rather than
     /// carrying on with a context the provider will reject anyway.
     async fn compact(
@@ -273,7 +273,7 @@ impl Engine {
         assistant.thinking = response.thinking.clone();
         messages.push(assistant);
 
-        // [R-AGENT-005]: no tool calls means finished, even when the text is
+        // [REQ-1004, REQ-1005, REQ-1006]: no tool calls means finished, even when the text is
         // empty. Empty text is not a failure; v0.2.x reported it as one.
         if response.tool_calls.is_empty() {
             state.empty_finish = response.text.trim().is_empty();
@@ -281,7 +281,7 @@ impl Engine {
             return Turn::Done;
         }
 
-        // [R-AGENT-025]: in the order the model returned them.
+        // [REQ-1032]: in the order the model returned them.
         for call in &response.tool_calls {
             record.tool_calls.push(call.name.clone());
             deliver.send(AgentEvent::ToolStart {
@@ -302,11 +302,11 @@ impl Engine {
 
             messages.push(Message::tool_result(&call.id, &content));
 
-            // [R-AGENT-024]: `report` returns the error to the model and the
+            // [REQ-1029, REQ-1030, REQ-1031]: `report` returns the error to the model and the
             // run continues; `abort` stops. An argument correction is not a
-            // tool error and never aborts, which [R-AGENT-021] requires, so
+            // tool error and never aborts, which [REQ-1021, REQ-1022, REQ-1023, REQ-1024] requires, so
             // only a real failure reaches here with `error` set.
-            // [R-AGENT-006]: `denied` when policy refused, `tool_aborted`
+            // [REQ-1007, REQ-1008]: `denied` when policy refused, `tool_aborted`
             // when a tool failed. A user needs to know the boundary held
             // rather than that something broke.
             if result.stop {
@@ -344,7 +344,7 @@ impl Engine {
         cancel: &CancellationToken,
     ) -> Invoked {
         let Some(tool) = spec.tools.get(&call.name) else {
-            // [R-AGENT-023]: not found here means not found. No wider
+            // [REQ-1027, REQ-1028]: not found here means not found. No wider
             // registry is consulted.
             return Invoked::told(format!(
                 "no tool named `{}` is available to this agent",
@@ -354,7 +354,7 @@ impl Engine {
 
         let args: Value = serde_json::from_str(&call.arguments).unwrap_or(Value::Null);
 
-        // [R-POLICY-040]: the decision comes before the tool runs, never after.
+        // [REQ-2037, REQ-2038]: the decision comes before the tool runs, never after.
         if let (Some(policy), Some(describe)) = (&spec.policy, &spec.describe_call) {
             let judged = describe(&call.name, &args);
             let verdict = policy.evaluate(&judged, &spec.grants);
@@ -362,7 +362,7 @@ impl Engine {
                 id: call.id.clone(),
                 decision: verdict.decision.as_str().to_owned(),
             });
-            // [R-POLICY-020]: `ask` becomes `deny` when nobody can be asked,
+            // [REQ-2022]: `ask` becomes `deny` when nobody can be asked,
             // so an unattended run cannot approve itself. When somebody can
             // be, the answer decides, and "stop" ends the run rather than
             // letting the model work around a refusal it was meant to respect.
@@ -387,7 +387,7 @@ impl Engine {
             };
 
             if let Some(stop) = refused {
-                // [R-POLICY-041]: the model is told which tool and that policy
+                // [REQ-2039]: the model is told which tool and that policy
                 // refused, so it can choose another approach rather than
                 // repeating itself against a wall.
                 let rule = verdict.rule.unwrap_or_else(|| "no rule matched".to_owned());
@@ -419,7 +419,7 @@ impl Engine {
 
     /// The parsed answer, when there is one to have.
     ///
-    /// `[R-AGENT-080]`: present when the run finished, absent otherwise. A
+    /// `[REQ-1070, REQ-1071]`: present when the run finished, absent otherwise. A
     /// value from a run that stopped early would be a partial answer wearing
     /// the shape of a complete one.
     fn final_value(&self, spec: &AgentSpec, state: &RunState, stop: StopReason) -> Option<Value> {
@@ -477,7 +477,7 @@ struct RunState {
 }
 
 impl RunState {
-    /// `[R-AGENT-005]`: a finish with no text is recorded, so a caller is not
+    /// `[REQ-1004, REQ-1005, REQ-1006]`: a finish with no text is recorded, so a caller is not
     /// handed a silent success.
     fn finish_detail(&self) -> Option<String> {
         self.empty_finish
@@ -487,7 +487,7 @@ impl RunState {
 
 /// Delivers events, and stops trying once a sink has failed.
 ///
-/// `[R-AGENT-071]`: identical handling for every kind. Rendering is not the
+/// `[REQ-1063, REQ-1064, REQ-1065, REQ-1066, REQ-1067, REQ-1068]`: identical handling for every kind. Rendering is not the
 /// work, so a broken sink does not destroy a run in progress; and it does not
 /// fail silently either, because the failure is recorded and the sink stops
 /// receiving.

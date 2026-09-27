@@ -6,7 +6,7 @@
 //! `@std//fs` and `@std//shell` do what a handler cannot do for itself, and
 //! everything here is confined to the workspace.
 //!
-//! The confinement is not policy. `docs/spec/policy.md` records that policy
+//! The confinement is not policy. `ADR-2002` records that policy
 //! governs what a model decided, and a handler is code the workspace's own
 //! author wrote. It is there because a path that escapes the workspace is a
 //! mistake whichever of them made it, and the cheapest place to notice is
@@ -314,7 +314,7 @@ pub(crate) fn run_words(
 /// Run a command in the workspace and collect what it produced.
 ///
 /// The command is a list of words, never a string for a shell to split.
-/// `[R-POLICY-006]` judges a command line, and a string handed to `sh -c` is a
+/// `[REQ-2008]` judges a command line, and a string handed to `sh -c` is a
 /// command line the policy never saw the real shape of.
 fn capture_inner(
     eval: &mut Evaluator<'_, '_, '_>,
@@ -355,7 +355,7 @@ fn capture_inner(
 
 /// Start a program in the workspace and wait for it.
 ///
-/// `[R-STAR-081]`: the thread blocks. A command is the clearest case for it:
+/// `[REQ-2520, REQ-2521]`: the thread blocks. A command is the clearest case for it:
 /// there is nothing useful a handler could do with a future here.
 fn spawn(
     state: &crate::state::Running,

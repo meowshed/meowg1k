@@ -12,7 +12,7 @@ use crate::policy::{Call, Decision, Grants, Policy, Verdict, redact};
 
 /// How long an approval waits.
 ///
-/// `[R-POLICY-024]`: indefinitely by default. A prompt that expires while you
+/// `[REQ-2028, REQ-2029, REQ-2030]`: indefinitely by default. A prompt that expires while you
 /// are reading the command it is asking about turns a security decision into a
 /// reflex. A timeout stays configurable for an unattended terminal that is
 /// nevertheless a terminal.
@@ -36,13 +36,13 @@ pub struct Prompt {
     pub tool: String,
     /// The arguments, verbatim except for what was marked sensitive.
     ///
-    /// `[R-POLICY-021]`: verbatim, never a summary. An approval prompt that
+    /// `[REQ-2023, REQ-2024]`: verbatim, never a summary. An approval prompt that
     /// paraphrases what it is approving is worse than no prompt, because it
     /// asks for consent to something the reader did not see.
     pub arguments: String,
     /// The rule that caused the question.
     ///
-    /// `[R-POLICY-022]`: so the user learns why they are being asked and can
+    /// `[REQ-2025]`: so the user learns why they are being asked and can
     /// narrow the policy afterwards, instead of answering the same question
     /// every run.
     pub rule: String,
@@ -80,8 +80,8 @@ impl Prompt {
 
 /// What a person said to an approval prompt.
 ///
-/// Four answers, by `[R-TUI-061]`. "Always" is the one worth stating twice:
-/// `[R-POLICY-023]` and `[R-TUI-062]` both say it lasts for the process and
+/// Four answers, by `[REQ-2840, REQ-2841]`. "Always" is the one worth stating twice:
+/// `[REQ-2026, REQ-2027]` and `[REQ-2842]` both say it lasts for the process and
 /// nothing writes it back to a file, because a permission granted in a hurry
 /// should not outlive the terminal it was granted in.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -147,7 +147,7 @@ pub struct Explanation {
 
 /// Predict what the rules say about a call, without making it.
 ///
-/// Satisfies `[R-POLICY-050]`: the *rule* decision, not the final outcome. It
+/// Satisfies `[REQ-2046, REQ-2047]`: the *rule* decision, not the final outcome. It
 /// does not claim to predict how an `ask` would be answered, because that
 /// depends on a person and on grants made during a run that has not happened.
 /// A permission system whose decisions cannot be queried without triggering

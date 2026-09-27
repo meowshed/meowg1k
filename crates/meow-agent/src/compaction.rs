@@ -12,13 +12,13 @@ pub struct Compaction {
     pub at: f32,
     /// How many of the most recent messages stay verbatim.
     ///
-    /// `[R-AGENT-041]`. The recent ones are what the model is reasoning about
+    /// `[REQ-1040]`. The recent ones are what the model is reasoning about
     /// right now; summarising those is what makes a compacted agent lose the
     /// thread.
     pub keep_recent: usize,
     /// Which model summarises.
     ///
-    /// `[R-AGENT-045]`. Summarising is a cheap task, and the first draft ran
+    /// `[REQ-1047, REQ-1048]`. Summarising is a cheap task, and the first draft ran
     /// it on the agent's expensive model at the worst possible moment of every
     /// long run. `None` falls back to the agent's own.
     pub model: Option<String>,

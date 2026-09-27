@@ -11,7 +11,7 @@ use crate::log::Sessions;
 
 /// What a person typed, once it has been recognised.
 ///
-/// `[R-SESSION-032]` fixes the three selectors. They resolve at the moment of
+/// `[REQ-2223]` fixes the three selectors. They resolve at the moment of
 /// use, never when they were written down: `@last` in a script means the most
 /// recent run each time the script runs, which is the only reading that is
 /// useful in a shell.
@@ -28,7 +28,7 @@ pub enum Selector {
 impl Selector {
     /// Recognise a selector.
     ///
-    /// Anything starting with `@` is a selector; `[R-SESSION-033]` forbids a
+    /// Anything starting with `@` is a selector; `[REQ-2224, REQ-2225, REQ-2226, REQ-2227]` forbids a
     /// name from starting with one, so the two namespaces cannot collide.
     pub fn parse(text: &str) -> Self {
         let Some(rest) = text.strip_prefix('@') else {
@@ -47,7 +47,7 @@ impl Selector {
 impl Sessions {
     /// Give a session a name.
     ///
-    /// Satisfies `[R-SESSION-033]`: unique within the workspace, and never
+    /// Satisfies `[REQ-2224, REQ-2225, REQ-2226, REQ-2227]`: unique within the workspace, and never
     /// starting with `@`, so a name can never shadow a selector.
     pub fn name_session(&self, id: &SessionId, name: &str) -> Result<()> {
         if name.starts_with('@') {
@@ -68,7 +68,7 @@ impl Sessions {
 
     /// One session, by whatever a person typed.
     ///
-    /// Satisfies `[R-SESSION-031]`: a short identifier matching several
+    /// Satisfies `[REQ-2221, REQ-2222]`: a short identifier matching several
     /// sessions fails with the candidates listed. Picking the newest would be
     /// convenient right up until it deleted the wrong run.
     pub fn resolve(&self, text: &str) -> Result<Session> {

@@ -26,7 +26,7 @@ pub trait Embed: Send + Sync {
 pub enum Rejected {
     /// The batch was too big, as a batch.
     ///
-    /// `[R-INDEX-020]`: split and retried. Every provider has a limit and
+    /// `[REQ-1418, REQ-1419]`: split and retried. Every provider has a limit and
     /// none of them agrees on it, so discovering it by being told is more
     /// reliable than configuring it.
     TooLarge,
@@ -48,9 +48,9 @@ pub const DEFAULT_BATCH: usize = 64;
 
 /// Embed a list of texts, splitting any batch the provider refuses.
 ///
-/// Satisfies `[R-INDEX-020]`: a rejected batch is halved and retried, down to
+/// Satisfies `[REQ-1418, REQ-1419]`: a rejected batch is halved and retried, down to
 /// one text. A single text that is still refused is the caller's to report,
-/// with the file and the lines, which is `[R-INDEX-021]` and is why this
+/// with the file and the lines, which is `[REQ-1420]` and is why this
 /// returns the index of the offender rather than a message about sizes.
 ///
 /// # Errors
@@ -121,7 +121,7 @@ pub fn from_bytes(bytes: &[u8]) -> Option<Vec<f32>> {
 ///
 /// Cosine similarity, which is what every embedding model this talks to is
 /// trained for. Vectors of different lengths score zero rather than panicking:
-/// that means the index was built by another model, and `[R-INDEX-051]`
+/// that means the index was built by another model, and `[REQ-1436, REQ-1437]`
 /// catches it before a query gets this far.
 pub fn similarity(a: &[f32], b: &[f32]) -> f32 {
     if a.len() != b.len() {

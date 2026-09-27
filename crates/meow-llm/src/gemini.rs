@@ -167,7 +167,7 @@ impl<T: Transport> Gemini<T> {
             message,
             retry_after: response.retry_after,
             // The API's own status, never text matched out of a message, per
-            // [R-LLM-037]. `RESOURCE_EXHAUSTED` covers both a spent quota and
+            // [REQ-1634, REQ-1635]. `RESOURCE_EXHAUSTED` covers both a spent quota and
             // a rate limit; the retry policy tells them apart by the header.
             quota_exhausted: status == "RESOURCE_EXHAUSTED" && response.retry_after.is_none(),
         }
@@ -245,7 +245,7 @@ fn parts_of(v: &Value, seen: &mut BTreeMap<String, usize>) -> (String, Vec<ToolC
 /// It takes a subset and rejects the whole request for a keyword it does not
 /// know, which turns a schema written for every other provider into a 400.
 /// Dropping what it cannot read is what lets one declaration serve all of
-/// them, per `[R-STAR-061]`.
+/// them, per `[REQ-2511]`.
 fn clean_schema(schema: &Value) -> Value {
     const REFUSED: [&str; 4] = ["additionalProperties", "$schema", "x-meow", "default"];
 
@@ -394,7 +394,7 @@ impl<T: Transport> Provider for Gemini<T> {
             events.extend(usage_of(v.get("usageMetadata")).map(StreamEvent::Usage));
 
             for event in events {
-                // [R-LLM-023]: the consumer's error aborts the request and
+                // [REQ-1620, REQ-1621]: the consumer's error aborts the request and
                 // reaches the caller unchanged.
                 sink.event(event.clone())?;
                 agg.push(event);

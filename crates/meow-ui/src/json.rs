@@ -11,13 +11,13 @@ use crate::Renderer;
 
 /// One JSON object per line.
 ///
-/// Satisfies `[R-TUI-030]` - every line an object with a `type` - and
-/// `[R-TUI-031]` by emitting the schema version before anything else. The
+/// Satisfies `[REQ-2824]` - every line an object with a `type` - and
+/// `[REQ-2825]` by emitting the schema version before anything else. The
 /// objects are `meow_core::view` types serialised directly, which is what
-/// makes `[R-TUI-032]` hold: there is no second definition here to drift from
+/// makes `[REQ-2826, REQ-2827]` hold: there is no second definition here to drift from
 /// the one the export uses.
 ///
-/// `[R-TUI-033]` is the caller's half of the bargain. This writes only the
+/// `[REQ-2828, REQ-2829]` is the caller's half of the bargain. This writes only the
 /// stream; diagnostics go to stderr, which this never touches.
 pub struct Json<W: Write> {
     out: W,

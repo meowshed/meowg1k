@@ -11,7 +11,7 @@ use crate::rule::{Rule, SelectorKind};
 
 /// What a policy says about one call.
 ///
-/// `[R-POLICY-010]` orders them: deny beats ask beats allow.
+/// `[REQ-2016, REQ-2017]` orders them: deny beats ask beats allow.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Decision {
     /// Run it.
@@ -40,7 +40,7 @@ pub enum Source {
     Rule,
     /// No rule matched, so the default applied.
     ///
-    /// `[R-POLICY-011]`: the default is deny. A tool an agent was never
+    /// `[REQ-2018]`: the default is deny. A tool an agent was never
     /// granted stays unreachable however convincingly it is asked for.
     NoMatch,
     /// A person answered a prompt.
@@ -64,8 +64,8 @@ impl Source {
 /// Whether a call reads or writes.
 ///
 /// The distinction decides what a partially denied call does:
-/// `[R-POLICY-008]` lets a read proceed and name what it skipped, and
-/// `[R-POLICY-009]` denies a write whole, because a partial write leaves the
+/// `[REQ-2011, REQ-2012]` lets a read proceed and name what it skipped, and
+/// `[REQ-2013, REQ-2014]` denies a write whole, because a partial write leaves the
 /// workspace in a state nobody chose.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Access {
@@ -77,7 +77,7 @@ pub enum Access {
 
 /// A call, resolved and ready to be judged.
 ///
-/// `[R-POLICY-003]` and `[R-POLICY-014]`: the paths are already absolute with
+/// `[REQ-2004, REQ-2005]` and `[REQ-2006, REQ-2007]`: the paths are already absolute with
 /// symlinks resolved, and the tool must act on exactly these. Re-resolving
 /// later reopens the window in which a path allowed as a file becomes a
 /// symlink to somewhere denied.
@@ -136,24 +136,24 @@ pub struct Verdict {
     pub decision: Decision,
     /// Which rule said so, when one did.
     ///
-    /// `[R-POLICY-012]`: a decision that cannot name its rule cannot be acted
+    /// `[REQ-2019]`: a decision that cannot name its rule cannot be acted
     /// on, because the user has nothing to change.
     pub rule: Option<String>,
     /// Where it was declared.
     pub origin: Option<String>,
     /// How it was reached.
     pub source: Source,
-    /// Paths a read must skip, per `[R-POLICY-008]`.
+    /// Paths a read must skip, per `[REQ-2011, REQ-2012]`.
     pub denied_paths: Vec<PathBuf>,
     /// How many higher-precedence rules were checked without matching.
     ///
-    /// `[R-POLICY-051]`.
+    /// `[REQ-2048, REQ-2049]`.
     pub checked: usize,
 }
 
 /// Grants a person made during this process.
 ///
-/// `[R-POLICY-023]`: never written to a file. Persisting a grant made inside a
+/// `[REQ-2026, REQ-2027]`: never written to a file. Persisting a grant made inside a
 /// prompt is how a permission system rots: the next run inherits a decision
 /// nobody remembers making.
 #[derive(Debug, Clone, Default)]
@@ -216,7 +216,7 @@ impl Policy {
 
     /// Check that every selector applies to something.
     ///
-    /// Satisfies `[R-POLICY-005]`. `supports` answers which selectors a tool
+    /// Satisfies `[REQ-2009]`. `supports` answers which selectors a tool
     /// matching a pattern has; the caller knows its own tools, and the policy
     /// layer does not.
     ///
@@ -242,9 +242,9 @@ impl Policy {
 
     /// Decide about one call.
     ///
-    /// Satisfies `[R-POLICY-010]` by checking deny, then ask, then allow, and
-    /// returning the first match; `[R-POLICY-011]` by denying when nothing
-    /// matches; `[R-POLICY-013]` by touching no filesystem, network, or clock,
+    /// Satisfies `[REQ-2016, REQ-2017]` by checking deny, then ask, then allow, and
+    /// returning the first match; `[REQ-2018]` by denying when nothing
+    /// matches; `[REQ-2020, REQ-2021]` by touching no filesystem, network, or clock,
     /// and by taking the grants as an argument rather than reading them from
     /// somewhere, so the same call and the same policy and the same grants
     /// always give the same answer.
@@ -266,7 +266,7 @@ impl Policy {
                     continue;
                 };
                 // A session grant turns an ask into an allow, and never
-                // touches a deny: [R-POLICY-031] forbids widening, and a
+                // touches a deny: [REQ-2033, REQ-2034] forbids widening, and a
                 // person answering a prompt is not a reason to stop denying
                 // what the workspace denied.
                 let (decision, source) = if decision == Decision::Ask && grants.has(&call.tool) {
@@ -305,7 +305,7 @@ impl Policy {
                 if call.paths.is_empty() {
                     return None;
                 }
-                // [R-POLICY-006]: once per resolved path.
+                // [REQ-2010]: once per resolved path.
                 let (matched, missed): (Vec<&PathBuf>, Vec<&PathBuf>) = call
                     .paths
                     .iter()
@@ -323,7 +323,7 @@ impl Policy {
                     .matches_text(command)
                     .then_some(Hit { denied: Vec::new() })
             }
-            // [R-POLICY-007]: a policy can allow one host without allowing the
+            // [REQ-2015]: a policy can allow one host without allowing the
             // network. Egress is where a prompt-injected agent does the most
             // damage, so an all-or-nothing network rule is not enough.
             SelectorKind::Hosts => {
@@ -337,7 +337,7 @@ impl Policy {
 
     /// The effective policy when an agent narrows the workspace's.
     ///
-    /// Satisfies `[R-POLICY-030]` and `[R-POLICY-031]`: for every call, the
+    /// Satisfies `[REQ-2031, REQ-2032]` and `[REQ-2033, REQ-2034]`: for every call, the
     /// more restrictive of what the two say, ordering deny above ask above
     /// allow. An agent can therefore tighten and never loosen, which is what
     /// makes the workspace policy a boundary rather than a suggestion.
@@ -350,7 +350,7 @@ impl Policy {
 
     /// Which arguments of a call must never be shown or stored.
     ///
-    /// `[R-POLICY-060]`.
+    /// `[REQ-2041, REQ-2042, REQ-2043]`.
     pub fn sensitive_for(&self, tool: &str) -> Vec<String> {
         let mut out = Vec::new();
         for rule in self.deny.iter().chain(&self.ask).chain(&self.allow) {
@@ -386,13 +386,13 @@ impl Narrowed<'_> {
 
 /// Replace a sensitive value.
 ///
-/// `[R-POLICY-061]`: a fixed placeholder, revealing nothing, not even how long
+/// `[REQ-2044, REQ-2045]`: a fixed placeholder, revealing nothing, not even how long
 /// the value was.
 pub const REDACTED: &str = "[redacted]";
 
 /// Redact the marked arguments of a call.
 ///
-/// `[R-POLICY-060]`: the same text is used in the approval prompt, the
+/// `[REQ-2041, REQ-2042, REQ-2043]`: the same text is used in the approval prompt, the
 /// transcript, and every export, so a secret cannot be shown in one and hidden
 /// in another.
 pub fn redact(args: &serde_json::Value, sensitive: &[String]) -> serde_json::Value {
@@ -408,7 +408,7 @@ pub fn redact(args: &serde_json::Value, sensitive: &[String]) -> serde_json::Val
     serde_json::Value::Object(out)
 }
 
-/// Resolve a path the way `[R-POLICY-003]` expects, before evaluation.
+/// Resolve a path the way `[REQ-2004, REQ-2005]` expects, before evaluation.
 ///
 /// Here rather than inside `evaluate`, because evaluation must touch no
 /// filesystem and because the tool has to act on exactly what was judged.

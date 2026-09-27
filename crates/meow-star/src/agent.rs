@@ -3,7 +3,7 @@
 
 //! An agent declaration, and the one builder that every source of one uses.
 //!
-//! `[R-STAR-051]` asks a markdown agent and a Starlark agent to produce the
+//! `[REQ-2498, REQ-2499]` asks a markdown agent and a Starlark agent to produce the
 //! same value. The cheapest way to promise that and keep the promise is to
 //! give both one intermediate and one builder, so there is no second place for
 //! a default to be decided differently. [`Fields`] is that intermediate:
@@ -23,7 +23,7 @@ use crate::registry::Origin;
 /// What bounds a run, as a declaration writes it.
 ///
 /// Minutes rather than a duration string, because YAML has no duration type
-/// and `[R-STAR-050]` needs frontmatter to express everything a keyword
+/// and `[REQ-2496, REQ-2497]` needs frontmatter to express everything a keyword
 /// argument can.
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -102,7 +102,7 @@ pub struct RuleFields {
 
 /// Everything a declaration can say about an agent.
 ///
-/// The field set is `[R-STAR-040]`'s, minus `name`, which the caller supplies:
+/// The field set is `[REQ-2488, REQ-2489]`'s, minus `name`, which the caller supplies:
 /// a Starlark agent is named by a keyword argument and a markdown agent by its
 /// filename, and threading that difference through here would put the one
 /// thing that is genuinely not shared into the shared type.
@@ -194,7 +194,7 @@ impl Fields {
         let model = self.model.clone().ok_or_else(|| missing(name, "model"))?;
 
         let system = match (source, &self.system) {
-            // [R-STAR-050]: the body is the prompt, so frontmatter carrying
+            // [REQ-2496, REQ-2497]: the body is the prompt, so frontmatter carrying
             // `system` has two prompts and no rule for which wins. Refused,
             // rather than picking one and surprising half of its readers.
             (Source::Markdown, Some(_)) => {
@@ -217,7 +217,7 @@ impl Fields {
             });
         }
 
-        // [R-STAR-054]: prepended in the order given, separated by a blank
+        // [REQ-2502, REQ-2503, REQ-2504, REQ-2505]: prepended in the order given, separated by a blank
         // line, and that is the whole composition. Substitution and
         // conditionals are how a configuration format turns into a bad
         // programming language; an agent that needs logic is a Starlark agent.

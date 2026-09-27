@@ -4,8 +4,8 @@
 //! The typed rows the session layer builds its meaning on.
 //!
 //! The store keeps these queryable rather than folding them into the opaque
-//! body, because two requirements read them on every rebuild: `[R-SESSION-011]`
-//! asks which ranges are superseded, and `[R-SESSION-022]` sums usage across a
+//! body, because two requirements read them on every rebuild: `[REQ-2211]`
+//! asks which ranges are superseded, and `[REQ-2219]` sums usage across a
 //! session tree.
 
 use rusqlite::OptionalExtension;
@@ -73,7 +73,7 @@ impl Store {
 
     /// Append one event with its body.
     ///
-    /// One event, one commit, per `[R-STORE-020]`.
+    /// One event, one commit, per `[REQ-2623, REQ-2624]`.
     pub fn append(&self, session_id: &str, seq: i64, kind: &str, body: &str) -> Result<()> {
         self.append_with_payload(session_id, seq, kind, body, None)
     }
@@ -81,7 +81,7 @@ impl Store {
     /// Append one event whose bulk lives in a blob.
     ///
     /// The body is still written: a reader of the log must be able to say what
-    /// happened without fetching anything, and `[R-SESSION-052]` counts the
+    /// happened without fetching anything, and `[REQ-2239, REQ-2240, REQ-2241, REQ-2242]` counts the
     /// referents of whatever the body points at.
     ///
     /// # Errors
@@ -242,7 +242,7 @@ impl Store {
 
     /// Store the rebuildable copy of a session's state.
     ///
-    /// `[R-SESSION-041]` permits this so that listing a thousand sessions does
+    /// `[REQ-2229, REQ-2230]` permits this so that listing a thousand sessions does
     /// not read a thousand events. The log wins on any disagreement, which is
     /// why nothing reads this without being able to fall back.
     pub fn set_state_cache(&self, session_id: &str, state: &str) -> Result<()> {
@@ -303,7 +303,7 @@ impl Store {
 
     /// Every session whose identifier ends with `suffix`, or whose name is it.
     ///
-    /// The suffix rather than the prefix, because `[R-SESSION-034]` makes the
+    /// The suffix rather than the prefix, because `[REQ-2220]` makes the
     /// short form the random tail.
     pub fn resolve_session(&self, needle: &str) -> Result<Vec<crate::SessionRow>> {
         let conn = self.conn();

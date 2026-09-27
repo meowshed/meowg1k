@@ -1,10 +1,10 @@
 // Copyright © 2025 The meowg1k Authors
 // SPDX-License-Identifier: Apache-2.0
 
-//! Every requirement in `docs/spec/llm.md`, one test or more each.
+//! Every requirement in `SPC-1600`, one test or more each.
 //!
 //! Nothing here reaches the network. Every provider test runs against a
-//! recorded exchange, which is also why `[R-LLM-021]` is stated over a
+//! recorded exchange, which is also why `[REQ-1618]` is stated over a
 //! recording: two live calls to a model cannot be compared, because the model
 //! is free to answer differently.
 
@@ -72,7 +72,7 @@ impl Provider for Bare {
     }
 }
 
-/// [R-LLM-001] a provider declares what it can do
+/// [REQ-1600, REQ-1601] a provider declares what it can do
 #[test]
 fn a_provider_declares_its_capabilities() {
     let a = Anthropic::new(Recorded::default(), "k");
@@ -82,7 +82,7 @@ fn a_provider_declares_its_capabilities() {
     assert!(!caps.embeddings, "anthropic has no embedding endpoint");
 }
 
-/// [R-LLM-002] an undeclared capability is refused before a request is sent
+/// [REQ-1602] an undeclared capability is refused before a request is sent
 #[tokio::test]
 async fn an_undeclared_capability_is_refused_without_sending_anything() {
     let bare = Bare;
@@ -112,7 +112,7 @@ async fn an_undeclared_capability_is_refused_without_sending_anything() {
     ));
 }
 
-/// [R-LLM-003] no vendor type appears in a trait signature
+/// [REQ-1603] no vendor type appears in a trait signature
 #[test]
 fn the_trait_names_no_vendor_type() {
     // A compile-time claim: this file uses the provider through its trait and
@@ -125,9 +125,9 @@ fn the_trait_names_no_vendor_type() {
     assert_eq!(_uses_only_our_types(&a).0, "anthropic");
 }
 
-/// [R-LLM-010] a message carries exactly one role
-/// [R-LLM-011] an assistant message carries text and tool calls together
-/// [R-LLM-012] a tool result names the call it answers
+/// [REQ-1607] a message carries exactly one role
+/// [REQ-1608] an assistant message carries text and tool calls together
+/// [REQ-1609] a tool result names the call it answers
 #[test]
 fn a_message_carries_one_role_and_a_result_names_its_call() {
     let m = Message::new(Role::User, "hi");
@@ -150,8 +150,8 @@ fn a_message_carries_one_role_and_a_result_names_its_call() {
     );
 }
 
-/// [R-LLM-013] tool call identifiers are unique within a response
-/// [R-LLM-014] a repeated identifier is one call, whatever the session setting
+/// [REQ-1610, REQ-1611] tool call identifiers are unique within a response
+/// [REQ-1612] a repeated identifier is one call, whatever the session setting
 #[tokio::test]
 async fn a_repeated_tool_call_identifier_produces_one_call() {
     let body = r#"{"content":[
@@ -174,7 +174,7 @@ async fn a_repeated_tool_call_identifier_produces_one_call() {
     assert_eq!(ids, vec!["c1", "c2"]);
 }
 
-/// [R-LLM-015] a cache hint becomes a breakpoint and leaves content alone
+/// [REQ-1613, REQ-1614, REQ-1615, REQ-1616] a cache hint becomes a breakpoint and leaves content alone
 #[tokio::test]
 async fn a_cache_hint_becomes_a_breakpoint_without_changing_the_message() {
     let transport = Recorded::with_responses(vec![ok(&text_reply("hi"))]);
@@ -206,8 +206,8 @@ fn a_sent_body(a: &Anthropic<Recorded>) -> String {
     a.transport().bodies().first().cloned().unwrap_or_default()
 }
 
-/// [R-LLM-020] the stream event kinds are exactly eight
-/// [R-LLM-021] aggregating a recorded stream gives the non-streaming value
+/// [REQ-1617] the stream event kinds are exactly eight
+/// [REQ-1618] aggregating a recorded stream gives the non-streaming value
 #[tokio::test]
 async fn aggregating_a_recorded_stream_matches_the_whole_answer() {
     let lines: Vec<String> = [
@@ -251,7 +251,7 @@ async fn aggregating_a_recorded_stream_matches_the_whole_answer() {
     );
 }
 
-/// [R-LLM-022] a provider without native streaming declares it unsupported
+/// [REQ-1619] a provider without native streaming declares it unsupported
 #[tokio::test]
 async fn a_provider_without_streaming_refuses_rather_than_synthesising_it() {
     let mut sink = Collect::default();
@@ -272,7 +272,7 @@ async fn a_provider_without_streaming_refuses_rather_than_synthesising_it() {
     );
 }
 
-/// [R-LLM-023] a sink error aborts the request and reaches the caller
+/// [REQ-1620, REQ-1621] a sink error aborts the request and reaches the caller
 #[tokio::test]
 async fn a_sink_error_stops_the_stream_and_is_not_interpreted() {
     let lines: Vec<String> = (0..5)
@@ -308,7 +308,7 @@ async fn a_sink_error_stops_the_stream_and_is_not_interpreted() {
     );
 }
 
-/// [R-LLM-024] thinking survives onto the message and goes back next turn
+/// [REQ-1622, REQ-1623] thinking survives onto the message and goes back next turn
 #[tokio::test]
 async fn thinking_is_kept_and_sent_back_on_the_next_turn() {
     let body = r#"{"content":[
@@ -341,9 +341,9 @@ async fn thinking_is_kept_and_sent_back_on_the_next_turn() {
     assert_eq!(sent["messages"][1]["content"][0]["type"], "thinking");
 }
 
-/// [R-LLM-030] every error is classified as exactly one of three
-/// [R-LLM-031] the transient statuses
-/// [R-LLM-032] the fatal statuses
+/// [REQ-1624] every error is classified as exactly one of three
+/// [REQ-1625] the transient statuses
+/// [REQ-1626] the fatal statuses
 #[test]
 fn every_status_lands_in_exactly_one_class() {
     let http = |status, quota| LlmError::Http {
@@ -374,7 +374,7 @@ fn every_status_lands_in_exactly_one_class() {
     assert_eq!(LlmError::Cancelled.class(), Class::Fatal);
 }
 
-/// [R-LLM-033] only transient errors are retried, and a fatal one does not wait
+/// [REQ-1627, REQ-1628] only transient errors are retried, and a fatal one does not wait
 #[tokio::test(start_paused = true)]
 async fn a_fatal_error_surfaces_at_once_and_is_not_retried() {
     let tries = Arc::new(AtomicU32::new(0));
@@ -406,7 +406,7 @@ async fn a_fatal_error_surfaces_at_once_and_is_not_retried() {
     assert_eq!(started.elapsed(), Duration::ZERO, "and must not wait first");
 }
 
-/// [R-LLM-033] a transient error is retried until it succeeds
+/// [REQ-1627, REQ-1628] a transient error is retried until it succeeds
 #[tokio::test(start_paused = true)]
 async fn a_transient_error_is_retried() {
     let tries = Arc::new(AtomicU32::new(0));
@@ -431,7 +431,7 @@ async fn a_transient_error_is_retried() {
     assert_eq!(tries.load(Ordering::SeqCst), 3);
 }
 
-/// [R-LLM-034] Retry-After is honoured over the exponent
+/// [REQ-1629, REQ-1630, REQ-1631] Retry-After is honoured over the exponent
 #[tokio::test(start_paused = true)]
 async fn retry_after_is_honoured() {
     let tries = Arc::new(AtomicU32::new(0));
@@ -464,8 +464,8 @@ async fn retry_after_is_honoured() {
     );
 }
 
-/// [R-LLM-035] a spent quota surfaces at once
-/// [R-LLM-037] a spent quota is told apart from a rate limit by the provider's
+/// [REQ-1632, REQ-1633] a spent quota surfaces at once
+/// [REQ-1634, REQ-1635] a spent quota is told apart from a rate limit by the provider's
 ///             own signal, not by matching text
 #[tokio::test]
 async fn a_spent_quota_is_told_apart_from_a_rate_limit() {
@@ -501,7 +501,7 @@ async fn a_spent_quota_is_told_apart_from_a_rate_limit() {
     );
 }
 
-/// [R-LLM-036] cancellation is checked before sleeping and before each attempt
+/// [REQ-1636] cancellation is checked before sleeping and before each attempt
 #[tokio::test(start_paused = true)]
 async fn cancelling_during_a_backoff_does_not_wait_it_out() {
     let cancel = CancellationToken::new();
@@ -531,7 +531,7 @@ async fn cancelling_during_a_backoff_does_not_wait_it_out() {
     );
 }
 
-/// [R-LLM-040] cached tokens stay absent when the provider does not report them
+/// [REQ-1637, REQ-1638, REQ-1639] cached tokens stay absent when the provider does not report them
 #[tokio::test]
 async fn an_unreported_cache_count_stays_absent_rather_than_zero() {
     let without = r#"{"content":[],"usage":{"input_tokens":10,"output_tokens":3}}"#;
@@ -561,7 +561,7 @@ async fn an_unreported_cache_count_stays_absent_rather_than_zero() {
     );
 }
 
-/// [R-LLM-041] no usage block at all is distinguishable from zeroes
+/// [REQ-1640] no usage block at all is distinguishable from zeroes
 #[tokio::test]
 async fn no_usage_at_all_is_distinguishable_from_zeroes() {
     let a = Anthropic::new(Recorded::with_responses(vec![ok(r#"{"content":[]}"#)]), "k");
@@ -588,8 +588,8 @@ async fn no_usage_at_all_is_distinguishable_from_zeroes() {
     );
 }
 
-/// [R-LLM-050] a provider without native schemas validates here instead
-/// [R-LLM-052] a satisfied schema returns parsed, not a string
+/// [REQ-1641, REQ-1642, REQ-1643] a provider without native schemas validates here instead
+/// [REQ-1646] a satisfied schema returns parsed, not a string
 #[tokio::test]
 async fn a_schema_is_satisfied_by_validation_and_returned_parsed() {
     let reply = r#"{"content":[{"type":"text","text":"{\"file\":\"a.rs\",\"line\":3}"}]}"#;
@@ -612,7 +612,7 @@ async fn a_schema_is_satisfied_by_validation_and_returned_parsed() {
     assert_eq!(value["line"], 3);
 }
 
-/// [R-LLM-051] a failing answer is asked again with the error, then gives up
+/// [REQ-1644, REQ-1645] a failing answer is asked again with the error, then gives up
 #[tokio::test]
 async fn a_failing_schema_is_asked_again_with_the_reason_and_then_gives_up() {
     let bad = r#"{"content":[{"type":"text","text":"{\"file\":\"a.rs\"}"}]}"#;
@@ -647,7 +647,7 @@ async fn a_failing_schema_is_asked_again_with_the_reason_and_then_gives_up() {
     );
 }
 
-/// [R-LLM-052] validation catches every constraint the schema builder emits
+/// [REQ-1646] validation catches every constraint the schema builder emits
 #[test]
 fn validation_covers_the_constraints_the_schema_builder_can_express() {
     let schema = serde_json::json!({
@@ -683,8 +683,8 @@ fn validation_covers_the_constraints_the_schema_builder_can_express() {
     }
 }
 
-/// [R-LLM-060] a cancelled request stops
-/// [R-LLM-061] and says it was cancelled, not that it timed out
+/// [REQ-1647, REQ-1648] a cancelled request stops
+/// [REQ-1649] and says it was cancelled, not that it timed out
 #[tokio::test]
 async fn a_cancelled_request_says_so() {
     let cancel = CancellationToken::new();

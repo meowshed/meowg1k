@@ -3,7 +3,7 @@
 
 //! Forward-only schema migrations.
 //!
-//! `[R-STORE-005]` forbids a downgrade path, so this module has no way to
+//! `[REQ-2609, REQ-2610]` forbids a downgrade path, so this module has no way to
 //! express one: a migration is a version and the SQL that reaches it.
 
 use rusqlite::Connection;
@@ -28,7 +28,7 @@ const MIGRATIONS: &[Migration] = &[
         ) STRICT;
 
         -- Content-addressed payloads. `data` holds the bytes whether the
-        -- payload was inlined or not, so [R-STORE-010]'s "invisible to a
+        -- payload was inlined or not, so [REQ-2613, REQ-2614, REQ-2615, REQ-2616]'s "invisible to a
         -- reader" is structural rather than a rule to remember.
         CREATE TABLE blobs (
             hash     TEXT PRIMARY KEY,
@@ -55,7 +55,7 @@ const MIGRATIONS: &[Migration] = &[
             PRIMARY KEY (session_id, seq)
         ) STRICT;
 
-        -- [R-STORE-031]: the workspace store is its own table, so deleting a
+        -- [REQ-2633]: the workspace store is its own table, so deleting a
         -- session cannot touch it.
         CREATE TABLE kv (
             key   TEXT PRIMARY KEY,
@@ -82,10 +82,10 @@ const MIGRATIONS: &[Migration] = &[
         -- meow-session owns what the shape means.
         ALTER TABLE events ADD COLUMN body TEXT NOT NULL DEFAULT '{}';
 
-        -- [R-SESSION-020] wants these summable without parsing a string, and
-        -- [R-SESSION-022] sums them across a session tree, so they are columns
+        -- [REQ-2215] wants these summable without parsing a string, and
+        -- [REQ-2219] sums them across a session tree, so they are columns
         -- rather than part of the JSON body. cost_micros is nullable because
-        -- [R-SESSION-021] forbids recording an unpriced model as free.
+        -- [REQ-2216, REQ-2217, REQ-2218] forbids recording an unpriced model as free.
         CREATE TABLE usage (
             session_id  TEXT NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
             seq         INTEGER NOT NULL,
@@ -96,7 +96,7 @@ const MIGRATIONS: &[Migration] = &[
             PRIMARY KEY (session_id, seq)
         ) STRICT;
 
-        -- [R-SESSION-011] and [R-SESSION-013] both ask which ranges are
+        -- [REQ-2211] and [REQ-2214] both ask which ranges are
         -- superseded, on every rebuild, so the range is queryable.
         CREATE TABLE compactions (
             session_id   TEXT NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
@@ -107,7 +107,7 @@ const MIGRATIONS: &[Migration] = &[
             PRIMARY KEY (session_id, seq)
         ) STRICT;
 
-        -- A rebuildable copy of the state, which [R-SESSION-041] permits so
+        -- A rebuildable copy of the state, which [REQ-2229, REQ-2230] permits so
         -- that listing a thousand sessions does not read a thousand events.
         -- The log wins on any disagreement.
         ALTER TABLE sessions ADD COLUMN state TEXT;
@@ -116,7 +116,7 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 3,
         sql: r#"
-        -- [R-SESSION-052] asks a fork to record where it came from, so a
+        -- [REQ-2239, REQ-2240, REQ-2241, REQ-2242] asks a fork to record where it came from, so a
         -- reader of a forked session can find the run it branched off and the
         -- point it branched at. Two columns rather than a JSON field, because
         -- `meow session list` shows them and a list should not parse.
@@ -127,12 +127,12 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 4,
         sql: r#"
-        -- [R-INDEX-050] puts the vectors in the same database as everything
+        -- [REQ-1435] puts the vectors in the same database as everything
         -- else, which is what lets a chunk share the blob table with a tool
         -- result quoting the same file.
 
         -- One row per indexed file. The hash covers the chunking parameters
-        -- as well as the content, per [R-INDEX-030], so changing the chunk
+        -- as well as the content, per [REQ-1423, REQ-1424], so changing the chunk
         -- size does not leave chunks that look current.
         CREATE TABLE index_files (
             path    TEXT PRIMARY KEY,
@@ -142,7 +142,7 @@ const MIGRATIONS: &[Migration] = &[
         ) STRICT;
 
         -- One row per chunk. `vector` is null until the chunk is embedded,
-        -- which is what makes a build resumable under [R-INDEX-022]: an
+        -- which is what makes a build resumable under [REQ-1421, REQ-1422]: an
         -- interrupted run finds its own work half done and does the rest.
         CREATE TABLE index_chunks (
             id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -188,10 +188,10 @@ fn recorded_version(conn: &Connection) -> Result<u32> {
 
 /// Bring the database up to [`latest_version`].
 ///
-/// Satisfies `[R-STORE-004]`: migrations run in ascending order, each in its
+/// Satisfies `[REQ-2607, REQ-2608]`: migrations run in ascending order, each in its
 /// own transaction, so a failure leaves the database at the version it had
 /// before that migration rather than part-way through it. Satisfies
-/// `[R-STORE-006]`: a database from the future is an error, and the file is
+/// `[REQ-2611, REQ-2612]`: a database from the future is an error, and the file is
 /// not touched.
 pub(crate) fn migrate(conn: &mut Connection, path: &std::path::Path) -> Result<u32> {
     let current = recorded_version(conn)?;

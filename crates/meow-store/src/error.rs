@@ -13,7 +13,7 @@ use std::path::PathBuf;
 pub enum StoreError {
     /// The database was written by a newer binary than this one.
     ///
-    /// Required by `[R-STORE-006]`: the file is left untouched, and both
+    /// Required by `[REQ-2611, REQ-2612]`: the file is left untouched, and both
     /// versions are named so a user knows which binary to reach for.
     #[error(
         "database at {path} has schema version {found}, but this binary supports at most {supported}"
@@ -39,7 +39,7 @@ pub enum StoreError {
 
     /// A blob was asked for by a hash that has no row.
     ///
-    /// Required by `[R-STORE-013]`: a missing blob is an error naming the
+    /// Required by `[REQ-2621, REQ-2622]`: a missing blob is an error naming the
     /// hash, never empty content.
     #[error("no blob with hash {hash}")]
     BlobMissing {
@@ -66,7 +66,7 @@ pub enum StoreError {
 
     /// Any other failure SQLite reported.
     ///
-    /// Required by `[R-STORE-021]`: a failed write reaches the caller. The
+    /// Required by `[REQ-2625, REQ-2626]`: a failed write reaches the caller. The
     /// store never logs a failure and carries on.
     #[error("database error: {0}")]
     Sqlite(#[from] rusqlite::Error),

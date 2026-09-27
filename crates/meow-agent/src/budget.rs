@@ -10,7 +10,7 @@ use meow_core::Usage;
 
 /// The four axes a run is bounded on.
 ///
-/// `[R-AGENT-010]`. An axis left unset is unbounded, per `[R-AGENT-012]`, and
+/// `[REQ-1009]`. An axis left unset is unbounded, per `[REQ-1012, REQ-1013]`, and
 /// a spec with no budget at all takes [`Budget::default`] rather than running
 /// free.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -26,7 +26,7 @@ pub struct Budget {
 }
 
 impl Default for Budget {
-    /// `[R-AGENT-016]`: 200,000 tokens, 40 steps, 30 minutes, cost unbounded.
+    /// `[REQ-1019]`: 200,000 tokens, 40 steps, 30 minutes, cost unbounded.
     ///
     /// Tokens and steps are what actually bound spend. Wall clock bounds
     /// patience, and it is the axis that misfires: a slow provider or a long
@@ -110,8 +110,8 @@ struct Spend {
 
 /// What a run and its descendants have spent, shared.
 ///
-/// Satisfies `[R-AGENT-013]`: a child's spend reaches its caller because both
-/// hold the same ledger. Satisfies `[R-AGENT-017]`: a step is reserved before
+/// Satisfies `[REQ-1014]`: a child's spend reaches its caller because both
+/// hold the same ledger. Satisfies `[REQ-1015, REQ-1016]`: a step is reserved before
 /// the call and reconciled after, so three concurrent invocations cannot each
 /// observe the same remaining amount and each spend it.
 #[derive(Debug, Clone)]
@@ -156,10 +156,10 @@ impl Ledger {
 
     /// A ledger for a run inside this one.
     ///
-    /// Satisfies `[R-AGENT-014]`: the child's budget is the tighter of what it
+    /// Satisfies `[REQ-1017]`: the child's budget is the tighter of what it
     /// asked for and what the caller has left, so a fan-out cannot exceed the
     /// top-level cap however generous each child's own declaration is. The
-    /// spend is the same allocation, which is what makes `[R-AGENT-013]`
+    /// spend is the same allocation, which is what makes `[REQ-1014]`
     /// transitive rather than one level deep.
     pub fn child(&self, asked: Budget) -> Self {
         // One lock, not two. The child's allowance and the point it measures

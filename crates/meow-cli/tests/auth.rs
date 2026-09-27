@@ -21,7 +21,7 @@ fn home() -> TempDir {
     tempfile::tempdir().unwrap()
 }
 
-/// Run `meow`, having first agreed to the workspace - `[R-AUTH-030]`.
+/// Run `meow`, having first agreed to the workspace - `[REQ-1222, REQ-1223]`.
 fn run(home: &Path, at: &Path, args: &[&str]) -> Output {
     let _ = bare(home, at, &["trust"]);
     bare(home, at, args)
@@ -64,7 +64,7 @@ meow.model(name = "m", provider = "anthropic", id = "i", context = 1000, max_out
     dir
 }
 
-/// [R-AUTH-013] login stores one, list says so, logout removes it
+/// [REQ-1209, REQ-1210, REQ-1211] login stores one, list says so, logout removes it
 #[test]
 fn a_credential_can_be_stored_listed_and_removed() {
     let home = home();
@@ -96,7 +96,7 @@ fn a_credential_can_be_stored_listed_and_removed() {
     );
 }
 
-/// [R-AUTH-014] no command prints a credential
+/// [REQ-1212] no command prints a credential
 #[test]
 fn nothing_ever_prints_the_credential() {
     let home = home();
@@ -128,7 +128,7 @@ fn nothing_ever_prints_the_credential() {
     }
 }
 
-/// [R-AUTH-001] the store is consulted when the declaration has no key
+/// [REQ-1200] the store is consulted when the declaration has no key
 #[test]
 fn the_store_supplies_a_key_the_declaration_does_not() {
     let home = home();
@@ -153,7 +153,7 @@ fn the_store_supplies_a_key_the_declaration_does_not() {
     );
 }
 
-/// [R-AUTH-001] a declared key wins over the store
+/// [REQ-1200] a declared key wins over the store
 #[test]
 fn a_declared_key_is_preferred_to_the_stored_one() {
     let home = home();
@@ -178,7 +178,7 @@ meow.model(name = "m", provider = "anthropic", id = "i", context = 1000, max_out
     );
 }
 
-/// [R-AUTH-011] a store anybody can read is refused, naming the mode
+/// [REQ-1205, REQ-1206] a store anybody can read is refused, naming the mode
 #[cfg(unix)]
 #[test]
 fn a_store_readable_by_others_is_refused() {
@@ -205,7 +205,7 @@ fn a_store_readable_by_others_is_refused() {
     );
 }
 
-/// [R-AUTH-010] the store is written with owner-only permissions
+/// [REQ-1204] the store is written with owner-only permissions
 #[cfg(unix)]
 #[test]
 fn the_store_is_created_private() {
@@ -227,7 +227,7 @@ fn the_store_is_created_private() {
     );
 }
 
-/// [R-AUTH-012] a write that is interrupted leaves the old store
+/// [REQ-1207, REQ-1208] a write that is interrupted leaves the old store
 #[test]
 fn a_failed_write_does_not_truncate_what_was_there() {
     let home = home();
@@ -264,7 +264,7 @@ fn a_failed_write_does_not_truncate_what_was_there() {
     );
 }
 
-/// [R-AUTH-002] a provider with no credential names all three places
+/// [REQ-1201] a provider with no credential names all three places
 #[test]
 fn a_missing_credential_names_where_it_was_looked_for() {
     let home = home();
@@ -294,7 +294,7 @@ meow.index(model = "e")
     );
 }
 
-/// [R-AUTH-023] a device flow is refused when there is nobody to read the code
+/// [REQ-1221] a device flow is refused when there is nobody to read the code
 #[test]
 fn an_oauth_login_needs_a_terminal() {
     let home = home();
@@ -318,7 +318,7 @@ fn an_oauth_login_needs_a_terminal() {
     );
 }
 
-/// [R-AUTH-003] the store is read when a provider is built, not when it is
+/// [REQ-1202] the store is read when a provider is built, not when it is
 /// declared
 ///
 /// Loading `.meow/` must not read a credential, because loading happens for

@@ -12,7 +12,7 @@
 use meow_cli::index::Unindexed;
 use meow_star::port::Search;
 
-/// [R-STAR-019] a root that is not in its canonical spelling still searches
+/// [REQ-2441, REQ-2442, REQ-2443, REQ-2444] a root that is not in its canonical spelling still searches
 ///
 /// `Walk::run` canonicalises before it walks and `Workspace::at` does not, so
 /// stripping the given root off a walked path matches nothing whenever the two
@@ -41,7 +41,7 @@ fn a_root_that_is_not_canonical_still_finds_its_files() {
     assert_eq!(hits[0].first_line, 2, "the line number is one-based");
 }
 
-/// [R-STAR-025] the searches that need an index still say they have none
+/// [REQ-2459, REQ-2460, REQ-2461, REQ-2462] the searches that need an index still say they have none
 #[test]
 fn ranking_says_why_it_cannot_rather_than_returning_nothing() {
     let dir = tempfile::tempdir().unwrap();

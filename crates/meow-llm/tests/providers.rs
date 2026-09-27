@@ -3,7 +3,7 @@
 
 //! The providers, against recorded exchanges.
 //!
-//! `[R-LLM-021]` is stated over a recording rather than a live call, because
+//! `[REQ-1618]` is stated over a recording rather than a live call, because
 //! two live calls to a model cannot be compared: the model is free to answer
 //! differently. These check the translation in both directions, which is the
 //! part that can be wrong in a way nobody notices until a tool runs twice.
@@ -55,7 +55,7 @@ fn sent(transport: &Recorded) -> Value {
     serde_json::from_str(&transport.bodies()[0]).unwrap()
 }
 
-/// [R-LLM-003] no vendor type crosses the trait: one request becomes each
+/// [REQ-1603] no vendor type crosses the trait: one request becomes each
 /// vendor's shape
 #[tokio::test]
 async fn one_request_becomes_each_vendors_shape() {
@@ -101,7 +101,7 @@ async fn one_request_becomes_each_vendors_shape() {
     assert_eq!(body["generationConfig"]["maxOutputTokens"], 1024);
 }
 
-/// [R-LLM-014] a repeated tool-call identifier is one call, not two
+/// [REQ-1612] a repeated tool-call identifier is one call, not two
 #[tokio::test]
 async fn a_repeated_tool_call_identifier_is_one_call() {
     let provider = OpenAi::new(
@@ -198,7 +198,7 @@ async fn gemini_calls_get_identifiers_that_do_not_collide() {
     assert_eq!(answer.tool_calls[1].name, "fs.read");
 }
 
-/// [R-LLM-037] a spent quota is the API's own code, never matched out of a
+/// [REQ-1634, REQ-1635] a spent quota is the API's own code, never matched out of a
 /// message
 #[tokio::test]
 async fn a_spent_quota_comes_from_the_api_rather_than_its_wording() {
@@ -236,7 +236,7 @@ async fn a_spent_quota_comes_from_the_api_rather_than_its_wording() {
     }
 }
 
-/// [R-LLM-022] a streamed answer arrives as events and adds up to the same
+/// [REQ-1619] a streamed answer arrives as events and adds up to the same
 /// response
 #[tokio::test]
 async fn a_streamed_answer_adds_up() {
@@ -288,7 +288,7 @@ async fn a_streamed_answer_adds_up() {
     assert!(sink.0.iter().any(|e| matches!(e, StreamEvent::Done)));
 }
 
-/// [R-LLM-050] a native schema goes in the request rather than the prompt
+/// [REQ-1641, REQ-1642, REQ-1643] a native schema goes in the request rather than the prompt
 #[tokio::test]
 async fn a_native_schema_goes_in_the_request() {
     let mut request = asking();
@@ -349,7 +349,7 @@ async fn gemini_gets_a_schema_it_can_read() {
     assert_eq!(schema["properties"]["verdict"]["type"], "string");
 }
 
-/// [R-LLM-040] [R-LLM-041] usage is read where each vendor puts it, and a
+/// [REQ-1637, REQ-1638, REQ-1639] [REQ-1640] usage is read where each vendor puts it, and a
 /// missing block is absent rather than zero
 #[tokio::test]
 async fn usage_is_read_or_absent() {
@@ -418,7 +418,7 @@ async fn embeddings_keep_the_order_they_were_asked_in() {
     assert_eq!(vectors, vec![vec![1.0, 0.0], vec![0.0, 1.0]]);
 }
 
-/// [R-LLM-002] a provider that only embeds refuses generation before sending
+/// [REQ-1602] a provider that only embeds refuses generation before sending
 /// anything
 #[tokio::test]
 async fn an_embedding_only_provider_refuses_generation() {

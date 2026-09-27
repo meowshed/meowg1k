@@ -36,7 +36,7 @@ meow.model(name = "fast", provider = "anthropic", id = "x", context = 200000, ma
 meow.model(name = "cheap", provider = "anthropic", id = "y", context = 200000, max_output = 8192)
 "#;
 
-/// [R-STAR-040] meow.agent requires name, model, and system, and accepts the
+/// [REQ-2488, REQ-2489] meow.agent requires name, model, and system, and accepts the
 /// rest
 #[test]
 fn an_agent_accepts_every_declared_keyword() {
@@ -84,7 +84,7 @@ meow.agent(
     assert_eq!(reviewer.budget.duration, Some(Duration::from_secs(30 * 60)));
 }
 
-/// [R-STAR-040] an unknown value for a declared keyword fails where it is
+/// [REQ-2488, REQ-2489] an unknown value for a declared keyword fails where it is
 /// written
 #[test]
 fn a_bad_on_tool_error_names_what_is_allowed() {
@@ -102,7 +102,7 @@ meow.agent(name = "a", model = "fast", system = "s", on_tool_error = "explode")
     assert!(error.contains("explode"), "{error}");
 }
 
-/// [R-STAR-050] a .md file under .meow/agents/ declares an agent, named by its
+/// [REQ-2496, REQ-2497] a .md file under .meow/agents/ declares an agent, named by its
 /// file
 #[test]
 fn a_markdown_file_declares_an_agent() {
@@ -143,7 +143,7 @@ You review code. Be blunt.
     assert_eq!(reviewer.system, "You review code. Be blunt.");
 }
 
-/// [R-STAR-050] frontmatter may not carry system, because the body is the
+/// [REQ-2496, REQ-2497] frontmatter may not carry system, because the body is the
 /// prompt
 #[test]
 fn frontmatter_may_not_carry_the_system_prompt() {
@@ -159,7 +159,7 @@ fn frontmatter_may_not_carry_the_system_prompt() {
     assert!(error.contains("may not carry `system`"), "{error}");
 }
 
-/// [R-STAR-051] a markdown agent and a Starlark agent come out identical
+/// [REQ-2498, REQ-2499] a markdown agent and a Starlark agent come out identical
 #[test]
 fn the_two_ways_of_declaring_an_agent_agree() {
     let starlark = workspace(&[(
@@ -212,7 +212,7 @@ Be brief.
     assert_ne!(from_starlark.origin, from_markdown.origin);
 }
 
-/// [R-STAR-051] a markdown agent is a duplicate of a Starlark agent with the
+/// [REQ-2498, REQ-2499] a markdown agent is a duplicate of a Starlark agent with the
 /// same name, and says so
 #[test]
 fn a_markdown_agent_collides_with_a_starlark_one() {
@@ -230,7 +230,7 @@ fn a_markdown_agent_collides_with_a_starlark_one() {
     assert!(error.contains("meow.star"), "{error}");
 }
 
-/// [R-STAR-052] frontmatter that is not valid YAML fails with the file and the
+/// [REQ-2500] frontmatter that is not valid YAML fails with the file and the
 /// line
 #[test]
 fn broken_yaml_names_the_file_and_the_line() {
@@ -257,7 +257,7 @@ fn broken_yaml_names_the_file_and_the_line() {
     );
 }
 
-/// [R-STAR-052] a key outside the allowed set fails, naming the key
+/// [REQ-2500] a key outside the allowed set fails, naming the key
 #[test]
 fn an_unknown_frontmatter_key_is_refused() {
     let dir = workspace(&[
@@ -274,7 +274,7 @@ fn an_unknown_frontmatter_key_is_refused() {
     assert!(error.contains("unknown field"), "{error}");
 }
 
-/// [R-STAR-053] a .md file under .meow/lib/ loads as a string
+/// [REQ-2501] a .md file under .meow/lib/ loads as a string
 #[test]
 fn a_prompt_file_loads_as_a_string() {
     let dir = workspace(&[
@@ -294,7 +294,7 @@ meow.agent(name = "writer", model = "fast", system = text + "\n\nWrite well.")
     assert_eq!(writer.system, "Use short sentences.\n\n\nWrite well.");
 }
 
-/// [R-STAR-054] include prepends each file in the order given, separated by a
+/// [REQ-2502, REQ-2503, REQ-2504, REQ-2505] include prepends each file in the order given, separated by a
 /// blank line
 #[test]
 fn include_prepends_each_prompt_in_order() {
@@ -315,7 +315,7 @@ fn include_prepends_each_prompt_in_order() {
     );
 }
 
-/// [R-STAR-054] an include that leaves .meow/ is refused, like every other load
+/// [REQ-2502, REQ-2503, REQ-2504, REQ-2505] an include that leaves .meow/ is refused, like every other load
 #[test]
 fn an_include_may_not_leave_the_config_directory() {
     let dir = workspace(&[
@@ -330,7 +330,7 @@ fn an_include_may_not_leave_the_config_directory() {
     assert!(error.contains("leaves .meow/"), "{error}");
 }
 
-/// [R-STAR-054] include is the only composition: a Starlark agent has no such
+/// [REQ-2502, REQ-2503, REQ-2504, REQ-2505] include is the only composition: a Starlark agent has no such
 /// key
 #[test]
 fn include_belongs_to_a_markdown_agent() {
@@ -347,7 +347,7 @@ fn include_belongs_to_a_markdown_agent() {
     assert!(error.contains("names a markdown file"), "{error}");
 }
 
-/// [R-STAR-050] a markdown agent with no body has no system prompt, and says so
+/// [REQ-2496, REQ-2497] a markdown agent with no body has no system prompt, and says so
 #[test]
 fn a_markdown_agent_needs_a_body() {
     let dir = workspace(&[
@@ -392,7 +392,7 @@ meow.command(meow.tool(name = "probe", about = "name an agent", run = handler))
     assert!(loaded.registry.agent("reviewer").is_some());
 }
 
-/// [R-STAR-032] a name that matches nothing fails at load time, after every
+/// [REQ-2478, REQ-2479] a name that matches nothing fails at load time, after every
 /// markdown agent has been read
 #[test]
 fn naming_an_agent_that_does_not_exist_fails_at_load_time() {

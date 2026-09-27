@@ -9,7 +9,7 @@
 //! not know Starlark exists, does not render anything, and does not talk to a
 //! vendor API.
 //!
-//! `docs/spec/agent.md` is normative.
+//! `SPC-1000` is normative.
 
 mod budget;
 mod compaction;

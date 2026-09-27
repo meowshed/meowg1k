@@ -4,16 +4,16 @@
 //! The `@std//` module table.
 //!
 //! One table, built once, and every consumer takes a module from it. That is
-//! `[R-STAR-010]`, and it is the fix for the defect that cost v0.2.x the most:
+//! `[REQ-2414, REQ-2415]`, and it is the fix for the defect that cost v0.2.x the most:
 //! `ctx_run.go` and `module_llm.go` each assembled a context by hand, they
 //! drifted on UI nesting depth, and a module added to one was silently missing
 //! from tools running inside an agent loop. There is nowhere here for a second
-//! copy to live, which is also why `[R-STAR-011]` holds without a mechanism of
+//! copy to live, which is also why `[REQ-2416]` holds without a mechanism of
 //! its own.
 //!
 //! Every module resolves in both phases. What differs is what its builtins do:
 //! a call made while `.meow/` is being evaluated fails with
-//! [`StarError::ModuleUnavailable`], except in `env`, which `[R-STAR-084]`
+//! [`StarError::ModuleUnavailable`], except in `env`, which `[REQ-2524, REQ-2525]`
 //! carves out because credentials are resolved in a declaration file.
 //!
 //! [`StarError::ModuleUnavailable`]: crate::error::StarError::ModuleUnavailable
@@ -30,7 +30,7 @@ use starlark::values::none::{NoneOr, NoneType};
 use crate::error::{Result, StarError};
 use crate::run::running;
 
-/// The modules that exist, sorted, which is the order `[R-STAR-003]` lists
+/// The modules that exist, sorted, which is the order `[REQ-2405, REQ-2406]` lists
 /// them in when a `load` names one that does not.
 pub const NAMES: &[&str] = &[
     "csv", "env", "fs", "git", "http", "index", "json", "path", "re", "search", "shell", "store",
@@ -156,7 +156,7 @@ fn json_module(builder: &mut GlobalsBuilder) {
 
 /// `@std//yaml`: parse and encode.
 ///
-/// `[R-STAR-016]`: the value this produces is the value `json.parse` produces
+/// `[REQ-2431, REQ-2432, REQ-2433]`: the value this produces is the value `json.parse` produces
 /// for the same data, so a handler can read one format and write another
 /// without knowing which it read.
 #[starlark_module]
@@ -307,7 +307,7 @@ fn csv_module(builder: &mut GlobalsBuilder) {
     /// Parse CSV text.
     ///
     /// With a header, a list of dicts keyed by column name; without one, a
-    /// list of lists - `[R-STAR-017]`.
+    /// list of lists - `[REQ-2434, REQ-2435, REQ-2436]`.
     fn parse<'v>(
         #[starlark(require = pos)] text: String,
         #[starlark(require = named, default = true)] header: bool,
@@ -335,7 +335,7 @@ fn csv_module(builder: &mut GlobalsBuilder) {
         for (index, record) in reader.records().enumerate() {
             let record = record.map_err(|error| oops(format!("this is not CSV: {error}")))?;
             if header {
-                // `[R-STAR-017]`: a short or long record is a defect in the
+                // `[REQ-2434, REQ-2435, REQ-2436]`: a short or long record is a defect in the
                 // file, and saying which record it was is the difference
                 // between a fixable report and "this is not CSV".
                 if record.len() != columns.len() {
@@ -444,7 +444,7 @@ fn scalar(value: &serde_json::Value) -> String {
 
 /// `@std//xml`: a tree, because that is what XML is.
 ///
-/// `[R-STAR-018]`. Every mapping of XML onto the shape JSON has must decide
+/// `[REQ-2437, REQ-2438, REQ-2439, REQ-2440]`. Every mapping of XML onto the shape JSON has must decide
 /// what to do with an element that carries both attributes and children, or
 /// with two children sharing a tag, and every such decision is wrong for some
 /// document. So this returns the four things an element has and lets a handler
@@ -486,7 +486,7 @@ fn xml_module(builder: &mut GlobalsBuilder) {
     }
 }
 
-/// An XML element, in the four parts `[R-STAR-018]` names.
+/// An XML element, in the four parts `[REQ-2437, REQ-2438, REQ-2439, REQ-2440]` names.
 #[derive(Debug, Default)]
 struct Element {
     tag: String,
@@ -643,7 +643,7 @@ fn write_xml(value: &serde_json::Value, out: &mut String) -> starlark::Result<()
     Ok(())
 }
 
-/// `[R-STAR-018]`: text and attribute values are escaped, so a document built
+/// `[REQ-2437, REQ-2438, REQ-2439, REQ-2440]`: text and attribute values are escaped, so a document built
 /// from a model's output cannot close a tag the handler did not write.
 fn escape(text: &str, out: &mut String) {
     for ch in text.chars() {
@@ -660,7 +660,7 @@ fn escape(text: &str, out: &mut String) {
 
 /// `@std//path`: paths as text, with no disk behind them.
 ///
-/// One separator, `/`, on every platform - `[R-STAR-029]`. The native
+/// One separator, `/`, on every platform - `[REQ-2472, REQ-2473, REQ-2474]`. The native
 /// separator is the obvious choice and the wrong one: `search.files` and
 /// `fs.glob` report `/`, so a handler that built a path natively and compared
 /// it against a reported one matched on Unix and failed on Windows. Windows
@@ -754,7 +754,7 @@ fn path_module(builder: &mut GlobalsBuilder) {
     }
 }
 
-/// A path written the way `[R-STAR-029]` asks: one separator, and it is `/`.
+/// A path written the way `[REQ-2472, REQ-2473, REQ-2474]` asks: one separator, and it is `/`.
 fn slashed(path: impl AsRef<Path>) -> String {
     let text = path.as_ref().to_string_lossy().into_owned();
     if std::path::MAIN_SEPARATOR == '/' {
@@ -765,7 +765,7 @@ fn slashed(path: impl AsRef<Path>) -> String {
 
 /// The same path in whatever `Path` wants to parse here.
 ///
-/// `[R-STAR-029]` says this module accepts `\` in what it is given. On Unix a
+/// `[REQ-2472, REQ-2473, REQ-2474]` says this module accepts `\` in what it is given. On Unix a
 /// backslash is an ordinary character in a file name, so nothing is rewritten
 /// there and a file really called `a\b` keeps its name.
 fn native(path: &str) -> String {
@@ -802,7 +802,7 @@ fn search_module(builder: &mut GlobalsBuilder) {
             },
         };
 
-        // `[R-STAR-081]`: the call blocks this thread. The index reads a file
+        // `[REQ-2520, REQ-2521]`: the call blocks this thread. The index reads a file
         // and may reach a provider, and neither is something Starlark can
         // wait on itself.
         let found = state
@@ -830,7 +830,7 @@ fn search_module(builder: &mut GlobalsBuilder) {
 
     /// Find text in the workspace, by what it says rather than what it means.
     ///
-    /// `[R-STAR-019]`: no index is involved, so this works in a workspace
+    /// `[REQ-2441, REQ-2442, REQ-2443, REQ-2444]`: no index is involved, so this works in a workspace
     /// where `meow index build` has never run. The walk is the index's walk,
     /// so one `.gitignore` decides what is searchable however a handler
     /// searches.
@@ -872,7 +872,7 @@ fn search_module(builder: &mut GlobalsBuilder) {
 
 /// `@std//index`: the index a workspace declares, from a handler.
 ///
-/// `[R-STAR-024]`. `meow index build` and `index.build()` do the same work
+/// `[REQ-2456, REQ-2457, REQ-2458]`. `meow index build` and `index.build()` do the same work
 /// through the same port, so a handler that indexes before it searches does
 /// not have to shell out to the binary that is running it.
 #[starlark_module]
@@ -980,7 +980,7 @@ fn hits<'v>(
         .collect()
 }
 
-/// What a walk changed, as counts - `[R-STAR-024]`.
+/// What a walk changed, as counts - `[REQ-2456, REQ-2457, REQ-2458]`.
 fn alloc_indexed<'v>(
     heap: &starlark::values::Heap<'v>,
     done: &crate::port::Indexed,
@@ -1005,7 +1005,7 @@ fn re_module(builder: &mut GlobalsBuilder) {
     ///
     /// Group 0 is the whole match and the rest follow in the order the pattern
     /// opens them. A group that took part in no match is `None`, which is the
-    /// only way to tell "matched empty" from "did not match" - `[R-STAR-013]`.
+    /// only way to tell "matched empty" from "did not match" - `[REQ-2419, REQ-2420, REQ-2421, REQ-2422, REQ-2423]`.
     fn r#match<'v>(
         #[starlark(require = pos)] pattern: String,
         #[starlark(require = pos)] subject: String,
@@ -1100,7 +1100,7 @@ fn groups<'v>(heap: &starlark::values::Heap<'v>, caps: &regex::Captures<'_>) -> 
 
 /// `@std//time`: one scale, and it is seconds in UTC.
 ///
-/// `[R-STAR-014]`. A handler that measures a duration gets the same number on
+/// `[REQ-2424, REQ-2425, REQ-2426]`. A handler that measures a duration gets the same number on
 /// every machine, and a zone enters only at `format`, where a human is about
 /// to read the result.
 #[starlark_module]
@@ -1158,7 +1158,7 @@ fn time_module(builder: &mut GlobalsBuilder) {
 
 /// `@std//store`: what a handler keeps between runs.
 ///
-/// `[R-STAR-026]`. The table belongs to the workspace rather than to a
+/// `[REQ-2463, REQ-2464, REQ-2465]`. The table belongs to the workspace rather than to a
 /// session, so `meow session gc` leaves it alone. That is the difference from
 /// `ctx.session`, which is the right place for what one run decided and the
 /// wrong place for what every run should remember.
@@ -1173,7 +1173,7 @@ fn store_module(builder: &mut GlobalsBuilder) {
         let state = running(eval, "store.get")?;
         match state.runtime.keep().get(&key).map_err(oops)? {
             Some(value) => Ok(eval.heap().alloc(value)),
-            // `[R-STAR-027]`: an absent key gives what the caller asked for,
+            // `[REQ-2466, REQ-2467]`: an absent key gives what the caller asked for,
             // and `None` when it asked for nothing.
             None => Ok(default.into_option().unwrap_or_else(StarValue::new_none)),
         }
@@ -1193,7 +1193,7 @@ fn store_module(builder: &mut GlobalsBuilder) {
 
     /// Remove a key, and say whether it was there.
     ///
-    /// `[R-STAR-028]`: removing a key that was never written is not an error,
+    /// `[REQ-2468, REQ-2469, REQ-2470, REQ-2471]`: removing a key that was never written is not an error,
     /// because a handler cleaning up should not have to check first.
     fn delete<'v>(
         #[starlark(require = pos)] key: String,

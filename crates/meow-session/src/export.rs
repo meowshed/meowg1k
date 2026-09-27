@@ -11,7 +11,7 @@ use crate::log::Sessions;
 
 /// What must not appear in an export.
 ///
-/// `[R-SESSION-092]`: every value the policy marked sensitive, in both
+/// `[REQ-2260]`: every value the policy marked sensitive, in both
 /// formats. The caller supplies the arguments to hide, because which ones they
 /// are is a property of the policy and the tool set, and this crate knows
 /// neither.
@@ -21,7 +21,7 @@ pub struct Redaction {
     pub arguments: Vec<String>,
     /// Whether the model's reasoning is included.
     ///
-    /// `[R-SESSION-093]`: off unless asked for, because it is the part of a
+    /// `[REQ-2261]`: off unless asked for, because it is the part of a
     /// transcript least likely to be meant for an audience.
     pub include_thinking: bool,
 }
@@ -36,10 +36,10 @@ pub struct Export {
 impl Sessions {
     /// Export a session as one JSON object per line.
     ///
-    /// Satisfies `[R-SESSION-090]`: the objects are `meow_core::view` types,
+    /// Satisfies `[REQ-2257, REQ-2258]`: the objects are `meow_core::view` types,
     /// the same ones the live `--format json` renderer writes, so a persisted
     /// kind serialises identically in both by construction rather than by
-    /// agreement. `[R-TUI-034]` holds here too: only persisted kinds appear,
+    /// agreement. `[REQ-2830, REQ-2831]` holds here too: only persisted kinds appear,
     /// because only persisted kinds exist in a log.
     ///
     /// # Errors
@@ -68,7 +68,7 @@ impl Sessions {
 
     /// Export a session as markdown.
     ///
-    /// Satisfies `[R-SESSION-091]`: the transcript, the tool calls with their
+    /// Satisfies `[REQ-2259]`: the transcript, the tool calls with their
     /// policy decisions, and the usage totals.
     ///
     /// # Errors
@@ -193,7 +193,7 @@ fn schema_line() -> String {
 /// Apply the redaction to one event, or drop it.
 fn prepare(kind: EventKind, redaction: &Redaction) -> Option<EventKind> {
     match kind {
-        // `[R-SESSION-092]`: the arguments are the only place a marked value
+        // `[REQ-2260]`: the arguments are the only place a marked value
         // reaches the log, because the policy layer redacts before the prompt
         // and the engine records what it was told.
         EventKind::ToolCall { id, name, args } => Some(EventKind::ToolCall {

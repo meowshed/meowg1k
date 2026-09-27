@@ -11,7 +11,7 @@ use crate::error::{PolicyError, Result};
 
 /// Which tools a rule is about.
 ///
-/// `[R-POLICY-002]`: an exact name, or a trailing wildcard. A leading wildcard
+/// `[REQ-2002, REQ-2003]`: an exact name, or a trailing wildcard. A leading wildcard
 /// is refused, because `*.write` reads as "every write" and would silently not
 /// be, once two tool families spell the operation differently.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -25,7 +25,7 @@ pub enum NamePattern {
 }
 
 impl NamePattern {
-    /// Read a pattern, refusing the shapes `[R-POLICY-002]` forbids.
+    /// Read a pattern, refusing the shapes `[REQ-2002, REQ-2003]` forbids.
     ///
     /// # Errors
     ///
@@ -131,9 +131,9 @@ impl Selector {
 
     /// Whether it covers this path.
     ///
-    /// `[R-POLICY-003]` expects a path already made absolute with symlinks
+    /// `[REQ-2004, REQ-2005]` expects a path already made absolute with symlinks
     /// resolved. Resolving here would make evaluation touch the filesystem,
-    /// which `[R-POLICY-013]` forbids, and would open a window between the
+    /// which `[REQ-2020, REQ-2021]` forbids, and would open a window between the
     /// check and the use.
     pub fn matches_path(&self, path: &Path) -> bool {
         self.set.is_match(path)
@@ -141,7 +141,7 @@ impl Selector {
 
     /// Whether it covers this text.
     ///
-    /// `[R-POLICY-004]`: the whole command line as one string, so a rule says
+    /// `[REQ-2008]`: the whole command line as one string, so a rule says
     /// what may run rather than which binary may be named.
     pub fn matches_text(&self, text: &str) -> bool {
         self.set.is_match(text)
@@ -159,7 +159,7 @@ pub struct Rule {
     pub selector: Option<Selector>,
     /// Arguments whose values must never be shown or stored.
     ///
-    /// `[R-POLICY-060]`.
+    /// `[REQ-2041, REQ-2042, REQ-2043]`.
     pub sensitive: Vec<String>,
 }
 

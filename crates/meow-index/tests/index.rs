@@ -98,7 +98,7 @@ const FILES: &[(&str, &str)] = &[
     ("docs/sessions.md", "# Sessions\n\nA session is a log.\n"),
 ];
 
-/// [R-INDEX-020] a batch a provider refuses is split and retried
+/// [REQ-1418, REQ-1419] a batch a provider refuses is split and retried
 #[test]
 fn a_refused_batch_is_split_and_retried() {
     let mut embedder = Counting::new("small");
@@ -122,7 +122,7 @@ fn a_refused_batch_is_split_and_retried() {
     );
 }
 
-/// [R-INDEX-021] one chunk a provider refuses names the file and the lines
+/// [REQ-1420] one chunk a provider refuses names the file and the lines
 #[test]
 fn an_oversized_chunk_names_the_file_and_the_lines() {
     let long = "retry ".repeat(200);
@@ -150,7 +150,7 @@ fn an_oversized_chunk_names_the_file_and_the_lines() {
     assert!(shown.contains("big.rs"), "{shown}");
 }
 
-/// [R-INDEX-022] an interrupted build does not re-embed what it already paid
+/// [REQ-1421, REQ-1422] an interrupted build does not re-embed what it already paid
 /// for
 #[test]
 fn embedding_is_resumable() {
@@ -173,7 +173,7 @@ fn embedding_is_resumable() {
     assert_eq!(embedder.batches().len(), before, "it asked again");
 }
 
-/// [R-INDEX-030] a file is re-chunked only when its hash changes, and the hash
+/// [REQ-1423, REQ-1424] a file is re-chunked only when its hash changes, and the hash
 /// covers the chunking parameters
 #[test]
 fn only_a_changed_file_is_re_chunked() {
@@ -195,7 +195,7 @@ fn only_a_changed_file_is_re_chunked() {
     assert_eq!(after.unchanged, 2);
 }
 
-/// [R-INDEX-030] changing the chunking makes every file stale
+/// [REQ-1423, REQ-1424] changing the chunking makes every file stale
 #[test]
 fn changing_the_chunking_makes_everything_stale() {
     let dir = workspace(FILES);
@@ -219,7 +219,7 @@ fn changing_the_chunking_makes_everything_stale() {
     assert_eq!(after.unchanged, 0);
 }
 
-/// [R-INDEX-031] a file that is gone, or newly excluded, leaves nothing behind
+/// [REQ-1425] a file that is gone, or newly excluded, leaves nothing behind
 #[test]
 fn a_removed_or_excluded_file_leaves_nothing() {
     let dir = workspace(FILES);
@@ -241,7 +241,7 @@ fn a_removed_or_excluded_file_leaves_nothing() {
     assert_eq!(paths, [".gitignore", "src/retry.rs"]);
 }
 
-/// [R-INDEX-032] an update reports all four outcomes
+/// [REQ-1426] an update reports all four outcomes
 #[test]
 fn an_update_reports_what_it_did() {
     let dir = workspace(FILES);
@@ -260,7 +260,7 @@ fn an_update_reports_what_it_did() {
     assert_eq!(built.unchanged, 1, "{built:?}");
 }
 
-/// [R-INDEX-040] results are ranked by descending similarity and can be cited
+/// [REQ-1427] results are ranked by descending similarity and can be cited
 #[test]
 fn results_are_ranked_and_citable() {
     let dir = workspace(FILES);
@@ -288,7 +288,7 @@ fn results_are_ranked_and_citable() {
     }
 }
 
-/// [R-INDEX-041] an empty index says so and builds nothing
+/// [REQ-1428, REQ-1429] an empty index says so and builds nothing
 #[test]
 fn an_empty_index_says_so() {
     let dir = workspace(FILES);
@@ -307,7 +307,7 @@ fn an_empty_index_says_so() {
     assert!(embedder.batches().is_empty(), "it embedded something");
 }
 
-/// [R-INDEX-042] both the limit and the minimum score apply
+/// [REQ-1430, REQ-1431] both the limit and the minimum score apply
 #[test]
 fn a_query_applies_the_limit_and_the_minimum() {
     let dir = workspace(FILES);
@@ -347,7 +347,7 @@ fn a_query_applies_the_limit_and_the_minimum() {
     assert!(strict.len() < 3, "nothing was filtered: {strict:?}");
 }
 
-/// [R-INDEX-043] the same query twice costs one request
+/// [REQ-1432] the same query twice costs one request
 #[test]
 fn a_repeated_query_needs_no_second_request() {
     let dir = workspace(FILES);
@@ -372,7 +372,7 @@ fn a_repeated_query_needs_no_second_request() {
     assert_eq!(embedder.batches().len(), after_first + 1);
 }
 
-/// [R-INDEX-044] a path filter applies before ranking
+/// [REQ-1433, REQ-1434] a path filter applies before ranking
 #[test]
 fn a_path_filter_applies_before_ranking() {
     let dir = workspace(FILES);
@@ -400,7 +400,7 @@ fn a_path_filter_applies_before_ranking() {
     assert!(hits[0].path.starts_with("docs/"), "{hits:?}");
 }
 
-/// [R-INDEX-050] the vectors live in the same database as everything else
+/// [REQ-1435] the vectors live in the same database as everything else
 #[test]
 fn the_index_shares_one_database() {
     let dir = workspace(FILES);
@@ -419,7 +419,7 @@ fn the_index_shares_one_database() {
     assert_eq!(files.len(), 1, "{files:?}");
 }
 
-/// [R-INDEX-051] a query against an index another model built fails, naming
+/// [REQ-1436, REQ-1437] a query against an index another model built fails, naming
 /// both
 #[test]
 fn a_query_by_the_wrong_model_names_both() {
@@ -442,7 +442,7 @@ fn a_query_by_the_wrong_model_names_both() {
     assert!(error.to_string().contains("large"), "{error}");
 }
 
-/// [R-INDEX-052] clear removes the index and leaves the rest alone
+/// [REQ-1438, REQ-1439] clear removes the index and leaves the rest alone
 #[test]
 fn clear_removes_the_index_and_nothing_else() {
     let dir = workspace(FILES);
@@ -568,7 +568,7 @@ fn a_damaged_graph_is_rebuilt_rather_than_fatal() {
     assert!(!hits.is_empty(), "a bad cache lost the answer");
 }
 
-/// [R-INDEX-052] clear forgets the graph as well as the rows.
+/// [REQ-1438, REQ-1439] clear forgets the graph as well as the rows.
 #[test]
 fn clear_forgets_the_graph() {
     let dir = workspace(FILES);

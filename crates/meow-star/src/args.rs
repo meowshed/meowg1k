@@ -53,7 +53,7 @@ impl Arg {
 
     /// One line of help, as the command's usage lists it.
     ///
-    /// `[R-STAR-061]`: built from the same node as the flag and the schema, so
+    /// `[REQ-2511]`: built from the same node as the flag and the schema, so
     /// a constraint that is enforced is also a constraint that is documented.
     pub fn help(&self) -> String {
         let mut line = self.about().to_owned();
@@ -87,7 +87,7 @@ pub struct Args {
 impl Args {
     /// Build an argument set from what a declaration passed.
     ///
-    /// Checks `[R-STAR-062]`: positional indices are unique and contiguous
+    /// Checks `[REQ-2512, REQ-2513]`: positional indices are unique and contiguous
     /// from zero. Contiguous because a gap has no meaning a user could act on,
     /// and leaving it to the parser to discover means the error arrives when
     /// somebody runs the command rather than when it is declared.
@@ -154,7 +154,7 @@ impl Args {
 
     /// The schema the model is sent.
     ///
-    /// `[R-STAR-061]`: derived, never written twice. A positional argument is
+    /// `[REQ-2511]`: derived, never written twice. A positional argument is
     /// an ordinary property here, because the model has no command line.
     pub fn json_schema(&self) -> Value {
         let mut properties = Map::new();
@@ -175,7 +175,7 @@ impl Args {
 
     /// Fill in defaults and check every constraint.
     ///
-    /// Satisfies `[R-STAR-063]`: the command line and a model-supplied
+    /// Satisfies `[REQ-2514]`: the command line and a model-supplied
     /// argument object both arrive here, so neither can be checked more
     /// loosely than the other.
     ///

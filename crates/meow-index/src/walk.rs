@@ -12,7 +12,7 @@ use crate::error::{IndexError, Result};
 
 /// How big a file may be before it is skipped.
 ///
-/// `[R-INDEX-003]`. A megabyte of source is a generated file, a vendored
+/// `[REQ-1405, REQ-1406]`. A megabyte of source is a generated file, a vendored
 /// bundle, or a data fixture, and embedding it buys a result nobody wanted at
 /// a cost everybody pays.
 pub const DEFAULT_MAX_BYTES: u64 = 1024 * 1024;
@@ -26,7 +26,7 @@ const SNIFF_BYTES: usize = 8192;
 
 /// The directory the index must never read, whatever an ignore file says.
 ///
-/// `[R-INDEX-001]`: not re-includable. Indexing the store would embed the
+/// `[REQ-1400, REQ-1401, REQ-1402]`: not re-includable. Indexing the store would embed the
 /// index, which grows without bound and answers every query with itself.
 const DATA_DIR: &str = ".meow/.data";
 
@@ -37,12 +37,12 @@ pub struct Walked {
     pub files: Vec<PathBuf>,
     /// The files skipped for being binary.
     ///
-    /// `[R-INDEX-002]`: counted, because "why is this not in the index" is
+    /// `[REQ-1403, REQ-1404]`: counted, because "why is this not in the index" is
     /// the question an index has to be able to answer.
     pub binary: Vec<PathBuf>,
     /// The files skipped for being too large, with their sizes.
     ///
-    /// `[R-INDEX-003]`: each one reported, not just counted, because the
+    /// `[REQ-1405, REQ-1406]`: each one reported, not just counted, because the
     /// answer to "why is this missing" is a path.
     pub too_large: Vec<(PathBuf, u64)>,
     /// Symbolic links that pointed outside the workspace.
@@ -74,11 +74,11 @@ impl Default for Walk {
 impl Walk {
     /// Find everything under a root that should be indexed.
     ///
-    /// Satisfies `[R-INDEX-001]` through `.gitignore` and `.meowignore`, with
+    /// Satisfies `[REQ-1400, REQ-1401, REQ-1402]` through `.gitignore` and `.meowignore`, with
     /// `.meow/.data/` excluded last so no negation can bring it back;
-    /// `[R-INDEX-002]` and `[R-INDEX-003]` by recording what was skipped and
-    /// why; `[R-INDEX-004]` by refusing a symbolic link that leaves the root;
-    /// and `[R-INDEX-005]` by having no rule about prose at all - markdown is
+    /// `[REQ-1403, REQ-1404]` and `[REQ-1405, REQ-1406]` by recording what was skipped and
+    /// why; `[REQ-1407]` by refusing a symbolic link that leaves the root;
+    /// and `[REQ-1408]` by having no rule about prose at all - markdown is
     /// a text file like any other.
     ///
     /// # Errors
@@ -136,7 +136,7 @@ impl Walk {
             if !entry.file_type().is_some_and(|t| t.is_file()) {
                 continue;
             }
-            // [R-INDEX-004]: a link that resolves outside the workspace is
+            // [REQ-1407]: a link that resolves outside the workspace is
             // somebody else's content, and following it would index a home
             // directory from a repository.
             if let Some(path) = self.judge(&root, entry.path(), &mut out) {
@@ -161,7 +161,7 @@ impl Walk {
 impl Walk {
     /// Files a `.meowignore` negation asks for back.
     ///
-    /// `[R-INDEX-001]` wants a path `.gitignore` excludes to be indexable
+    /// `[REQ-1400, REQ-1401, REQ-1402]` wants a path `.gitignore` excludes to be indexable
     /// deliberately, in one line. Git's own rule is that a file inside an
     /// excluded directory cannot be re-included, so `!generated/api.rs` alone
     /// does nothing when `.gitignore` holds `generated/` - the walk never

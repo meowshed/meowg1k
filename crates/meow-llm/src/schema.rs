@@ -116,7 +116,7 @@ fn kind_of(v: &serde_json::Value) -> &'static str {
 ///
 /// # Errors
 ///
-/// [`LlmError::Schema`] describing what is wrong, which `[R-LLM-051]` puts
+/// [`LlmError::Schema`] describing what is wrong, which `[REQ-1644, REQ-1645]` puts
 /// into the follow-up request so the model is told rather than guessing.
 pub fn parse_and_validate(
     text: &str,

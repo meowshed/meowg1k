@@ -9,7 +9,7 @@
 //! range is the session layer's job, and the store only guarantees the event is
 //! written, ordered, and still there later.
 //!
-//! `docs/spec/store.md` is normative. Every requirement it states is cited by
+//! `SPC-2600` is normative. Every requirement it states is cited by
 //! the code that satisfies it and by at least one test.
 
 mod blob;
@@ -34,18 +34,18 @@ pub use crate::session::SessionRow;
 
 /// How long a blocked write waits before giving up.
 ///
-/// `[R-STORE-023]` requires at least five seconds. Ten leaves room for a slow
+/// `[REQ-2631]` requires at least five seconds. Ten leaves room for a slow
 /// filesystem without making a genuine deadlock look like a hang forever.
 const BUSY_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(10);
 
-/// The size below which `[R-STORE-010]` permits inlining a payload instead of
+/// The size below which `[REQ-2613, REQ-2614, REQ-2615, REQ-2616]` permits inlining a payload instead of
 /// putting it in the blob table. Kept as the documented boundary; see
 /// [`Store::put_blob`] for why this store does not use the permission.
 pub const INLINE_LIMIT: usize = 512;
 
 /// The number of rows a bulk write commits at a time.
 ///
-/// `[R-STORE-024]` forbids holding the single write lock for the length of an
+/// `[REQ-2629, REQ-2630]` forbids holding the single write lock for the length of an
 /// index build, so a bulk write commits in batches this size and lets another
 /// writer in between them.
 pub const BULK_BATCH: usize = 256;
@@ -60,7 +60,7 @@ pub struct Store {
 impl Store {
     /// Open, or create, the database for a workspace root.
     ///
-    /// Satisfies `[R-STORE-001]`: one file, at `.meow/.data/meow.db` beneath
+    /// Satisfies `[REQ-2600]`: one file, at `.meow/.data/meow.db` beneath
     /// the workspace root.
     pub fn open(workspace_root: &Path) -> Result<Self> {
         let dir = workspace_root.join(".meow").join(".data");
@@ -76,7 +76,7 @@ impl Store {
         let mut conn = Connection::open(path)?;
         conn.busy_timeout(BUSY_TIMEOUT)?;
 
-        // [R-STORE-002]. Write-ahead logging gives one writer alongside many
+        // [REQ-2601, REQ-2602]. Write-ahead logging gives one writer alongside many
         // readers; NORMAL loses at most the last transaction on a power
         // failure, which costs a rerun of one turn and keeps the write path
         // off the agent's critical path.
@@ -115,14 +115,14 @@ impl Store {
     /// Whether the database is encrypted.
     ///
     /// Always false, and said out loud rather than left to assume, which is
-    /// what `[R-STORE-007]` asks of `meow doctor`.
+    /// what `[REQ-2603, REQ-2604]` asks of `meow doctor`.
     pub fn is_encrypted(&self) -> bool {
         false
     }
 
     /// The total size of the database and its side files, in bytes.
     ///
-    /// Satisfies `[R-STORE-042]`, so retention can act on size. The
+    /// Satisfies `[REQ-2636]`, so retention can act on size. The
     /// write-ahead log counts, because it is disk a user paid for.
     pub fn size_bytes(&self) -> Result<u64> {
         let mut total = 0;
@@ -151,7 +151,7 @@ impl Store {
 
     /// Make the database readable and writable by its owner only.
     ///
-    /// Satisfies `[R-STORE-008]`. This is not encryption; it is the cheap part
+    /// Satisfies `[REQ-2605]`. This is not encryption; it is the cheap part
     /// that stops every other account on the machine from reading a
     /// transcript.
     #[cfg(unix)]

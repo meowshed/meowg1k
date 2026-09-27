@@ -104,7 +104,7 @@ impl Drop for Authorisation {
     }
 }
 
-/// [R-AUTH-020] the person is shown a code and a URL, and the token is stored
+/// [REQ-1213] the person is shown a code and a URL, and the token is stored
 #[tokio::test(flavor = "multi_thread")]
 async fn an_approved_flow_returns_the_token() {
     let server = Authorisation::new(
@@ -148,7 +148,7 @@ async fn an_approved_flow_returns_the_token() {
     );
 }
 
-/// [R-AUTH-021] `slow_down` is honoured rather than ignored
+/// [REQ-1214, REQ-1215, REQ-1216] `slow_down` is honoured rather than ignored
 #[tokio::test(flavor = "multi_thread")]
 async fn slow_down_lengthens_the_wait() {
     let server = Authorisation::new(
@@ -174,7 +174,7 @@ async fn slow_down_lengthens_the_wait() {
     );
 }
 
-/// [R-AUTH-021] a code the server says has expired stops the flow
+/// [REQ-1214, REQ-1215, REQ-1216] a code the server says has expired stops the flow
 #[tokio::test(flavor = "multi_thread")]
 async fn an_expired_code_stops() {
     let server = Authorisation::new(1, 600, vec![r#"{"error":"expired_token"}"#]);
@@ -193,7 +193,7 @@ async fn an_expired_code_stops() {
     );
 }
 
-/// [R-AUTH-021] the flow stops running when the run is cancelled
+/// [REQ-1214, REQ-1215, REQ-1216] the flow stops running when the run is cancelled
 #[tokio::test(flavor = "multi_thread")]
 async fn cancelling_stops_the_flow() {
     let server = Authorisation::new(1, 600, vec![r#"{"error":"authorization_pending"}"#]);
@@ -215,7 +215,7 @@ async fn cancelling_stops_the_flow() {
     );
 }
 
-/// [R-AUTH-021] a refusal is reported with what the server said
+/// [REQ-1214, REQ-1215, REQ-1216] a refusal is reported with what the server said
 #[tokio::test(flavor = "multi_thread")]
 async fn a_refusal_carries_the_servers_reason() {
     let server = Authorisation::new(
@@ -234,7 +234,7 @@ async fn a_refusal_carries_the_servers_reason() {
     );
 }
 
-/// [R-AUTH-021] a server that sends neither a token nor an error is not
+/// [REQ-1214, REQ-1215, REQ-1216] a server that sends neither a token nor an error is not
 /// polled forever
 #[tokio::test(flavor = "multi_thread")]
 async fn a_silent_server_fails_rather_than_hanging() {

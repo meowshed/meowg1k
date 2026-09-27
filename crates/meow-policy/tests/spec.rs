@@ -1,9 +1,9 @@
 // Copyright © 2025 The meowg1k Authors
 // SPDX-License-Identifier: Apache-2.0
 
-//! Every requirement in `docs/spec/policy.md` that this crate owns.
+//! Every requirement in `SPC-2000` that this crate owns.
 //!
-//! Enforcement, `[R-POLICY-040]` to `[R-POLICY-042]`, is tested in
+//! Enforcement, `[REQ-2037, REQ-2038]` to `[REQ-2040]`, is tested in
 //! `meow-agent`, because the engine is what calls a tool.
 
 // `allow-unwrap-in-tests` in clippy.toml covers `#[test]` functions, not the
@@ -34,7 +34,7 @@ fn p(s: &str) -> PathBuf {
     PathBuf::from(s)
 }
 
-/// [R-POLICY-001] a rule matches on a name and may narrow
+/// [REQ-2000, REQ-2001] a rule matches on a name and may narrow
 #[test]
 fn a_rule_matches_a_name_and_may_narrow_further() {
     let policy = Policy::new()
@@ -60,7 +60,7 @@ fn a_rule_matches_a_name_and_may_narrow_further() {
     );
 }
 
-/// [R-POLICY-002] a trailing wildcard and an exact name, never a leading one
+/// [REQ-2002, REQ-2003] a trailing wildcard and an exact name, never a leading one
 #[test]
 fn a_leading_wildcard_is_refused_when_the_policy_is_built() {
     assert_eq!(
@@ -93,7 +93,7 @@ fn a_leading_wildcard_is_refused_when_the_policy_is_built() {
     assert_eq!(policy.evaluate(&c, &Grants::new()).decision, Decision::Deny);
 }
 
-/// [R-POLICY-003] paths are matched absolute, with `**` crossing directories
+/// [REQ-2004, REQ-2005] paths are matched absolute, with `**` crossing directories
 #[test]
 fn a_path_selector_crosses_directories_with_a_double_star() {
     let policy = Policy::new().with(Decision::Allow, paths(rule("fs.read"), &["/w/src/**"]));
@@ -109,7 +109,7 @@ fn a_path_selector_crosses_directories_with_a_double_star() {
     assert_eq!(policy.evaluate(&c, &Grants::new()).decision, Decision::Deny);
 }
 
-/// [R-POLICY-004] a command selector matches the whole command line
+/// [REQ-2008] a command selector matches the whole command line
 #[test]
 fn a_command_selector_matches_the_whole_line_not_just_the_binary() {
     let policy = Policy::new().with(
@@ -132,7 +132,7 @@ fn a_command_selector_matches_the_whole_line_not_just_the_binary() {
     }
 }
 
-/// [R-POLICY-005] a selector no matching tool supports fails at build time
+/// [REQ-2009] a selector no matching tool supports fails at build time
 #[test]
 fn a_selector_no_tool_supports_fails_when_the_policy_is_built() {
     let policy = Policy::new().with(Decision::Allow, commands(rule("fs.*"), &["cargo *"]));
@@ -149,8 +149,8 @@ fn a_selector_no_tool_supports_fails_when_the_policy_is_built() {
     }
 }
 
-/// [R-POLICY-006] a multi-path call is judged once per path
-/// [R-POLICY-008] a read returns what it may and names what it skipped
+/// [REQ-2010] a multi-path call is judged once per path
+/// [REQ-2011, REQ-2012] a read returns what it may and names what it skipped
 #[test]
 fn a_read_that_hits_a_denied_path_says_which_it_skipped() {
     let policy = Policy::new().with(Decision::Allow, paths(rule("fs.glob"), &["/w/src/**"]));
@@ -173,7 +173,7 @@ fn a_read_that_hits_a_denied_path_says_which_it_skipped() {
     );
 }
 
-/// [R-POLICY-009] a write that hits a denied path is denied whole
+/// [REQ-2013, REQ-2014] a write that hits a denied path is denied whole
 #[test]
 fn a_write_that_hits_a_denied_path_writes_nothing() {
     let policy = Policy::new().with(Decision::Allow, paths(rule("fs.write"), &["/w/src/**"]));
@@ -189,7 +189,7 @@ fn a_write_that_hits_a_denied_path_writes_nothing() {
     );
 }
 
-/// [R-POLICY-007] network tools narrow by host
+/// [REQ-2015] network tools narrow by host
 #[test]
 fn a_host_selector_allows_one_host_without_allowing_the_network() {
     let policy = Policy::new().with(
@@ -212,7 +212,7 @@ fn a_host_selector_allows_one_host_without_allowing_the_network() {
     }
 }
 
-/// [R-POLICY-010] deny first, then ask, then allow, first match wins
+/// [REQ-2016, REQ-2017] deny first, then ask, then allow, first match wins
 #[test]
 fn deny_beats_ask_beats_allow() {
     let policy = Policy::new()
@@ -234,7 +234,7 @@ fn deny_beats_ask_beats_allow() {
     }
 }
 
-/// [R-POLICY-011] nothing matching means deny
+/// [REQ-2018] nothing matching means deny
 #[test]
 fn a_call_that_matches_no_rule_is_denied() {
     let empty = Policy::new();
@@ -244,7 +244,7 @@ fn a_call_that_matches_no_rule_is_denied() {
     assert_eq!(v.rule, None, "there is no rule to name");
 }
 
-/// [R-POLICY-012] a decision names its rule, or records that none matched
+/// [REQ-2019] a decision names its rule, or records that none matched
 #[test]
 fn a_decision_names_the_rule_that_produced_it() {
     let policy = Policy::new().with(Decision::Allow, commands(rule("shell"), &["cargo *"]));
@@ -263,7 +263,7 @@ fn a_decision_names_the_rule_that_produced_it() {
     );
 }
 
-/// [R-POLICY-013] evaluation is a pure function of call, policy, and grants
+/// [REQ-2020, REQ-2021] evaluation is a pure function of call, policy, and grants
 #[test]
 fn evaluation_is_the_same_answer_every_time() {
     let policy = Policy::new().with(Decision::Ask, rule("shell"));
@@ -279,7 +279,7 @@ fn evaluation_is_the_same_answer_every_time() {
     }
 }
 
-/// [R-POLICY-014] the tool acts on exactly the path that was judged
+/// [REQ-2006, REQ-2007] the tool acts on exactly the path that was judged
 #[test]
 fn the_judged_path_is_the_one_to_act_on() {
     // The call carries resolved paths, and nothing in this crate resolves
@@ -298,7 +298,7 @@ fn the_judged_path_is_the_one_to_act_on() {
     );
 }
 
-/// [R-POLICY-020] ask resolves to deny when nobody can answer
+/// [REQ-2022] ask resolves to deny when nobody can answer
 #[test]
 fn an_ask_with_nobody_to_answer_becomes_deny_not_allow() {
     // The policy answers `ask`; turning that into a decision is the caller's,
@@ -321,10 +321,10 @@ fn an_ask_with_nobody_to_answer_becomes_deny_not_allow() {
     );
 }
 
-/// [R-POLICY-023] [R-TUI-062] a session grant applies to this process only
+/// [REQ-2026, REQ-2027] [REQ-2842] a session grant applies to this process only
 ///
 /// Both requirements say it, and this is the one place it can be checked:
-/// `[R-TUI-062]` is about what choosing "always" at the prompt means, and what
+/// `[REQ-2842]` is about what choosing "always" at the prompt means, and what
 /// it means is a grant that nothing writes back to a file.
 #[test]
 fn a_session_grant_lives_and_dies_with_the_process() {
@@ -348,7 +348,7 @@ fn a_session_grant_lives_and_dies_with_the_process() {
     );
 }
 
-/// [R-POLICY-023] a grant cannot turn a deny into anything
+/// [REQ-2026, REQ-2027] a grant cannot turn a deny into anything
 #[test]
 fn a_grant_cannot_undo_a_deny() {
     let policy = Policy::new().with(Decision::Deny, rule("shell"));
@@ -362,8 +362,8 @@ fn a_grant_cannot_undo_a_deny() {
     );
 }
 
-/// [R-POLICY-030] an agent policy narrows to the stricter of the two
-/// [R-POLICY-031] and can never widen
+/// [REQ-2031, REQ-2032] an agent policy narrows to the stricter of the two
+/// [REQ-2033, REQ-2034] and can never widen
 #[test]
 fn an_agent_can_tighten_the_workspace_policy_and_never_loosen_it() {
     let workspace = Policy::new()
@@ -401,7 +401,7 @@ fn an_agent_can_tighten_the_workspace_policy_and_never_loosen_it() {
     );
 }
 
-/// [R-POLICY-032] a sub-agent inherits and may narrow again
+/// [REQ-2035, REQ-2036] a sub-agent inherits and may narrow again
 #[test]
 fn narrowing_composes_so_a_sub_agent_can_only_tighten_further() {
     let workspace = Policy::new().with(Decision::Allow, rule("fs.read"));
@@ -426,7 +426,7 @@ fn narrowing_composes_so_a_sub_agent_can_only_tighten_further() {
     );
 }
 
-/// [R-POLICY-051] an explanation says how many rules were checked first
+/// [REQ-2048, REQ-2049] an explanation says how many rules were checked first
 #[test]
 fn an_explanation_reports_what_was_checked_before_the_match() {
     let policy = Policy::new()
@@ -442,8 +442,8 @@ fn an_explanation_reports_what_was_checked_before_the_match() {
     );
 }
 
-/// [R-POLICY-060] a marked value is redacted wherever it appears
-/// [R-POLICY-061] and the placeholder reveals nothing, not even its length
+/// [REQ-2041, REQ-2042, REQ-2043] a marked value is redacted wherever it appears
+/// [REQ-2044, REQ-2045] and the placeholder reveals nothing, not even its length
 #[test]
 fn a_marked_value_is_replaced_by_a_fixed_placeholder() {
     let policy = Policy::new().with(
@@ -470,8 +470,8 @@ fn a_marked_value_is_replaced_by_a_fixed_placeholder() {
     );
 }
 
-/// [R-POLICY-021] the prompt shows the exact arguments, never a summary
-/// [R-POLICY-022] and names the rule that caused it
+/// [REQ-2023, REQ-2024] the prompt shows the exact arguments, never a summary
+/// [REQ-2025] and names the rule that caused it
 #[test]
 fn an_approval_prompt_shows_the_call_verbatim_and_names_its_rule() {
     use meow_policy::Prompt;
@@ -517,7 +517,7 @@ fn an_approval_prompt_shows_the_call_verbatim_and_names_its_rule() {
     assert!(p.arguments.contains(REDACTED));
 }
 
-/// [R-POLICY-024] a prompt waits by default, and denies only if configured to expire
+/// [REQ-2028, REQ-2029, REQ-2030] a prompt waits by default, and denies only if configured to expire
 #[test]
 fn a_prompt_waits_unless_a_timeout_was_configured() {
     use meow_policy::Timeout;
@@ -535,7 +535,7 @@ fn a_prompt_waits_unless_a_timeout_was_configured() {
     );
 }
 
-/// [R-POLICY-050] explain predicts the rule decision without triggering a call
+/// [REQ-2046, REQ-2047] explain predicts the rule decision without triggering a call
 #[test]
 fn explain_predicts_the_rule_decision_without_making_the_call() {
     use meow_policy::explain;

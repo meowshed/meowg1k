@@ -29,7 +29,7 @@ pub enum IndexError {
 
     /// There is nothing to search.
     ///
-    /// `[R-INDEX-041]`: a query against an empty or absent index says so and
+    /// `[REQ-1428, REQ-1429]`: a query against an empty or absent index says so and
     /// builds nothing. A query that quietly built an index would turn a typo
     /// into several minutes and a bill.
     #[error("the index is empty; run `meow index build` first")]
@@ -37,7 +37,7 @@ pub enum IndexError {
 
     /// The index was built by a different embedding model.
     ///
-    /// `[R-INDEX-051]`: both names, because the fix is to rebuild or to change
+    /// `[REQ-1436, REQ-1437]`: both names, because the fix is to rebuild or to change
     /// the model back and neither is obvious from one of them.
     #[error(
         "the index was built by `{built_by}` and the query used `{asked_by}`; rebuild it or use the model it was built with"
@@ -55,7 +55,7 @@ pub enum IndexError {
 
     /// One chunk is too large for the embedding model, on its own.
     ///
-    /// `[R-INDEX-021]`: the file and the lines, not a generic size error. A
+    /// `[REQ-1420]`: the file and the lines, not a generic size error. A
     /// caller who is told "input too large" and nothing else has to bisect
     /// their own repository to find out where.
     #[error("{path}:{first}-{last} is {chars} characters, and the model takes {limit}")]

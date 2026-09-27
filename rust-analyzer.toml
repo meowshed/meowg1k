@@ -4,7 +4,7 @@ excludeDirs = [
     ".github",
     ".meowg1k",
     "cmd",
-    "docs",
     "internal",
+    "project",
     "target",
 ]

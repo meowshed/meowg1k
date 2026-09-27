@@ -44,7 +44,7 @@ meow.model(
 )
 "#;
 
-/// [R-STAR-001] the workspace is the nearest ancestor with .meow/meow.star,
+/// [REQ-2400, REQ-2401, REQ-2402] the workspace is the nearest ancestor with .meow/meow.star,
 /// and nothing outside it is merged in
 #[test]
 fn discovery_takes_the_nearest_ancestor_and_merges_nothing() {
@@ -62,7 +62,7 @@ fn discovery_takes_the_nearest_ancestor_and_merges_nothing() {
     assert_ne!(found.root(), outer.path());
 }
 
-/// [R-STAR-002] running outside a workspace names what was searched and says
+/// [REQ-2403, REQ-2404] running outside a workspace names what was searched and says
 /// what to do about it
 #[test]
 fn no_workspace_names_the_directories_and_suggests_init() {
@@ -81,7 +81,7 @@ fn no_workspace_names_the_directories_and_suggests_init() {
     );
 }
 
-/// [R-STAR-003] @std// resolves a runtime module, and an unknown name lists
+/// [REQ-2405, REQ-2406] @std// resolves a runtime module, and an unknown name lists
 /// what there is
 #[test]
 fn an_unknown_std_module_lists_the_ones_that_exist() {
@@ -95,7 +95,7 @@ fn an_unknown_std_module_lists_the_ones_that_exist() {
     );
 }
 
-/// [R-STAR-003] a module that exists resolves, and its members are usable
+/// [REQ-2405, REQ-2406] a module that exists resolves, and its members are usable
 #[test]
 fn std_env_resolves_and_its_members_are_usable() {
     // `PATH` rather than a variable this test sets: `set_var` is unsafe in
@@ -133,7 +133,7 @@ meow.provider(name = "absent", kind = "openai", api_key = get("MEOW_NOT_SET_ANYW
     );
 }
 
-/// [R-STAR-004] // resolves inside .meow/, and a path that escapes it fails
+/// [REQ-2407, REQ-2408] // resolves inside .meow/, and a path that escapes it fails
 #[test]
 fn a_local_load_stays_inside_the_config_directory() {
     let dir = workspace(&[
@@ -153,7 +153,7 @@ fn a_local_load_stays_inside_the_config_directory() {
     assert!(error.contains("leaves .meow/"), "{error}");
 }
 
-/// [R-STAR-005] [R-PKG-001] a package path is never read as a local path
+/// [REQ-2409, REQ-2410, REQ-2411] [REQ-1800, REQ-1801, REQ-1802] a package path is never read as a local path
 ///
 /// The workspace here has a file at exactly the path the load names. Reading
 /// `@acme//lib/models.star` as `//lib/models.star` would work on this machine
@@ -185,7 +185,7 @@ fn a_package_load_is_never_read_as_a_local_path() {
     );
 }
 
-/// [R-STAR-006] an import cycle is reported with the ring in order
+/// [REQ-2412] an import cycle is reported with the ring in order
 #[test]
 fn an_import_cycle_is_listed_in_order() {
     let dir = workspace(&[
@@ -199,7 +199,7 @@ fn an_import_cycle_is_listed_in_order() {
     assert!(error.contains("a.star -> b.star -> a.star"), "{error}");
 }
 
-/// [R-STAR-007] a file named by several load statements is evaluated once
+/// [REQ-2413] a file named by several load statements is evaluated once
 #[test]
 fn a_file_loaded_twice_is_evaluated_once() {
     let dir = workspace(&[
@@ -231,7 +231,7 @@ fn a_file_loaded_twice_is_evaluated_once() {
     assert!(loaded.registry.model("fast").is_some());
 }
 
-/// [R-STAR-010] one module table decides what exists, and a module that
+/// [REQ-2414, REQ-2415] one module table decides what exists, and a module that
 /// exists resolves in both phases
 #[test]
 fn one_table_separates_an_unknown_module_from_an_unavailable_call() {
@@ -240,7 +240,7 @@ fn one_table_separates_an_unknown_module_from_an_unavailable_call() {
     assert!(unknown.contains("there is no module"), "{unknown}");
 
     // A module that exists loads in the declaration phase. What it refuses is
-    // being called there, which is the distinction [R-STAR-084] draws.
+    // being called there, which is the distinction [REQ-2524, REQ-2525] draws.
     let loads = workspace(&[("meow.star", "load(\"@std//json\", \"parse\")")]);
     assert!(
         load_at(&loads).is_ok(),
@@ -258,7 +258,7 @@ fn one_table_separates_an_unknown_module_from_an_unavailable_call() {
     );
 }
 
-/// [R-STAR-031] declaring the same name twice names both sites
+/// [REQ-2477] declaring the same name twice names both sites
 #[test]
 fn a_duplicate_declaration_names_both_files() {
     let dir = workspace(&[
@@ -278,7 +278,7 @@ fn a_duplicate_declaration_names_both_files() {
     assert!(error.contains("meow.star"), "{error}");
 }
 
-/// [R-STAR-032] a reference is resolved after every file is evaluated, so
+/// [REQ-2478, REQ-2479] a reference is resolved after every file is evaluated, so
 /// declaration order does not matter
 #[test]
 fn a_reference_resolves_whatever_the_declaration_order() {
@@ -303,7 +303,7 @@ meow.model(name = "fast", provider = "anthropic", id = "x", context = 1, max_out
     assert!(error.contains("model `fastt` is not declared"), "{error}");
 }
 
-/// [R-STAR-033] a command that collides with a built-in is refused
+/// [REQ-2480, REQ-2481] a command that collides with a built-in is refused
 #[test]
 fn a_command_may_not_take_a_builtin_name() {
     let dir = workspace(&[(
@@ -319,7 +319,7 @@ meow.command(meow.agent(name = "session", model = "fast", system = "help"))
     assert!(error.contains("built-in command"), "{error}");
 }
 
-/// [R-STAR-082] print says what to use instead
+/// [REQ-2522] print says what to use instead
 #[test]
 fn print_fails_and_points_at_ctx_out() {
     let dir = workspace(&[("meow.star", r#"print("hello")"#)]);
@@ -328,7 +328,7 @@ fn print_fails_and_points_at_ctx_out() {
     assert!(error.contains("ctx.out"), "{error}");
 }
 
-/// [R-STAR-083] a declaration file has no way to reach the world, because
+/// [REQ-2523] a declaration file has no way to reach the world, because
 /// every module but `env` refuses to be called during declaration
 #[test]
 fn a_declaration_file_cannot_reach_the_world() {
@@ -351,7 +351,7 @@ fn a_declaration_file_cannot_reach_the_world() {
     }
 }
 
-/// [R-STAR-084] only load and @std//env are callable during declaration
+/// [REQ-2524, REQ-2525] only load and @std//env are callable during declaration
 #[test]
 fn only_env_is_callable_during_declaration() {
     let allowed = workspace(&[("meow.star", "load(\"@std//env\", \"get\")\nget(\"PATH\")")]);
@@ -369,7 +369,7 @@ fn only_env_is_callable_during_declaration() {
     );
 }
 
-/// [R-STAR-080] each load owns its evaluators, and nothing survives into the
+/// [REQ-2518, REQ-2519] each load owns its evaluators, and nothing survives into the
 /// next one
 #[test]
 fn two_loads_of_one_workspace_are_independent() {
@@ -383,7 +383,7 @@ fn two_loads_of_one_workspace_are_independent() {
     assert_eq!(first.files.len(), second.files.len());
 }
 
-/// [R-STAR-090] a Starlark error carries the file and the line
+/// [REQ-2526] a Starlark error carries the file and the line
 #[test]
 fn an_error_points_at_the_line_that_caused_it() {
     let dir = workspace(&[("meow.star", "x = 1\ny = undefined_name\n")]);
@@ -393,7 +393,7 @@ fn an_error_points_at_the_line_that_caused_it() {
     assert!(error.contains(":2"), "the line is missing: {error}");
 }
 
-/// [R-STAR-091] a near-miss name is suggested
+/// [REQ-2527] a near-miss name is suggested
 #[test]
 fn a_near_miss_suggests_the_declared_name() {
     let dir = workspace(&[(
@@ -419,7 +419,7 @@ meow.model(
 )
 "#;
 
-/// [R-STAR-034] a model says what it is for, and chat is the default
+/// [REQ-2482, REQ-2483] a model says what it is for, and chat is the default
 #[test]
 fn a_model_declares_what_it_is_for() {
     let dir = workspace(&[("meow.star", TWO_KINDS)]);
@@ -445,7 +445,7 @@ fn a_model_declares_what_it_is_for() {
     assert!(error.contains("`chat` or `embedding`"), "{error}");
 }
 
-/// [R-STAR-034] an agent given an embedding model is refused, naming both
+/// [REQ-2482, REQ-2483] an agent given an embedding model is refused, naming both
 #[test]
 fn an_agent_may_not_use_an_embedding_model() {
     let dir = workspace(&[(
@@ -459,7 +459,7 @@ fn an_agent_may_not_use_an_embedding_model() {
     assert!(error.contains("`embed` is an embedding model"), "{error}");
 }
 
-/// [R-STAR-035] an index says which model embeds the workspace
+/// [REQ-2484, REQ-2485, REQ-2486, REQ-2487] an index says which model embeds the workspace
 #[test]
 fn an_index_declares_its_model_and_parameters() {
     let dir = workspace(&[(
@@ -477,7 +477,7 @@ fn an_index_declares_its_model_and_parameters() {
     assert_eq!(declared.max_bytes, Some(500_000));
 }
 
-/// [R-STAR-035] an index on a chat model is refused, naming both
+/// [REQ-2484, REQ-2485, REQ-2486, REQ-2487] an index on a chat model is refused, naming both
 #[test]
 fn an_index_may_not_use_a_chat_model() {
     let dir = workspace(&[(
@@ -491,7 +491,7 @@ fn an_index_may_not_use_a_chat_model() {
     assert!(error.contains("`fast` is a chat model"), "{error}");
 }
 
-/// [R-STAR-035] an index is declared at most once
+/// [REQ-2484, REQ-2485, REQ-2486, REQ-2487] an index is declared at most once
 #[test]
 fn an_index_may_be_declared_only_once() {
     let dir = workspace(&[(

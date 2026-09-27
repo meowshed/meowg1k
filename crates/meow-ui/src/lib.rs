@@ -27,7 +27,7 @@ pub use crate::tty::Tty;
 
 /// Something that turns events into output.
 ///
-/// `[R-TUI-005]`: all three take the same stream, and none of them needs a
+/// `[REQ-2804, REQ-2805]`: all three take the same stream, and none of them needs a
 /// terminal to be driven.
 pub trait Renderer {
     /// Take one event.
@@ -39,7 +39,7 @@ pub trait Renderer {
 
     /// Show a prompt and leave it up until it is answered.
     ///
-    /// `[R-TUI-060]`: it occupies the live region and never overwrites the
+    /// `[REQ-2838, REQ-2839]`: it occupies the live region and never overwrites the
     /// transcript above it. A renderer with no live region writes to stderr,
     /// which is right for the same reason: stdout may be a pipe carrying a
     /// result, and a question does not belong in it.
@@ -99,11 +99,11 @@ pub struct Conditions {
 
 /// Choose a renderer.
 ///
-/// Satisfies `[R-TUI-001]` by being a function of the runtime's conditions and
-/// nothing a script can reach; `[R-TUI-002]` by letting `--format json` win
+/// Satisfies `[REQ-2800]` by being a function of the runtime's conditions and
+/// nothing a script can reach; `[REQ-2801]` by letting `--format json` win
 /// whatever the terminal is, because a program asking for JSON gets JSON even
-/// from an interactive shell; `[R-TUI-003]` by treating a pipe, `NO_COLOR`,
-/// and `--color=never` alike; and `[R-TUI-004]` by falling through to the
+/// from an interactive shell; `[REQ-2802]` by treating a pipe, `NO_COLOR`,
+/// and `--color=never` alike; and `[REQ-2803]` by falling through to the
 /// inline renderer.
 pub fn choose(conditions: Conditions) -> Choice {
     if conditions.json {

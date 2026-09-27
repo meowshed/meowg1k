@@ -11,8 +11,9 @@ revised: 2026-09-27
 
 <role>
 The root policy for working on meowg1k. It outranks every installed plugin's
-defaults where the two disagree. `docs/spec/` decides what the binary does and
-this file decides how to work on it, so neither restates the other.
+defaults where the two disagree. The record under `project/` decides what the
+binary does and why, and this file decides how to work on it, so neither
+restates the other.
 `.meowpaw/profile.toml` declares the verbs, the commit convention and the
 branch.
 </role>
@@ -22,20 +23,21 @@ meowg1k is a script-friendly AI companion CLI. Users write their commands in
 Starlark and their agents in markdown, and the Rust binary supplies the
 runtime, the model gateways, the session store, the index and the terminal.
 `v0.2.1` was the last Go release and is tagged; the Go code is gone from `main`.
-`docs/spec/` holds the numbered requirements, and `docs/design/` records the
-decisions that produced them.
+The record lives under `project/`: `vision.md`, one requirement per file in
+`requirements/`, one decision per file in `adrs/`, and the specifications that
+state the present in `specs/`.
 </project>
 
 <principles>
 
 <principle name="spec_first">
-Write the requirement in `docs/spec/` before the code whose behaviour no
-requirement covers, because v0.2.x collected behaviour nobody decided on: a
+Write the requirement in `project/requirements/` before the code whose behaviour
+no requirement covers, because v0.2.x collected behaviour nobody decided on: a
 context built twice, an agent loop returning a bare string, a retry that backed
-off on authentication failures. Each requirement is `R-<AREA>-<n>`, uses MUST
-and MUST NOT in the RFC 2119 sense, and states one testable obligation at a
-boundary; `docs/spec/README.md` has the areas, the tombstone for a withdrawn
-number and the template. When an implementation contradicts a requirement,
+off on authentication failures. Each requirement is one file, `REQ-NNNN`, in
+its topic's block of 200, uses one RFC 2119 keyword and states one testable
+obligation at a boundary; `meow-method template requirement` has the form and
+`meow-method check` enforces it. When an implementation contradicts a requirement,
 stop, and propose the amendment as its own reviewable change, with the reason,
 the requirements and tests it touches, and the migration. Rewording a
 requirement to match the code loses the reason it was written.
@@ -43,9 +45,9 @@ requirement to match the code loses the reason it was written.
 
 <principle name="requirements_trace_to_tests">
 Name the requirement in a doc comment on every test that checks one, as in
-`/// [R-SESSION-014] compaction supersedes without deleting`, because the set of
-IDs in `docs/spec/` and the set in the tests are then two lists a check can
-compare. An ID in the spec with no test is unbuilt or untested, and an ID in a
+`/// [REQ-2210] compaction supersedes without deleting`, because the set of IDs
+in `project/requirements/` and the set in the tests are then two lists a check can
+compare. An ID in the record with no test is unbuilt or untested, and an ID in a
 test with no requirement is a typo or a stale withdrawal.
 </principle>
 
@@ -60,10 +62,10 @@ is wrong. `meow review`, `meow commit` and `meow ask` run on this repository.
 <principle name="docs_must_match_code">
 Fix or delete a document that describes something else in the same change that
 touches its subsystem, because the v0.2.x guides described modules and commands
-that didn't exist and were deleted for it. `docs/spec/` says what, `docs/design/`
-says why and the code says how; don't start a fourth account. A Starlark API
-change updates `docs/design/0.3.0-starlark-api.md`, and an architecture change
-updates `docs/design/0.3.0-architecture.md` and the crate table below.
+that didn't exist and were deleted for it. The specifications say what, the decisions
+say why and the code says how; don't start a fourth account. A Starlark API
+change updates SPC-2400, and an architecture change updates SPC-3000 and the
+crate table below.
 </principle>
 
 <principle name="crate_boundaries">
@@ -97,10 +99,10 @@ the handler context only in `crates/meow-star/src/context.rs`, because v0.2.x
 built it in `ctx_run.go` and `module_llm.go` and a module added to one was
 missing from tools inside an agent loop. To add a module, write the
 `#[starlark_module]` function calling `running(eval, "<module>.<call>")` first
-so declaration refuses it, per `[R-STAR-084]`; register it in `Modules::build`
+so declaration refuses it, per `[REQ-2524]`; register it in `Modules::build`
 and `NAMES`; test each builtin and its argument errors in
-`crates/meow-star/tests/running.rs`; and document it in section 10 of
-`docs/design/0.3.0-starlark-api.md`.
+`crates/meow-star/tests/running.rs`; and state it in SPC-2400 with the
+requirement it satisfies.
 </principle>
 
 <principle name="starlark_thread_bridge">
@@ -122,8 +124,9 @@ call, and none inside an inner loop.
 
 <principle name="errors">
 Give each library crate one `thiserror` enum, with variants named for what went
-wrong and carrying enough to act on, and convert to `miette` in `meow-cli`, so a
-Starlark mistake renders as a diagnostic pointing at the line. Never `unwrap`
+wrong and carrying enough to act on, and let `meow-cli` print them at the
+process boundary. A Starlark mistake keeps the diagnostic `starlark-rust`
+renders, which points at the line, as ADR-0103 decides. Never `unwrap`
 or `expect` outside tests: restructure so the compiler sees the invariant, and
 where that's impossible, write an `#[allow]` with the reason beside it. Return
 every error the caller needs, because v0.2.x logged session write failures and

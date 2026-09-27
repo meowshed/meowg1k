@@ -6,7 +6,7 @@
 //! The engine is async and `Send`; a Starlark evaluator is neither. The bridge
 //! between them is one rule: every handler runs on its own blocking thread
 //! with its own evaluator, and a builtin that needs the engine blocks that
-//! thread on it. `[R-STAR-081]` asks for exactly this, and the alternative -
+//! thread on it. `[REQ-2520, REQ-2521]` asks for exactly this, and the alternative -
 //! handing Starlark a future or a callback - would mean a value crossing a
 //! thread boundary, which the type system correctly refuses.
 
@@ -104,7 +104,7 @@ pub struct Ports {
     pub events: Arc<dyn Events>,
     /// Who answers when the policy says to ask.
     ///
-    /// `None` resolves every `ask` to `deny`, per `[R-POLICY-020]`: an
+    /// `None` resolves every `ask` to `deny`, per `[REQ-2022]`: an
     /// unattended run must not be able to approve itself.
     pub approve: Option<Arc<dyn meow_agent::Approver>>,
     /// Whether to plan tool calls instead of making them.
@@ -202,7 +202,7 @@ impl Runtime {
 
     /// Wait for an asynchronous call from a script thread.
     ///
-    /// `[R-STAR-081]`: the thread blocks and Starlark never sees a future.
+    /// `[REQ-2520, REQ-2521]`: the thread blocks and Starlark never sees a future.
     /// Only ever called from a thread that is not driving the reactor - the
     /// thread a handler runs on is always a `spawn_blocking` one.
     pub fn block_on<F: std::future::Future>(&self, future: F) -> F::Output {
@@ -287,7 +287,7 @@ impl Runtime {
     ///
     /// [`StarError`] when the agent, its model, or one of its tools is not
     /// declared. A run that starts always returns an outcome, per
-    /// `[R-AGENT-001]`; only building the run can fail.
+    /// `[REQ-1000]`; only building the run can fail.
     pub fn run_agent(
         self: &Arc<Self>,
         name: &str,
@@ -303,9 +303,9 @@ impl Runtime {
         let engine = Arc::clone(self.engine_for(&self.agent_model(name)?)?);
         let mut sink = crate::run::sink(self);
 
-        // `[R-SESSION-051]`: the history is whatever the session says it saw,
+        // `[REQ-2238]`: the history is whatever the session says it saw,
         // superseded ranges and all. An empty one is a fresh run, which is
-        // `[R-SESSION-054]`: continuation is never inferred.
+        // `[REQ-2244, REQ-2245]`: continuation is never inferred.
         let history = self.session.history();
 
         Ok(
@@ -371,7 +371,7 @@ impl Runtime {
 
     /// Turn declared tool names into tools the engine can call.
     ///
-    /// A name may be a tool or another agent, which is what `[R-STAR-041]`
+    /// A name may be a tool or another agent, which is what `[REQ-2490, REQ-2491]`
     /// means by an agent being usable where a tool is. Construction stops
     /// adding sub-agents at the depth limit rather than recursing forever on
     /// a pair of agents that name each other.
@@ -431,13 +431,13 @@ impl Runtime {
 
     /// Call one Starlark handler on this thread.
     ///
-    /// `[R-STAR-080]`: a fresh evaluator on a scoped heap, so nothing the
+    /// `[REQ-2518, REQ-2519]`: a fresh evaluator on a scoped heap, so nothing the
     /// handler allocated survives the call and nothing crosses a thread.
     ///
     /// # Errors
     ///
     /// [`StarError::Starlark`] carrying the diagnostic, which is what makes
-    /// `[R-STAR-090]` hold for a run-time failure as well as a load-time one.
+    /// `[REQ-2526]` hold for a run-time failure as well as a load-time one.
     pub fn call_handler(
         self: &Arc<Self>,
         handler: &Handler,
@@ -514,7 +514,7 @@ impl Runtime {
 
 /// Turn a tool call into something the policy can judge.
 ///
-/// `[R-POLICY-003]`: the paths are resolved here, before the decision, and the
+/// `[REQ-2004, REQ-2005]`: the paths are resolved here, before the decision, and the
 /// tool acts on exactly these. Re-resolving afterwards reopens the window in
 /// which a path allowed as a file becomes a symbolic link to somewhere denied.
 ///
@@ -657,7 +657,7 @@ impl Relay {
 
     /// Tell the live region where the run has got to.
     ///
-    /// `[R-TUI-012]` wants the current tool, the elapsed time, the step count,
+    /// `[REQ-2810, REQ-2811]` wants the current tool, the elapsed time, the step count,
     /// and the budget consumed, and this is the only place that knows all four
     /// at once.
     fn progress(&self, tool: Option<String>) {
@@ -740,7 +740,7 @@ impl Sink for Relay {
                 self.progress(None);
             }
             E::Policy { id, decision } => {
-                // `[R-SESSION-070]` and `[R-SESSION-071]`: before the tool
+                // `[REQ-2250]` and `[REQ-2251]`: before the tool
                 // runs, and for the denials as well as the approvals.
                 self.keep(meow_core::EventKind::Policy {
                     id,
@@ -784,7 +784,7 @@ impl Sink for Relay {
 
 /// A tool that is planned rather than run.
 ///
-/// Satisfies `[R-TUI-072]`: the policy decision still happens, because the
+/// Satisfies `[REQ-2845, REQ-2846, REQ-2847]`: the policy decision still happens, because the
 /// engine takes it before the tool is reached, and the transcript records what
 /// would have run. The model is fed a placeholder.
 ///
@@ -898,7 +898,7 @@ impl Tool for StarlarkTool {
             }
         };
 
-        // `[R-STAR-063]`: the model's arguments meet the same declaration the
+        // `[REQ-2514]`: the model's arguments meet the same declaration the
         // command line does, so a constraint cannot be enforced on one path
         // and not the other.
         let bound = self
@@ -911,7 +911,7 @@ impl Tool for StarlarkTool {
         let ledger = Ledger::new(Budget::default());
         let depth = self.depth;
 
-        // `[R-STAR-080]`: its own thread and its own evaluator. The handler
+        // `[REQ-2518, REQ-2519]`: its own thread and its own evaluator. The handler
         // cannot run on the thread that is already blocked waiting for this
         // call, and a Starlark value cannot move between the two.
         tokio::task::spawn_blocking(move || runtime.call_handler(&handler, &bound, &ledger, depth))
@@ -949,7 +949,7 @@ pub(crate) fn phase_of(eval: &Evaluator<'_, '_, '_>) -> Option<Phase> {
 
 /// Reach the run state from inside a builtin.
 ///
-/// `[R-STAR-084]`: a runtime module called while `.meow/` is being evaluated
+/// `[REQ-2524, REQ-2525]`: a runtime module called while `.meow/` is being evaluated
 /// says so, rather than failing with something about a missing value.
 pub(crate) fn running<'a>(
     eval: &Evaluator<'_, 'a, '_>,

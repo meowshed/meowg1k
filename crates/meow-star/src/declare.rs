@@ -21,7 +21,7 @@ use crate::state::{Declaring, Phase};
 
 /// Reach the declaration state from inside a builtin.
 ///
-/// `[R-STAR-030]`: a handler that could declare a tool would make the tool set
+/// `[REQ-2475, REQ-2476]`: a handler that could declare a tool would make the tool set
 /// unknowable before a run, and `meow policy explain` depends on it being
 /// knowable. The error names the phase rather than saying only that the call
 /// failed, because "not available" leaves a reader guessing whether they typed
@@ -77,7 +77,7 @@ fn present(value: Option<StarValue<'_>>) -> Option<StarValue<'_>> {
 
 /// Read a nested declaration through the shape both Starlark and YAML use.
 ///
-/// `[R-STAR-051]`: one structure, filled from either syntax, so a default can
+/// `[REQ-2498, REQ-2499]`: one structure, filled from either syntax, so a default can
 /// only be decided in one place.
 fn from_json<T: serde::de::DeserializeOwned>(
     value: Option<StarValue<'_>>,
@@ -105,9 +105,9 @@ fn as_f64(value: StarValue<'_>) -> starlark::Result<f64> {
 
 /// Read a `tools` list, which may hold values or names.
 ///
-/// `[R-STAR-041]`: an agent value goes where a tool value goes. A markdown
+/// `[REQ-2490, REQ-2491]`: an agent value goes where a tool value goes. A markdown
 /// agent can only write names, so both forms land on the same list and
-/// `[R-STAR-051]` holds without a second code path.
+/// `[REQ-2498, REQ-2499]` holds without a second code path.
 fn as_names<'v>(
     value: Option<StarValue<'v>>,
     what: &str,
@@ -190,7 +190,7 @@ fn declarations(builder: &mut GlobalsBuilder) {
         #[starlark(require = named, default = NoneOr::None)] kind: NoneOr<String>,
         eval: &mut Evaluator<'v, '_, '_>,
     ) -> starlark::Result<NoneType> {
-        // [R-STAR-034]: `chat` unless it says otherwise, because most models
+        // [REQ-2482, REQ-2483]: `chat` unless it says otherwise, because most models
         // in most workspaces answer and only the index needs the other kind.
         let kind = match kind.into_option().as_deref() {
             None => crate::registry::ModelKind::Chat,
@@ -254,13 +254,13 @@ fn declarations(builder: &mut GlobalsBuilder) {
 
     /// Declare an agent.
     ///
-    /// The keyword arguments are `[R-STAR-040]`'s set, and they are collected
+    /// The keyword arguments are `[REQ-2488, REQ-2489]`'s set, and they are collected
     /// into [`agent::Fields`] rather than used directly, because a markdown
-    /// agent fills the same structure and `[R-STAR-051]` asks the two to come
+    /// agent fills the same structure and `[REQ-2498, REQ-2499]` asks the two to come
     /// out identical. Naming them explicitly here rather than taking `**kwargs`
     /// keeps Starlark's own error for a misspelled argument, which points at
     /// the call.
-    // `meow.agent` takes the ten keyword arguments `[R-STAR-040]` names.
+    // `meow.agent` takes the ten keyword arguments `[REQ-2488, REQ-2489]` names.
     // Grouping them into a struct would satisfy the lint and change the
     // Starlark surface, and the Starlark surface is the product.
     #[allow(clippy::too_many_arguments)]
@@ -304,7 +304,7 @@ fn declarations(builder: &mut GlobalsBuilder) {
     /// A markdown agent under `.meow/agents/` is read after `meow.star` has
     /// been evaluated, so a handler cannot hold its value the way it holds a
     /// `meow.agent` one. This gives it the same value by name, and
-    /// `[R-STAR-032]` still holds: the name is checked once everything has
+    /// `[REQ-2478, REQ-2479]` still holds: the name is checked once everything has
     /// been read, not when the handler runs.
     fn agent_named<'v>(
         #[starlark(require = pos)] name: String,
@@ -338,13 +338,13 @@ fn declarations(builder: &mut GlobalsBuilder) {
 
     /// Say how this workspace is indexed.
     ///
-    /// `[R-STAR-035]`: which model embeds it, and the chunking parameters
-    /// `[R-INDEX-003]` and `[R-INDEX-012]` call configured. Choosing a model
+    /// `[REQ-2484, REQ-2485, REQ-2486, REQ-2487]`: which model embeds it, and the chunking parameters
+    /// `[REQ-1405, REQ-1406]` and `[REQ-1412]` call configured. Choosing a model
     /// for somebody is how an index gets built by one model and queried by
     /// another.
     /// Declare a package this workspace loads from.
     ///
-    /// `[R-PKG-001]`: every `@<name>//` load needs one of these, so
+    /// `[REQ-1800, REQ-1801, REQ-1802]`: every `@<name>//` load needs one of these, so
     /// `meow.lock` is the whole list of what a workspace runs that it did not
     /// write.
     fn package<'v>(
@@ -391,7 +391,7 @@ fn declarations(builder: &mut GlobalsBuilder) {
 
     /// Declare what every agent in this workspace may do.
     ///
-    /// `[R-STAR-030]` covers this call for the same reason it covers the
+    /// `[REQ-2475, REQ-2476]` covers this call for the same reason it covers the
     /// others: a policy written inside a handler would be applied after the
     /// calls it was meant to govern, which reads as a permission bug rather
     /// than as a mistake in the file.
@@ -639,7 +639,7 @@ fn runtime_calls(builder: &mut GlobalsBuilder) {
 
 /// `print`, defined only to refuse.
 ///
-/// `[R-STAR-082]`: leaving it undefined would also fail, with "variable
+/// `[REQ-2522]`: leaving it undefined would also fail, with "variable
 /// `print` not found", which tells a user that they made a typo rather than
 /// that printing is the wrong thing to do here. Defining it lets the error
 /// name what to use instead.
@@ -667,7 +667,7 @@ fn put(node: &mut Value, key: &str, value: Option<Value>) {
 
 /// Everything a declaration file can see.
 ///
-/// `[R-STAR-010]`: this function is the only place the surface is assembled.
+/// `[REQ-2414, REQ-2415]`: this function is the only place the surface is assembled.
 /// A second builder is how v0.2.x ended up with two context shapes.
 pub fn globals() -> starlark::environment::Globals {
     starlark::environment::GlobalsBuilder::standard()

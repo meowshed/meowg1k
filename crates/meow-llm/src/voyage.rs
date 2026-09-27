@@ -3,7 +3,7 @@
 
 //! Voyage, which only embeds.
 //!
-//! A provider that declares no chat is not a lesser provider: `[R-LLM-002]`
+//! A provider that declares no chat is not a lesser provider: `[REQ-1602]`
 //! refuses a request for something a provider did not declare before it is
 //! sent, so a workspace that names this for an agent finds out at declaration
 //! time rather than from a confusing answer.
@@ -39,7 +39,7 @@ impl<T: Transport> Voyage<T> {
     /// Build a provider for one embedding model.
     ///
     /// The model is fixed at construction rather than taken per call, because
-    /// `[R-INDEX-051]` makes an index answerable for which model built it and
+    /// `[REQ-1436, REQ-1437]` makes an index answerable for which model built it and
     /// a provider that could silently use another would undo that.
     pub fn new(transport: T, api_key: impl Into<String>, model: impl Into<String>) -> Self {
         Self {

@@ -13,8 +13,8 @@ use crate::theme::Role;
 
 /// Line-oriented output with no escape sequences at all.
 ///
-/// Satisfies `[R-TUI-020]` by writing nothing but text and newlines, and
-/// `[R-TUI-021]` by carrying the same information the terminal renderer does:
+/// Satisfies `[REQ-2821, REQ-2822]` by writing nothing but text and newlines, and
+/// `[REQ-2823]` by carrying the same information the terminal renderer does:
 /// every step, every tool call with its policy decision, and the totals. What
 /// it drops is the live region, which cannot exist without moving a cursor.
 pub struct Plain<W: Write> {
@@ -69,7 +69,7 @@ impl<W: Write> Renderer for Plain<W> {
 
             // Deltas are dropped and the whole text is written once, per step.
             // A pipe that received a line per token would be unreadable, and
-            // `[R-TUI-021]` asks for the same information, not the same
+            // `[REQ-2823]` asks for the same information, not the same
             // granularity.
             ViewEvent::Live(LiveKind::TextDelta { .. } | LiveKind::ThinkingDelta { .. }) => Ok(()),
 

@@ -10,7 +10,7 @@ use crate::message::{Response, ToolCall};
 
 /// One thing that happened during a streaming call.
 ///
-/// `[R-LLM-020]` fixes the set at eight. A closed set is what lets a renderer
+/// `[REQ-1617]` fixes the set at eight. A closed set is what lets a renderer
 /// and a script handle the stream without either guessing what a ninth kind
 /// might mean.
 #[derive(Debug, Clone, PartialEq)]
@@ -48,7 +48,7 @@ pub enum StreamEvent {
 
 /// Collects a stream back into the response it describes.
 ///
-/// `[R-LLM-021]` is stated over a recording rather than over two live calls,
+/// `[REQ-1618]` is stated over a recording rather than over two live calls,
 /// which is what makes it checkable: the same events must always produce the
 /// same value, and a test can supply the events.
 #[derive(Debug, Default)]
@@ -127,7 +127,7 @@ impl Aggregator {
 /// Where a streaming call sends what it receives.
 ///
 /// An error from the sink aborts the request and reaches the caller unchanged,
-/// per `[R-LLM-023]`: a consumer that cannot keep up, or that has decided to
+/// per `[REQ-1620, REQ-1621]`: a consumer that cannot keep up, or that has decided to
 /// stop, is not something to paper over.
 pub trait Sink: Send {
     /// Take one event.

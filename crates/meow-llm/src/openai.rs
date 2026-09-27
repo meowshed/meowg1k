@@ -54,7 +54,7 @@ impl<T: Transport> OpenAi<T> {
 
     /// The same, for a credential that can change between requests.
     ///
-    /// `[R-LLM-004]`: what is sent is asked for per request rather than fixed
+    /// `[REQ-1604, REQ-1605, REQ-1606]`: what is sent is asked for per request rather than fixed
     /// when the provider is built, which is what lets a token that expires be
     /// renewed without rebuilding anything.
     pub fn with_bearer(transport: T, bearer: std::sync::Arc<dyn crate::bearer::Bearer>) -> Self {
@@ -101,7 +101,7 @@ impl<T: Transport> OpenAi<T> {
     ///
     /// `response_format` is the part compatibility most often stops at: a
     /// local server takes the body and ignores the field. Declaring emulation
-    /// makes `[R-LLM-050]` ask in the prompt and check the answer here, which
+    /// makes `[REQ-1641, REQ-1642, REQ-1643]` ask in the prompt and check the answer here, which
     /// works either way.
     #[must_use]
     pub fn with_emulated_schema(mut self) -> Self {
@@ -163,7 +163,7 @@ impl<T: Transport> OpenAi<T> {
         if stream {
             body["stream"] = json!(true);
             // Without this the stream carries no usage at all, and
-            // [R-LLM-041] would have to report nothing rather than a cost.
+            // [REQ-1640] would have to report nothing rather than a cost.
             body["stream_options"] = json!({ "include_usage": true });
         }
         body
@@ -172,7 +172,7 @@ impl<T: Transport> OpenAi<T> {
     /// Turn a status and a body into a classified error.
     ///
     /// The quota signal is the API's own `error.code`, never text matched out
-    /// of a message. `[R-LLM-037]`.
+    /// of a message. `[REQ-1634, REQ-1635]`.
     fn error_from(&self, response: &HttpResponse) -> LlmError {
         let parsed: Option<Value> = serde_json::from_str(&response.body).ok();
         let code = parsed
@@ -221,7 +221,7 @@ impl<T: Transport> OpenAi<T> {
             .to_owned();
 
         // Some compatible servers put the model's reasoning here; the official
-        // API does not send it at all. Absent is absent, per [R-LLM-024].
+        // API does not send it at all. Absent is absent, per [REQ-1622, REQ-1623].
         let thinking = message
             .get("reasoning_content")
             .or_else(|| message.get("reasoning"))
@@ -237,7 +237,7 @@ impl<T: Transport> OpenAi<T> {
             .flatten()
         {
             let id = call["id"].as_str().unwrap_or_default().to_owned();
-            // [R-LLM-014]: a repeated identifier is one call, not two.
+            // [REQ-1612]: a repeated identifier is one call, not two.
             if calls.iter().any(|c| c.id == id) {
                 continue;
             }
@@ -328,7 +328,7 @@ impl<T: Transport> Provider for OpenAi<T> {
             1
         };
 
-        // [R-LLM-051]: ask again with the validation error in the follow-up,
+        // [REQ-1644, REQ-1645]: ask again with the validation error in the follow-up,
         // so the model is told what was wrong rather than guessing. A native
         // schema needs one attempt, because the API enforced it.
         for attempt in 1..=attempts {
@@ -417,7 +417,7 @@ impl<T: Transport> Provider for OpenAi<T> {
             };
 
             for event in events_from(&v, &mut slots) {
-                // [R-LLM-023]: the consumer's error aborts the request and
+                // [REQ-1620, REQ-1621]: the consumer's error aborts the request and
                 // reaches the caller unchanged.
                 sink.event(event.clone())?;
                 agg.push(event);

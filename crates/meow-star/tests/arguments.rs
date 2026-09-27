@@ -56,7 +56,7 @@ fn given(pairs: &[(&str, Value)]) -> Map<String, Value> {
         .collect()
 }
 
-/// [R-STAR-060] every type builds, each with the constraints that belong to it
+/// [REQ-2506, REQ-2507, REQ-2508, REQ-2509, REQ-2510] every type builds, each with the constraints that belong to it
 #[test]
 fn every_argument_type_builds_with_its_constraints() {
     let args = args_of(&tool(
@@ -89,7 +89,7 @@ fn every_argument_type_builds_with_its_constraints() {
     assert_eq!(schema["required"], json!(["title"]));
 }
 
-/// [R-STAR-060] a default outside an enum's values is refused where it is
+/// [REQ-2506, REQ-2507, REQ-2508, REQ-2509, REQ-2510] a default outside an enum's values is refused where it is
 /// written
 #[test]
 fn an_enum_default_must_be_one_of_its_values() {
@@ -101,7 +101,7 @@ fn an_enum_default_must_be_one_of_its_values() {
     assert!(error.contains("`slow` is not one of the values"), "{error}");
 }
 
-/// [R-STAR-061] one declaration produces the flag, the help line, and the
+/// [REQ-2511] one declaration produces the flag, the help line, and the
 /// schema
 #[test]
 fn one_declaration_produces_the_flag_the_help_and_the_schema() {
@@ -128,7 +128,7 @@ fn one_declaration_produces_the_flag_the_help_and_the_schema() {
     );
 }
 
-/// [R-STAR-062] positional indices are unique
+/// [REQ-2512, REQ-2513] positional indices are unique
 #[test]
 fn two_arguments_may_not_share_a_position() {
     let dir = workspace(&tool(
@@ -142,7 +142,7 @@ fn two_arguments_may_not_share_a_position() {
     assert!(error.contains("both positional 0"), "{error}");
 }
 
-/// [R-STAR-062] positional indices run from zero without gaps
+/// [REQ-2512, REQ-2513] positional indices run from zero without gaps
 #[test]
 fn positional_indices_must_be_contiguous_from_zero() {
     let dir = workspace(&tool(
@@ -157,7 +157,7 @@ fn positional_indices_must_be_contiguous_from_zero() {
     assert!(error.contains("1 is missing"), "{error}");
 }
 
-/// [R-STAR-062] positional arguments come back in the order they are typed
+/// [REQ-2512, REQ-2513] positional arguments come back in the order they are typed
 #[test]
 fn positional_arguments_keep_their_order() {
     let args = args_of(&tool(
@@ -175,7 +175,7 @@ fn positional_arguments_keep_their_order() {
     assert_eq!(flags, ["force"]);
 }
 
-/// [R-STAR-063] a constraint holds for a command-line value and a
+/// [REQ-2514] a constraint holds for a command-line value and a
 /// model-supplied one alike
 #[test]
 fn a_constraint_holds_on_both_paths() {
@@ -216,7 +216,7 @@ fn a_constraint_holds_on_both_paths() {
     assert_eq!(bound["mode"], json!("fast"));
 }
 
-/// [R-STAR-063] a missing required argument and an unknown one are both
+/// [REQ-2514] a missing required argument and an unknown one are both
 /// reported, and reported together
 #[test]
 fn every_problem_is_reported_at_once() {
@@ -245,7 +245,7 @@ fn every_problem_is_reported_at_once() {
     );
 }
 
-/// [R-STAR-063] a wrong type is reported in the user's terms
+/// [REQ-2514] a wrong type is reported in the user's terms
 #[test]
 fn a_wrong_type_says_what_was_wanted_and_what_arrived() {
     let args = args_of(&tool(r#"{"count": meow.arg.int()}"#));
@@ -259,7 +259,7 @@ fn a_wrong_type_says_what_was_wanted_and_what_arrived() {
     );
 }
 
-/// [R-STAR-070] meow.schema builds each kind, and emits JSON Schema
+/// [REQ-2515, REQ-2516] meow.schema builds each kind, and emits JSON Schema
 #[test]
 fn a_schema_emits_json_schema() {
     let dir = workspace(
@@ -306,7 +306,7 @@ meow.agent(
     assert_eq!(fields["notes"]["items"]["type"], "string");
 }
 
-/// [R-STAR-071] a required field the schema does not declare fails when the
+/// [REQ-2517] a required field the schema does not declare fails when the
 /// schema is built
 #[test]
 fn a_schema_may_not_require_a_field_it_does_not_declare() {

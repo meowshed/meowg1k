@@ -7,7 +7,7 @@ use ratatui::style::{Color, Modifier, Style};
 
 /// How much colour a terminal can show.
 ///
-/// `[R-TUI-091]`: detected and quantised rather than dropped. A 16-colour
+/// `[REQ-2856]`: detected and quantised rather than dropped. A 16-colour
 /// terminal getting grey text is a worse outcome than a 16-colour terminal
 /// getting the nearest of sixteen colours, and both are better than every
 /// terminal getting none because one of them was old.
@@ -29,7 +29,7 @@ impl Depth {
     /// Takes the variables rather than reading them, so a test can state the
     /// environment it means instead of mutating the process.
     ///
-    /// `[R-TUI-090]`: `NO_COLOR` wins over everything, including a theme that
+    /// `[REQ-2855]`: `NO_COLOR` wins over everything, including a theme that
     /// asks for colour. Its presence is what counts, not its value, which is
     /// what the convention says.
     pub fn detect(no_color: bool, colorterm: Option<&str>, term: Option<&str>) -> Self {
@@ -49,7 +49,7 @@ impl Depth {
 
 /// Whether the terminal can be shown to draw boxes and spinners.
 ///
-/// `[R-TUI-093]`: shown to support, not assumed to. A terminal that says
+/// `[REQ-2859]`: shown to support, not assumed to. A terminal that says
 /// nothing gets the ASCII fallback, because a row of replacement characters is
 /// worse than a row of dashes.
 pub fn unicode(lang: Option<&str>, term: Option<&str>) -> bool {
@@ -174,7 +174,7 @@ impl Role {
 
     /// The word that carries the meaning when colour cannot.
     ///
-    /// `[R-TUI-092]`: colour is never the only carrier, which is also what
+    /// `[REQ-2857, REQ-2858]`: colour is never the only carrier, which is also what
     /// makes the plain renderer a faithful downgrade rather than a lossy one.
     pub fn sigil(self) -> &'static str {
         match self {
