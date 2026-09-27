@@ -62,7 +62,7 @@ docs/design/0.3.0-sessions.md section 4, medium).
   docs/spec/session.md [R-SESSION-032], high).
 - A short identifier needs to be unique only within a workspace, which lets the
   entropy come from the clock and the process identifier (from
-  https://github.com/retran/meowg1k/pull/129, high).
+  https://github.com/meowshed/meowg1k/pull/129, high).
 - A nested workspace inside a monorepo keeps sessions apart from its parent's,
   because discovery stops at the first `.meow/meow.star` (from
   crates/meow-star/src/workspace.rs:34-47, high).

@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 The size limit deletes and re-measures one session at a time (from
-https://github.com/retran/meowg1k/pull/128, high).
+https://github.com/meowshed/meowg1k/pull/128, high).
 
 Once this is accepted, a sweep with a size limit deletes the oldest session
 tree, measures the database, and repeats until it fits or every session has
@@ -29,7 +29,7 @@ crates/meow-cli/src/wire.rs:737, high).
 ## Why
 
 Deleting is what changes the file size, so a plan made up front would be wrong
-after the first deletion (from https://github.com/retran/meowg1k/pull/128,
+after the first deletion (from https://github.com/meowshed/meowg1k/pull/128,
 high).
 
 ## Alternatives
@@ -37,12 +37,12 @@ high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: retention by age and count only | No database query inside a loop, and no dependence on how the file shrinks (reasoned from crates/meow-session/src/retention.rs:64, low) | REQ-2255 asks for a size limit, because a log without one ends as a gigabyte of SQLite (from docs/design/0.3.0-sessions.md section 8, high) |
-| Plan the deletions up front | One pass, and the set to delete is known before anything goes (reasoned, low) | The plan is wrong after the first deletion changes the file size (from https://github.com/retran/meowg1k/pull/128, high) |
+| Plan the deletions up front | One pass, and the set to delete is known before anything goes (reasoned, low) | The plan is wrong after the first deletion changes the file size (from https://github.com/meowshed/meowg1k/pull/128, high) |
 
 ## What it costs
 
 It is a loop with a database query in it, fine for a sweep and wrong for
-anything on a run's path (from https://github.com/retran/meowg1k/pull/128,
+anything on a run's path (from https://github.com/meowshed/meowg1k/pull/128,
 high). Without a vacuum the loop can delete every unprotected session (reasoned
 from crates/meow-store/src/lib.rs:127, medium).
 

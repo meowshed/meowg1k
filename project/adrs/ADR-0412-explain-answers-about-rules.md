@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `explain` answers about rules, not outcomes, and doesn't claim to predict how an
-`ask` would be answered (from https://github.com/retran/meowg1k/pull/119, high).
+`ask` would be answered (from https://github.com/meowshed/meowg1k/pull/119, high).
 `meow_policy::explain` evaluates the call with an empty set of grants and
 returns the rule decision, the rule, where it was written and how many
 higher-precedence rules were checked (from
@@ -23,15 +23,15 @@ exist: `meow policy` has only `show`, so a user can't run
 `meow policy explain` (from crates/meow-cli/src/surface.rs:300-303 and
 crates/meow-cli/src/wire.rs:528-543, high). The pull request that built the
 function left the command to M8 (from
-https://github.com/retran/meowg1k/pull/119, high).
+https://github.com/meowshed/meowg1k/pull/119, high).
 
 ## Why
 
 `meow policy explain` had promised the decision a real call would receive,
 including one a person hasn't answered yet, which it can't know (from
-https://github.com/retran/meowg1k/pull/111, high). A permission system whose
+https://github.com/meowshed/meowg1k/pull/111, high). A permission system whose
 decisions can't be queried without triggering them is one people turn off (from
-https://github.com/retran/meowg1k/pull/119, high). A grant is a fact about a run
+https://github.com/meowshed/meowg1k/pull/119, high). A grant is a fact about a run
 in progress, and `explain` is a question asked before one (from
 crates/meow-policy/src/prompt.rs:156-157, high).
 
@@ -39,8 +39,8 @@ crates/meow-policy/src/prompt.rs:156-157, high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: return the decision a real call would receive, including the answer to an `ask`, as the first draft of `R-POLICY-050` promised | One answer tells the user whether the call will run (from https://github.com/retran/meowg1k/pull/111, high) | That answer depends on a person who hasn't answered yet (from https://github.com/retran/meowg1k/pull/111, high) |
-| No `explain`: learn a decision by making the call | Nothing to build, and the answer is the real outcome (reasoned from https://github.com/retran/meowg1k/pull/119, low) | A permission system whose decisions can't be queried without triggering them is one people turn off (from https://github.com/retran/meowg1k/pull/119, high) |
+| Do nothing: return the decision a real call would receive, including the answer to an `ask`, as the first draft of `R-POLICY-050` promised | One answer tells the user whether the call will run (from https://github.com/meowshed/meowg1k/pull/111, high) | That answer depends on a person who hasn't answered yet (from https://github.com/meowshed/meowg1k/pull/111, high) |
+| No `explain`: learn a decision by making the call | Nothing to build, and the answer is the real outcome (reasoned from https://github.com/meowshed/meowg1k/pull/119, low) | A permission system whose decisions can't be queried without triggering them is one people turn off (from https://github.com/meowshed/meowg1k/pull/119, high) |
 | Answer with the rule decision alone, ignoring grants (chosen) | The answer is a function of the policy and the call, so it is the same every time it is asked (from crates/meow-policy/src/prompt.rs:155-160, high) | It won |
 
 ## What it costs
@@ -66,7 +66,7 @@ docs/spec/policy.md [R-POLICY-050], low).
 - `explain` passes `Grants::new()`, so no grant reaches it (from
   crates/meow-policy/src/prompt.rs:158, high).
 - The command-line work is still owed: a `policy explain` subcommand that calls
-  `meow_policy::explain` (from https://github.com/retran/meowg1k/pull/119,
+  `meow_policy::explain` (from https://github.com/meowshed/meowg1k/pull/119,
   high).
 
 ## How I will know it was realised

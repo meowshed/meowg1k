@@ -15,4 +15,4 @@ A budget's cost axis MUST NOT be declarable unless something supplies the price
 of the calls it bounds. A user who caps cost and gets a cap that silently does
 nothing is worse off than one who was never offered it.
 
-(from https://github.com/retran/meowg1k/issues/168, high)
+(from https://github.com/meowshed/meowg1k/issues/168, high)

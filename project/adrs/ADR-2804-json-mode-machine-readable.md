@@ -23,7 +23,7 @@ Once this holds, `meow review --format json | jq` works from an interactive
 shell as well as from a pipe (from crates/meow-ui/src/lib.rs:100-116, high).
 A diagnostic raised mid-run under `--format json` travels the same way as one
 raised while loading, but only the loading path is tested (from
-https://github.com/retran/meowg1k/pull/151, high).
+https://github.com/meowshed/meowg1k/pull/151, high).
 
 ## Why
 
@@ -75,8 +75,8 @@ crates/meow-ui/src/lib.rs:100-116, high). The stream is JSON Lines, which
 ## What this does not settle
 
 - Whether a diagnostic raised mid-run under `--format json` reaches stderr;
-  no test covers it (from https://github.com/retran/meowg1k/pull/151, high).
+  no test covers it (from https://github.com/meowshed/meowg1k/pull/151, high).
 - `RunStart.model` is carried but left empty, because the engine reports the
   agent and not the model it resolved (from
-  https://github.com/retran/meowg1k/pull/124 and
+  https://github.com/meowshed/meowg1k/pull/124 and
   crates/meow-star/src/run.rs:685, high).

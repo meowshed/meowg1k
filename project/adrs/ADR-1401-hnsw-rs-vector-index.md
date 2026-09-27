@@ -19,12 +19,12 @@ and crates/meow-index/src/index.rs:296-336, high).
 
 Once this is accepted, a query touches only the pages of the graph its walk
 lands on, because the graph file is memory-mapped, and it reads chunk text only
-for the rows that won (from https://github.com/retran/meowg1k/pull/131, high).
+for the rows that won (from https://github.com/meowshed/meowg1k/pull/131, high).
 What still doesn't work is knowing the recall: the graph parameters (16
 connections, `ef_construction` 200, a search four times as wide as its limit)
 are the usual starting points and nothing measures them (from
 crates/meow-index/src/ann.rs:22-39 and
-https://github.com/retran/meowg1k/pull/131, high).
+https://github.com/meowshed/meowg1k/pull/131, high).
 
 ## Why
 
@@ -32,15 +32,15 @@ https://github.com/retran/meowg1k/pull/131, high).
 `unsafe_code = "deny"` lint intact, which `usearch` wouldn't (from
 docs/spec/index.md, high). Of the pure Rust options, it's the one with a track
 record on the path every search takes (from
-https://github.com/retran/meowg1k/pull/131, high).
+https://github.com/meowshed/meowg1k/pull/131, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: compare the query against every stored vector, as the first version of the branch did | No dependency and exact recall (reasoned from crates/meow-index/src/ann.rs:6-10, low) | It is linear in the corpus and read about a thousand chunks and eight megabytes off disk per question on this repository, growing with the corpus (from https://github.com/retran/meowg1k/pull/131, high) |
+| Do nothing: compare the query against every stored vector, as the first version of the branch did | No dependency and exact recall (reasoned from crates/meow-index/src/ann.rs:6-10, low) | It is linear in the corpus and read about a thousand chunks and eight megabytes off disk per question on this repository, growing with the corpus (from https://github.com/meowshed/meowg1k/pull/131, high) |
 | `usearch`, a C++ implementation | Recall or build time, which is when it earns its cost (from docs/spec/index.md, medium) | It breaks the single static binary and the `unsafe_code = "deny"` lint (from docs/spec/index.md, high) |
-| `fast-hnsw` | Two transitive crates in place of about twenty (from https://github.com/retran/meowg1k/pull/131, high) | It is a new crate with no track record on the path every search takes, and the specification names `hnsw_rs` (from https://github.com/retran/meowg1k/pull/131, high) |
+| `fast-hnsw` | Two transitive crates in place of about twenty (from https://github.com/meowshed/meowg1k/pull/131, high) | It is a new crate with no track record on the path every search takes, and the specification names `hnsw_rs` (from https://github.com/meowshed/meowg1k/pull/131, high) |
 
 v0.2.x used `coder/hnsw`, a Go library, so keeping it wasn't an option for the
 Rust tree (from docs/design/0.3.0-architecture.md:317,
@@ -49,7 +49,7 @@ high).
 ## What it costs
 
 `hnsw_rs` pulls about twenty crates, including `mmap-rs`, `rayon`, `sysctl`,
-`jiff` and `windows 0.48` (from https://github.com/retran/meowg1k/pull/131,
+`jiff` and `windows 0.48` (from https://github.com/meowshed/meowg1k/pull/131,
 high). It pins the unmaintained `bincode` 1.x for its file format, so
 `deny.toml` carries RUSTSEC-2025-0141 as an ignored advisory (from
 deny.toml:31-35, high). The graph lives in files under `.meow/.data/` beside the
@@ -89,9 +89,9 @@ The `deny.toml` exception has to be revisited whenever `hnsw_rs` is upgraded
 
 - The graph parameters. They are untuned and are the numbers to move once
   recall on a real corpus is measured (from
-  https://github.com/retran/meowg1k/pull/131, high).
+  https://github.com/meowshed/meowg1k/pull/131, high).
 - A check on the vector dimension. Nothing enforces one, so two models with the
   same name and different dimensions would score badly rather than fail (from
-  https://github.com/retran/meowg1k/pull/131, high).
+  https://github.com/meowshed/meowg1k/pull/131, high).
 - Where the vectors are stored. They stay in the database, and
   ADR-1403 settles that.

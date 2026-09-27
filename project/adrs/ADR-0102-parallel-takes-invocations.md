@@ -23,7 +23,7 @@ crates/meow-agent/src/nested.rs:143-185, high), and `meow.parallel` takes only
 invocations and keeps their order. What doesn't: `meow.parallel` still runs its invocations one after another, because
 the engine's fan-out takes specs and the Starlark side holds names (from
 crates/meow-star/src/value.rs:320-333 and
-https://github.com/retran/meowg1k/pull/123, high).
+https://github.com/meowshed/meowg1k/pull/123, high).
 
 ## Why
 
@@ -70,7 +70,7 @@ lifetime reason above (from docs/design/0.3.0-spike-starlark.md The correction,
 high). The fan-out shares the caller's ledger, so it stops starting new work
 once the budget is spent (from crates/meow-agent/src/nested.rs:145-150, high).
 Wiring `meow.parallel` to the engine's fan-out needs the spec cache M11 brings
-(from https://github.com/retran/meowg1k/pull/123, high).
+(from https://github.com/meowshed/meowg1k/pull/123, high).
 
 ## How I will know it was realised
 

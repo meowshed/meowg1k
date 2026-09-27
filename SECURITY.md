@@ -25,7 +25,7 @@ Please **do not** report security vulnerabilities through public GitHub issues.
 To report a vulnerability, please use GitHub's private vulnerability reporting feature. This ensures that the
 information is disclosed responsibly.
 
-1. Go to the [**"Security" tab of the `meowg1k` repository**](https://github.com/retran/meowg1k/security).
+1. Go to the [**"Security" tab of the `meowg1k` repository**](https://github.com/meowshed/meowg1k/security).
 2. Click on **"Report a vulnerability"**.
 3. Fill out the form with as much detail as possible, including:
    - A clear description of the vulnerability.
@@ -41,11 +41,12 @@ to understand the issue and coordinate a fix and disclosure.
 All official release artifacts are signed with [Sigstore cosign](https://docs.sigstore.dev/cosign/overview) and
 include a Software Bill of Materials (SBOM).
 
-You can verify the integrity of a release binary using the following command:
+You can verify the integrity of a release binary using the following command. Releases published before the
+repository moved to the `meowshed` organisation are signed as `retran/meowg1k`, so the pattern accepts both owners:
 
 ```bash
 cosign verify-blob \
-  --certificate-identity-regexp 'https://github.com/retran/meowg1k' \
+  --certificate-identity-regexp '^https://github.com/(meowshed|retran)/meowg1k/' \
   --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
   --signature meowg1k_<version>_linux_amd64.tar.gz.sig \
   meowg1k_<version>_linux_amd64.tar.gz

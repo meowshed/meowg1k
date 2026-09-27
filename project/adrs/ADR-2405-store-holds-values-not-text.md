@@ -25,7 +25,7 @@ and drift (from docs/spec/starlark.md, Decisions, high).
 | Option | Better at | Why it lost |
 | ------ | --------- | ----------- |
 | A store that takes strings | The stored bytes are whatever the handler wrote, so no encoding change in meowg1k can make an old row unreadable (reasoned from crates/meow-cli/src/keep.rs `Durable::get`, low). | Every handler encodes on the way in and decodes on the way out, and the two halves drift (from docs/spec/starlark.md, Decisions, high). |
-| Fall back to an in-memory map when the workspace database won't open | A handler keeps working within one run (from https://github.com/retran/meowg1k/pull/143, high). | A handler would write a value, read it back within the run, and find it gone next time with nothing explaining why; every call fails saying so instead (from https://github.com/retran/meowg1k/pull/143, high). |
+| Fall back to an in-memory map when the workspace database won't open | A handler keeps working within one run (from https://github.com/meowshed/meowg1k/pull/143, high). | A handler would write a value, read it back within the run, and find it gone next time with nothing explaining why; every call fails saying so instead (from https://github.com/meowshed/meowg1k/pull/143, high). |
 | Do nothing: keep state in `ctx.session` | No new module (reasoned from crates/meow-star/src/port.rs `Keep`, low). | `ctx.session` is the place for what one run decided and the wrong place for what every run should remember, because collecting sessions removes it (from crates/meow-star/src/port.rs `Keep`, high). |
 
 ## What it costs
@@ -36,7 +36,7 @@ type: a tuple put in comes back as a `list` (from `target/debug/meow` built on
 2026-09-27, and crates/meow-star/src/modules.rs `store.put`, which calls
 `to_json_value`, high). A row written by a future version that encodes
 differently fails to decode, and `get` names the key it couldn't read (from
-https://github.com/retran/meowg1k/pull/143 and crates/meow-cli/src/keep.rs
+https://github.com/meowshed/meowg1k/pull/143 and crates/meow-cli/src/keep.rs
 `Durable::get`, high).
 
 ## What would reverse it
@@ -48,7 +48,7 @@ text (reasoned from crates/meow-cli/src/keep.rs, low).
 ## Consequences
 
 A handler tells "absent" from "stored `None`" by passing `default` to `get`
-(from https://github.com/retran/meowg1k/pull/143, high). The table belongs to
+(from https://github.com/meowshed/meowg1k/pull/143, high). The table belongs to
 the workspace and not to a session, so `meow session gc` leaves it alone (from
 crates/meow-star/src/port.rs `Keep`, high).
 
@@ -63,6 +63,6 @@ covers `int`, `string`, `bool`, `list`, `dict` and `None`, and no test covers a
 ## What this does not settle
 
 Migrating a stored value when the encoding changes: there is nothing yet to
-migrate from (from https://github.com/retran/meowg1k/pull/143, high). Which
+migrate from (from https://github.com/meowshed/meowg1k/pull/143, high). Which
 Starlark types count as "any value a handler can build": a tuple doesn't keep
 its type today, which [R-STAR-027] doesn't allow (from the probe above, high).

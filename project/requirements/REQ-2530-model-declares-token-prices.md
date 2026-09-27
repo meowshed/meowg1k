@@ -14,4 +14,4 @@ verification: behavioural
 `meow.model` MUST accept an input price and an output price per million tokens,
 as `input_per_mtok` and `output_per_mtok`.
 
-(from https://github.com/retran/meowg1k/issues/168, high)
+(from https://github.com/meowshed/meowg1k/issues/168, high)

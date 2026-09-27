@@ -21,14 +21,14 @@ At `d67ae50`:
 1. Run `grep -r requests_per crates/`.
 
 It returns no match: no declaration, counter or refusal exists (from
-https://github.com/retran/meowg1k/issues/167, high).
+https://github.com/meowshed/meowg1k/issues/167, high).
 
 ## What the system does
 
 A workspace can bound steps, tokens and wall time for one run, and nothing
 limits how many requests it makes over time. The Go implementation kept a
 per-minute and per-day ceiling in its database, and the rewrite dropped it (from
-https://github.com/retran/meowg1k/issues/167, high).
+https://github.com/meowshed/meowg1k/issues/167, high).
 
 ## What it should do, and why
 

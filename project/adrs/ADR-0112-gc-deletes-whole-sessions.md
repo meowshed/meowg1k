@@ -37,7 +37,7 @@ than no log (from docs/design/0.3.0-sessions.md section 8, high).
 One large session can't be trimmed, only deleted whole. Under a size limit the
 sweep deletes the oldest sessions one tree at a time and measures the file
 again after each, which is a loop with a database query in it (from
-https://github.com/retran/meowg1k/pull/128, high). A named session anywhere in a
+https://github.com/meowshed/meowg1k/pull/128, high). A named session anywhere in a
 tree protects the whole tree, so one name can keep many unnamed sessions alive
 (from crates/meow-session/src/retention.rs:121-135, high).
 
@@ -54,7 +54,7 @@ tree protects the whole tree, so one name can keep many unnamed sessions alive
   matters (from docs/design/0.3.0-sessions.md section 8, high).
 - A fork is a sibling of its origin and not a descendant, so collecting the
   origin doesn't take the fork with it (from
-  https://github.com/retran/meowg1k/pull/128, high).
+  https://github.com/meowshed/meowg1k/pull/128, high).
 
 ## How I will know it was realised
 

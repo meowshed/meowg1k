@@ -14,7 +14,7 @@ supersedes: []
 When the workspace database won't open, every `store` call fails saying so;
 `quiet::Unopened` carries the reason and refuses, and `quiet::Ephemeral` exists
 for tests and is never what the binary chooses (from
-https://github.com/retran/meowg1k/pull/143, high).
+https://github.com/meowshed/meowg1k/pull/143, high).
 
 With this in place, the binary opens `Durable` and, when that fails, wires
 `Unopened` with the message "the workspace store will not open" and the error
@@ -28,17 +28,17 @@ crates/meow-star/tests/approval.rs:226, high).
 
 A handler would write a value, read it back within the run and find it gone next
 time, with nothing anywhere explaining why (from
-https://github.com/retran/meowg1k/pull/143, high).
+https://github.com/meowshed/meowg1k/pull/143, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Fall back to an in-memory map | It was the obvious shape, and a handler's run keeps going (from https://github.com/retran/meowg1k/pull/143, high) | The value disappears on the next run with nothing explaining why (from https://github.com/retran/meowg1k/pull/143, high) |
-| Refuse each `store` call with the reason (chosen) | The handler sees why at the call that needed the store, the way `quiet::NoIndex` reports a missing index (from https://github.com/retran/meowg1k/pull/143, high) | Chosen |
+| Fall back to an in-memory map | It was the obvious shape, and a handler's run keeps going (from https://github.com/meowshed/meowg1k/pull/143, high) | The value disappears on the next run with nothing explaining why (from https://github.com/meowshed/meowg1k/pull/143, high) |
+| Refuse each `store` call with the reason (chosen) | The handler sees why at the call that needed the store, the way `quiet::NoIndex` reports a missing index (from https://github.com/meowshed/meowg1k/pull/143, high) | Chosen |
 
 Doing nothing was not an option, because before #143 there was no `store`
-module at all (from https://github.com/retran/meowg1k/pull/143, high). The
+module at all (from https://github.com/meowshed/meowg1k/pull/143, high). The
 source names no third option.
 
 ## What it costs
@@ -77,4 +77,4 @@ over crates, high).
   (from crates/meow-star/src/port.rs:392-396, high).
 - A value stored by a future version that encodes differently fails to decode,
   and there is no migration for it (from
-  https://github.com/retran/meowg1k/pull/143, high).
+  https://github.com/meowshed/meowg1k/pull/143, high).

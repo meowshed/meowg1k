@@ -38,7 +38,7 @@ log even when most of it is superseded (from
 crates/meow-session/src/log.rs:237-239, high). The substitution is easy to get
 wrong: the first version put a summary after the messages that followed its
 range, and the test asserted the wrong order for two milestones (from
-https://github.com/retran/meowg1k/pull/129, high).
+https://github.com/meowshed/meowg1k/pull/129, high).
 
 ## What would reverse it
 

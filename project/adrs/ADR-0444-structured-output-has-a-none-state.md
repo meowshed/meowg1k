@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `Structured` gained a third state for a provider that produces no text at all
-(from https://github.com/retran/meowg1k/pull/133, high).
+(from https://github.com/meowshed/meowg1k/pull/133, high).
 
 What works now: `Structured` is `Native`, `Emulated` or `None`; Voyage declares
 `None`, and `check_supported` refuses a request carrying an output schema to a
@@ -27,13 +27,13 @@ emulated, so the requirement text lags the type (from docs/spec/llm.md
 
 Saying Voyage emulates a schema would claim it asks for JSON in a prompt it
 never sends, and `R-LLM-002` would then accept a schema it can't satisfy (from
-https://github.com/retran/meowg1k/pull/133, high).
+https://github.com/meowshed/meowg1k/pull/133, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: keep two states and declare such a provider's structured output emulated | Matches the two states `R-LLM-001` names, with no new variant for every match to handle (from docs/spec/llm.md `R-LLM-001`, medium) | `R-LLM-002` would accept a schema the provider can't satisfy (from https://github.com/retran/meowg1k/pull/133, high) |
+| Do nothing: keep two states and declare such a provider's structured output emulated | Matches the two states `R-LLM-001` names, with no new variant for every match to handle (from docs/spec/llm.md `R-LLM-001`, medium) | `R-LLM-002` would accept a schema the provider can't satisfy (from https://github.com/meowshed/meowg1k/pull/133, high) |
 | Declare generation itself as a capability and leave `Structured` at two states | One flag would cover every text feature an embedding-only provider lacks, where today Voyage refuses generation only when called (reasoned from crates/meow-llm/src/voyage.rs:82, low) | The source doesn't weigh it; `R-LLM-001` says every provider implements generation, so a generation flag would contradict the requirement outright (reasoned from docs/spec/llm.md `R-LLM-001`, low) |
 
 A third option isn't named by the code, the history or the design documents,

@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `meow.agent` and `meow.tool` return values rather than registering a name to
-quote later (from https://github.com/retran/meowg1k/pull/123, high). Each value
+quote later (from https://github.com/meowshed/meowg1k/pull/123, high). Each value
 holds only its name, and everything else is looked up through the evaluator's
 run state when the value is used (from crates/meow-star/src/value.rs:13-15,
 high).
@@ -29,7 +29,7 @@ crates/meow-star/src/declare.rs:106-110, high).
 ## Why
 
 A value is what lets an agent go into another agent's `tools` list and present
-the same schema there (from https://github.com/retran/meowg1k/pull/123, high).
+the same schema there (from https://github.com/meowshed/meowg1k/pull/123, high).
 It is also what the migration from v0.2.x means by replacing
 `ctx.run("name", k = v)` with `tool.run(k = v)` (from
 crates/meow-star/src/value.rs:9-11 and docs/design/0.3.0-starlark-api.md
@@ -39,8 +39,8 @@ section 11, high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: register a name to quote later, as v0.2.x's `ctx.run("name", ...)` did | Declaration order doesn't matter for a quoted name, because every name is resolved after the last file (from crates/meow-star/src/registry.rs:349-356, high) | An agent couldn't go into another agent's `tools` list as a value presenting the same schema (from https://github.com/retran/meowg1k/pull/123, high) |
-| A value holding the whole declaration, handler function included | A use needs no lookup in the run state (reasoned from crates/meow-star/src/value.rs:13-15, low) | A function can't outlive the evaluator that made it, and the value would drag the runtime into every frozen module (from https://github.com/retran/meowg1k/pull/123 and crates/meow-star/src/value.rs:13-15, high) |
+| Do nothing: register a name to quote later, as v0.2.x's `ctx.run("name", ...)` did | Declaration order doesn't matter for a quoted name, because every name is resolved after the last file (from crates/meow-star/src/registry.rs:349-356, high) | An agent couldn't go into another agent's `tools` list as a value presenting the same schema (from https://github.com/meowshed/meowg1k/pull/123, high) |
+| A value holding the whole declaration, handler function included | A use needs no lookup in the run state (reasoned from crates/meow-star/src/value.rs:13-15, low) | A function can't outlive the evaluator that made it, and the value would drag the runtime into every frozen module (from https://github.com/meowshed/meowg1k/pull/123 and crates/meow-star/src/value.rs:13-15, high) |
 
 No third option appears in the code, the history or the design documents.
 
@@ -51,7 +51,7 @@ to come after the line that makes it, where a quoted name could come anywhere
 (reasoned from
 docs/requirements/REQ-2479-references-resolved-after-all-declarations.md, low).
 Pull request 123 rewrote three existing tests that had asserted the old
-name-based behaviour (from https://github.com/retran/meowg1k/pull/123, high). A
+name-based behaviour (from https://github.com/meowshed/meowg1k/pull/123, high). A
 handler can't hold the value of a markdown agent, which is read after
 `meow.star`, so `meow.agent_named` exists to hand one out by name (from
 crates/meow-star/src/declare.rs:303-317, high).
@@ -66,14 +66,14 @@ crates/meow-star/src/declare.rs:303-317, high).
 
 `meow.command` takes the tool or agent rather than its name, so the thing it
 exposes has to exist before the line exposing it (from
-https://github.com/retran/meowg1k/pull/123, high).
+https://github.com/meowshed/meowg1k/pull/123, high).
 
 - `name_of` turns an agent value, a tool value or a string into a name, and
   both `tools` and `meow.command` go through it (from
   crates/meow-star/src/value.rs:115-123 and
   crates/meow-star/src/declare.rs:320-330, high).
 - A tool's handler is found by name in the frozen module when it runs, which
-  ADR-0421 records (from https://github.com/retran/meowg1k/pull/123, high).
+  ADR-0421 records (from https://github.com/meowshed/meowg1k/pull/123, high).
 
 ## How I will know it was realised
 

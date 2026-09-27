@@ -14,5 +14,5 @@ verification: behavioural
 A streaming request that a vendor answers with a non-success status MUST fail at
 the call, never through the stream the call would have returned.
 
-(from https://github.com/retran/meowg1k/pull/125 and
+(from https://github.com/meowshed/meowg1k/pull/125 and
 crates/meow-llm/src/http.rs:129, high)

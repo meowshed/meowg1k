@@ -13,7 +13,7 @@ supersedes: []
 
 `--continue` picks the invoked command's own most recent session rather than the
 newest one in the workspace, and with nothing of that command's to continue it
-fails and says so (from https://github.com/retran/meowg1k/pull/129, high).
+fails and says so (from https://github.com/meowshed/meowg1k/pull/129, high).
 
 Once this is accepted, `open_session` looks up the newest session whose agent is
 the invoked command and resumes it, and with none it prints "`--continue` found
@@ -23,21 +23,21 @@ crates/meow-cli/src/exit.rs:42, high). A specific older session can't be
 resumed: the design's `meow session resume <id>` has no subcommand in the
 binary, which offers `list`, `show`, `fork`, `export` and `gc` (from
 docs/design/0.3.0-sessions.md section 6 and
-https://github.com/retran/meowg1k/pull/129, high).
+https://github.com/meowshed/meowg1k/pull/129, high).
 
 ## Why
 
 Picking the newest session anywhere would let continuing one agent resume
-another's run (from https://github.com/retran/meowg1k/pull/129, high). A flag
+another's run (from https://github.com/meowshed/meowg1k/pull/129, high). A flag
 that quietly started a fresh run would give somebody a conversation they thought
-they were adding to (from https://github.com/retran/meowg1k/pull/129, high).
+they were adding to (from https://github.com/meowshed/meowg1k/pull/129, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Resume the newest session in the workspace | One lookup with no agent filter, and it continues whatever ran last whichever command it was (reasoned from crates/meow-store/src/rows.rs:266, low) | Continuing one agent could resume another's run (from https://github.com/retran/meowg1k/pull/129, high) |
-| Start a fresh run when there is nothing to continue | A script could pass `--continue` on every call, including the first, without checking whether a session exists (reasoned from crates/meow-cli/tests/surface.rs:374, low) | Somebody gets a conversation they thought they were adding to (from https://github.com/retran/meowg1k/pull/129, high) |
+| Resume the newest session in the workspace | One lookup with no agent filter, and it continues whatever ran last whichever command it was (reasoned from crates/meow-store/src/rows.rs:266, low) | Continuing one agent could resume another's run (from https://github.com/meowshed/meowg1k/pull/129, high) |
+| Start a fresh run when there is nothing to continue | A script could pass `--continue` on every call, including the first, without checking whether a session exists (reasoned from crates/meow-cli/tests/surface.rs:374, low) | Somebody gets a conversation they thought they were adding to (from https://github.com/meowshed/meowg1k/pull/129, high) |
 | Do nothing: every run is fresh and there is no `--continue` | A run never picks up context it wasn't given, which is why fresh stays the default (from docs/design/0.3.0-sessions.md section 6, high) | A failed run is a dead end with no resume, which the design lists as a gap in v0.2.x (from docs/design/0.3.0-sessions.md section 2, high) |
 
 ## What it costs

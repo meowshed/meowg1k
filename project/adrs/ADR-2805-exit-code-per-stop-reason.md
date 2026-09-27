@@ -37,7 +37,7 @@ no code is reused (from docs/spec/tui.md [R-TUI-081], high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: success and failure only, as in v0.2.x | Every shell and CI system already reads zero as success and anything else as failure, so there is no table to learn (reasoned from docs/design/0.3.0-tui.md section 2.4, low) | An agent can't act as a gate (from docs/spec/tui.md, high), and a CI job reads "the budget ran out" as "the code is clean" (from docs/design/0.3.0-tui.md section 2.4, high) |
-| One code shared by `denied` and `tool_aborted` | Fewer codes for a script to handle (reasoned from https://github.com/retran/meowg1k/pull/109, low) | A user needs to know the boundary held, not that something broke, and code 5 already assumed that distinction (from https://github.com/retran/meowg1k/pull/109, high) |
+| One code shared by `denied` and `tool_aborted` | Fewer codes for a script to handle (reasoned from https://github.com/meowshed/meowg1k/pull/109, low) | A user needs to know the boundary held, not that something broke, and code 5 already assumed that distinction (from https://github.com/meowshed/meowg1k/pull/109, high) |
 | The table without a code for `failed`, as drafted before commit e39cd2f | A shorter table (reasoned from docs/design/0.3.0-tui.md section 2.4, low) | A stop reason with no code breaks [REQ-2854], so commit e39cd2f added 9 for `failed` (from git show e39cd2f -- docs/spec/tui.md, high) |
 
 ## What it costs

@@ -13,5 +13,5 @@ verification: behavioural
 
 `git.commit` MUST commit what is staged and nothing else.
 
-(from https://github.com/retran/meowg1k/pull/136 and
+(from https://github.com/meowshed/meowg1k/pull/136 and
 crates/meow-star/src/capability_git.rs:168, high)

@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 Nothing matching means deny, so an empty policy fails closed (from
-https://github.com/retran/meowg1k/pull/119, high). `Policy::evaluate` returns
+https://github.com/meowshed/meowg1k/pull/119, high). `Policy::evaluate` returns
 `Deny` with the source `NoMatch` and no rule named when no rule matches (from
 crates/meow-policy/src/policy.rs:40-45 and
 crates/meow-policy/tests/spec.rs:237-245, high).
@@ -31,7 +31,7 @@ do (from crates/meow-cli/src/wire.rs:537, high).
 
 Failing closed makes forgetting to grant something a refusal rather than a hole,
 and that is what makes the rest of the policy mean anything (from
-https://github.com/retran/meowg1k/pull/119, high). A tool an agent was never
+https://github.com/meowshed/meowg1k/pull/119, high). A tool an agent was never
 granted stays unreachable however convincingly it is asked for (from
 crates/meow-policy/src/policy.rs:43-44, high).
 
@@ -40,8 +40,8 @@ crates/meow-policy/src/policy.rs:43-44, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: no policy layer, as in v0.2.x, where `shell_exec` is an ordinary tool | An agent runs every tool with no rule to write and no prompt to answer (from docs/spec/policy.md, Changes from v0.2.x, high) | An agent that is talked into running a command runs it (from docs/spec/policy.md, Changes from v0.2.x, high) |
-| Allow a call no rule matches | A new tool works without editing the policy, so a policy lists only what it forbids (reasoned from crates/meow-policy/src/policy.rs:40-45, low) | Forgetting to grant something becomes a hole rather than a refusal (from https://github.com/retran/meowg1k/pull/119, high) |
-| Deny a call no rule matches (chosen) | Forgetting a grant is a refusal the user sees (from https://github.com/retran/meowg1k/pull/119, high) | It won |
+| Allow a call no rule matches | A new tool works without editing the policy, so a policy lists only what it forbids (reasoned from crates/meow-policy/src/policy.rs:40-45, low) | Forgetting to grant something becomes a hole rather than a refusal (from https://github.com/meowshed/meowg1k/pull/119, high) |
+| Deny a call no rule matches (chosen) | Forgetting a grant is a refusal the user sees (from https://github.com/meowshed/meowg1k/pull/119, high) | It won |
 
 ## What it costs
 

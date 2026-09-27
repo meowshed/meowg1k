@@ -14,4 +14,4 @@ verification: behavioural
 Where no platform secret store is running, credentials MUST fall back to
 `~/.meow/auth.json`.
 
-(from https://github.com/retran/meowg1k/issues/166, high)
+(from https://github.com/meowshed/meowg1k/issues/166, high)

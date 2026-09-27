@@ -17,4 +17,4 @@ share one ceiling. A limit that resets with the process isn't a limit: run
 runs two processes and shows the second refused by what the first spent is what
 tells a shared limiter from a per-process one.
 
-(from https://github.com/retran/meowg1k/issues/167, high)
+(from https://github.com/meowshed/meowg1k/issues/167, high)

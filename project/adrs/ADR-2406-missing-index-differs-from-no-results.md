@@ -26,7 +26,7 @@ docs/spec/starlark.md, Decisions, high).
 | Option | Better at | Why it lost |
 | ------ | --------- | ----------- |
 | Return an empty list when there is no index | A handler that treats "no index" as "nothing found" needs no error handling, which matters because Starlark has no `try` (reasoned from https://github.com/bazelbuild/starlark/blob/master/spec.md, medium). | It collapses "found nothing" and "couldn't search" into one answer (from docs/spec/starlark.md, Decisions, high). |
-| Do nothing: keep the port that answered an empty list, as `quiet::NoIndex` did before PR #147 | Already built (from https://github.com/retran/meowg1k/pull/147, high). | A handler searching a workspace where `meow index build` never ran was told the workspace was empty, a wrong answer and not an error it could act on (from https://github.com/retran/meowg1k/pull/147, high). |
+| Do nothing: keep the port that answered an empty list, as `quiet::NoIndex` did before PR #147 | Already built (from https://github.com/meowshed/meowg1k/pull/147, high). | A handler searching a workspace where `meow index build` never ran was told the workspace was empty, a wrong answer and not an error it could act on (from https://github.com/meowshed/meowg1k/pull/147, high). |
 | Build the index on the first query | The handler gets results (reasoned from crates/meow-index/src/error.rs `Empty`, low). | A query that quietly built an index would turn a typo into several minutes and a bill (from crates/meow-index/src/error.rs `Empty`, high). |
 
 ## What it costs
@@ -53,7 +53,7 @@ build` has never been run (from docs/spec/starlark.md, Decisions, high). Each of
 the four reasons there is no index carries its own message - "declares no
 index", "not a declared model", "no provider" and "the index will not open" -
 where all four used to say to run `meow index build` (from
-https://github.com/retran/meowg1k/pull/147, high).
+https://github.com/meowshed/meowg1k/pull/147, high).
 
 ## How I will know it was realised
 

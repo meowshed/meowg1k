@@ -13,7 +13,7 @@ supersedes: []
 
 The caller supplies the message list, and the system prompt still comes from the
 specification rather than from the history (from
-https://github.com/retran/meowg1k/pull/129, high).
+https://github.com/meowshed/meowg1k/pull/129, high).
 
 Once this is accepted, `Engine::resume` puts the agent specification's system
 prompt first, drops every system message from the history it was given, and
@@ -28,15 +28,15 @@ crates/meow-cli/src/session.rs:100, high).
 
 An agent whose prompt changed between runs then runs under the new one, which is
 most of why anybody resumes with a different model (from
-https://github.com/retran/meowg1k/pull/129, high). Rebuilding the list means
+https://github.com/meowshed/meowg1k/pull/129, high). Rebuilding the list means
 reading a log, and the engine doesn't know the store exists (from
-https://github.com/retran/meowg1k/pull/129, high).
+https://github.com/meowshed/meowg1k/pull/129, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Take the system prompt from the session's history | A resumed run would repeat the original exactly, prompt and all (reasoned from crates/meow-agent/src/engine.rs:73, low) | An agent whose prompt changed would resume under the old one (from https://github.com/retran/meowg1k/pull/129, high) |
+| Take the system prompt from the session's history | A resumed run would repeat the original exactly, prompt and all (reasoned from crates/meow-agent/src/engine.rs:73, low) | An agent whose prompt changed would resume under the old one (from https://github.com/meowshed/meowg1k/pull/129, high) |
 | Let the engine rebuild the message list from the log | One call would resume a session, with no rebuild in the binary (reasoned from crates/meow-cli/src/session.rs:97, low) | The engine doesn't know the store exists, and rebuilding means reading a log (from crates/meow-agent/src/engine.rs:69, high) |
 | Do nothing: no resume path in the engine | The engine keeps one entry point, `run`, which is now a `resume` with an empty history (from crates/meow-agent/src/engine.rs:62, high) | `--continue` needs the earlier conversation, and REQ-2238 requires the resumed run to see compaction as the original did (from docs/spec/session.md [R-SESSION-051], high) |
 

@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `max_depth` is 3 and not declarable (from
-https://github.com/retran/meowg1k/pull/123, high).
+https://github.com/meowshed/meowg1k/pull/123, high).
 
 Once this is accepted, `meow-star` gives every agent spec it builds
 `max_depth: 3`, and while it builds a tool set it leaves out a sub-agent that
@@ -27,17 +27,17 @@ high).
 
 `R-STAR-040` doesn't list it among `meow.agent`'s keywords, and spec
 construction has to terminate on two agents that name each other (from
-https://github.com/retran/meowg1k/pull/123, high).
+https://github.com/meowshed/meowg1k/pull/123, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| A declarable `max_depth` keyword | A workspace that needs a deeper chain, or wants a shallower one, could say so (reasoned from crates/meow-agent/src/spec.rs:61, where the engine already takes the limit as a field, low) | `R-STAR-040` doesn't list it among `meow.agent`'s keywords (from https://github.com/retran/meowg1k/pull/123, high) |
-| No limit at construction, leaving the engine's runtime check to refuse a sub-agent that is too deep | The model would be told about the refusal as a tool error, as REQ-1052 describes (from crates/meow-agent/src/nested.rs:78-86, high) | `tools_for` builds each sub-agent's spec eagerly, so construction has to terminate on two agents that name each other before any run starts (from https://github.com/retran/meowg1k/pull/123 and crates/meow-star/src/run.rs:372-377, high) |
+| A declarable `max_depth` keyword | A workspace that needs a deeper chain, or wants a shallower one, could say so (reasoned from crates/meow-agent/src/spec.rs:61, where the engine already takes the limit as a field, low) | `R-STAR-040` doesn't list it among `meow.agent`'s keywords (from https://github.com/meowshed/meowg1k/pull/123, high) |
+| No limit at construction, leaving the engine's runtime check to refuse a sub-agent that is too deep | The model would be told about the refusal as a tool error, as REQ-1052 describes (from crates/meow-agent/src/nested.rs:78-86, high) | `tools_for` builds each sub-agent's spec eagerly, so construction has to terminate on two agents that name each other before any run starts (from https://github.com/meowshed/meowg1k/pull/123 and crates/meow-star/src/run.rs:372-377, high) |
 
 Doing nothing isn't an option here, because before this change `meow-star`
-built no agent specs at all (from https://github.com/retran/meowg1k/pull/123,
+built no agent specs at all (from https://github.com/meowshed/meowg1k/pull/123,
 high).
 
 ## What it costs
@@ -55,7 +55,7 @@ high).
 ## What would reverse it
 
 - REQ-2489 gaining a `max_depth` keyword for `meow.agent` (from
-  https://github.com/retran/meowg1k/pull/123, high).
+  https://github.com/meowshed/meowg1k/pull/123, high).
 - Sub-agent specs built lazily when a sub-agent is first called, which removes
   the need for construction to stop at a fixed depth (reasoned from
   crates/meow-star/src/run.rs:373-414, low).

@@ -13,7 +13,7 @@ supersedes: []
 
 The cache makes `R-STORE-045` structural rather than a rule to remember: no way
 exists to cache a generation without naming `CacheKind::Generation` and passing
-an opt-in (from https://github.com/retran/meowg1k/pull/113, high).
+an opt-in (from https://github.com/meowshed/meowg1k/pull/113, high).
 `Store::cache_put` takes a `CacheKind` and an `opted_in` flag, and a
 generation written with `opted_in` false is a no-op that returns `false`, never
 an error, so a caller that forwards a flag doesn't have to branch (from
@@ -30,7 +30,7 @@ store's tests, high).
 ## Why
 
 With the opt-in in the type, the default path can't cache a generation by
-accident (from https://github.com/retran/meowg1k/pull/113, high). An agent that
+accident (from https://github.com/meowshed/meowg1k/pull/113, high). An agent that
 retries wants a fresh attempt, and a cache would hand it the answer that
 already failed (from docs/spec/store.md [R-STORE-045], high).
 
@@ -39,7 +39,7 @@ already failed (from docs/spec/store.md [R-STORE-045], high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: keep v0.2.x's caching decorator, which wrapped every generation call when a preset set `CacheEnabled` and `--no-cache` was absent | One switch per preset turned caching on for every call without touching code (from v0.2.1:internal/adapters/gateway/factory.go:58-78, high) | The switch covered every call made with that preset, retries included, so a retry could get back the answer that had failed; the spec forbids caching a generation unless the caller asks (reasoned from docs/spec/store.md [R-STORE-045] and v0.2.1:internal/adapters/gateway/caching.go, low) |
-| A rule callers remember, with one untyped `cache_put` | A smaller signature, with no kind and no flag at each call site (reasoned from crates/meow-store/src/cache.rs:53-60, low) | The default path could cache a generation by accident (from https://github.com/retran/meowg1k/pull/113, high) |
+| A rule callers remember, with one untyped `cache_put` | A smaller signature, with no kind and no flag at each call site (reasoned from crates/meow-store/src/cache.rs:53-60, low) | The default path could cache a generation by accident (from https://github.com/meowshed/meowg1k/pull/113, high) |
 | Name the kind and the opt-in in the call (chosen) | The compiler refuses a generation cache write that doesn't say `CacheKind::Generation` (from crates/meow-store/src/cache.rs:16-27, high) | It won |
 
 ## What it costs

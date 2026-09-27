@@ -12,9 +12,9 @@ supersedes: []
 ## Decision
 
 Retention takes the strictest of the limits it was given rather than the first
-that matches (from https://github.com/retran/meowg1k/pull/128, high). A name
+that matches (from https://github.com/meowshed/meowg1k/pull/128, high). A name
 protects a whole tree, because a parent can't go without its descendants (from
-https://github.com/retran/meowg1k/pull/128, high).
+https://github.com/meowshed/meowg1k/pull/128, high).
 
 Once this is accepted, a sweep deletes every session that any configured limit
 selects, oldest first, and keeps a whole tree when any session in it is named
@@ -28,14 +28,14 @@ for `keep_days` and `max_size` under crates/meow-star/src, high).
 
 Three limits that each select a different set would otherwise depend on the
 order they were checked in, which nobody could predict from the configuration
-(from https://github.com/retran/meowg1k/pull/128, high).
+(from https://github.com/meowshed/meowg1k/pull/128, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: no retention | Never deletes a run somebody might want (reasoned, low) | An agent log grows fast, and a design without a collection story ends with a gigabyte of SQLite nobody wants to clone (from docs/design/0.3.0-sessions.md section 8, high) |
-| Apply the first limit that matches | Stops at one check per session (reasoned from crates/meow-session/src/retention.rs:64, low) | The result would depend on the order the limits were checked in (from https://github.com/retran/meowg1k/pull/128, high) |
+| Apply the first limit that matches | Stops at one check per session (reasoned from crates/meow-session/src/retention.rs:64, low) | The result would depend on the order the limits were checked in (from https://github.com/meowshed/meowg1k/pull/128, high) |
 
 ## What it costs
 

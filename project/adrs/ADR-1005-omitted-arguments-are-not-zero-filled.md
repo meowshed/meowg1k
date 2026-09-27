@@ -27,7 +27,7 @@ a confident wrong answer. (from docs/spec/agent.md Changes from v0.2.x, high)
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: fill a missing argument with its type's zero value, as v0.2.x did | The tool runs on the first call, with no extra turn (reasoned from docs/design/0.3.0-architecture.md section 2, low) | A model that omits a required integer receives `0` and returns a confident wrong answer (from docs/spec/agent.md Changes from v0.2.x, high) |
-| Treat a missing argument as a tool error | The existing error path carries it, with no separate kind of result (reasoned from crates/meow-agent/src/engine.rs:305-310, low) | An agent with the `abort` error policy would die on the model's first typo, so a correction is not a tool error (from https://github.com/retran/meowg1k/pull/118 and docs/spec/agent.md [R-AGENT-021], high) |
+| Treat a missing argument as a tool error | The existing error path carries it, with no separate kind of result (reasoned from crates/meow-agent/src/engine.rs:305-310, low) | An agent with the `abort` error policy would die on the model's first typo, so a correction is not a tool error (from https://github.com/meowshed/meowg1k/pull/118 and docs/spec/agent.md [R-AGENT-021], high) |
 
 The specification and the history name no third way to handle an omitted
 argument.

@@ -13,7 +13,7 @@ supersedes: []
 
 The file is `0600`, and one that isn't is refused rather than repaired, with an
 error naming the mode it found and the mode it wants (from
-https://github.com/retran/meowg1k/pull/153, high).
+https://github.com/meowshed/meowg1k/pull/153, high).
 
 With this in place, `Store::open` checks the mode before reading and fails with
 `AuthError::TooOpen` when any group or other bit is set; the message names the
@@ -25,21 +25,21 @@ crates/meow-cli/src/auth.rs:294-298, high).
 
 A file that was world-readable has already been readable, and quietly tightening
 the mode hides that from the person who needs to know (from
-https://github.com/retran/meowg1k/pull/153, high).
+https://github.com/meowshed/meowg1k/pull/153, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Tighten the mode quietly | The user keeps working with no step to take (reasoned from crates/meow-cli/src/auth.rs:275-292, low) | It hides that the file was readable (from https://github.com/retran/meowg1k/pull/153, high) |
-| Do nothing: read the file whatever its mode | Nothing refuses a store the user made readable on purpose (reasoned from crates/meow-cli/src/auth.rs:155, low) | [R-AUTH-011] says `meow auth` MUST refuse it; with the check replaced by `if false`, `a_store_readable_by_others_is_refused` fails (from docs/spec/auth.md [R-AUTH-011] and https://github.com/retran/meowg1k/pull/153, high) |
+| Tighten the mode quietly | The user keeps working with no step to take (reasoned from crates/meow-cli/src/auth.rs:275-292, low) | It hides that the file was readable (from https://github.com/meowshed/meowg1k/pull/153, high) |
+| Do nothing: read the file whatever its mode | Nothing refuses a store the user made readable on purpose (reasoned from crates/meow-cli/src/auth.rs:155, low) | [R-AUTH-011] says `meow auth` MUST refuse it; with the check replaced by `if false`, `a_store_readable_by_others_is_refused` fails (from docs/spec/auth.md [R-AUTH-011] and https://github.com/meowshed/meowg1k/pull/153, high) |
 
 The source names no third option.
 
 ## What it costs
 
 Windows has no mode to check, so the check is a no-op there and `R-AUTH-011` is
-vacuous on Windows (from https://github.com/retran/meowg1k/pull/153, high). A
+vacuous on Windows (from https://github.com/meowshed/meowg1k/pull/153, high). A
 user whose store was made readable has to run `chmod 600` before `meow auth`
 works again (reasoned from crates/meow-cli/src/auth.rs:28, low).
 

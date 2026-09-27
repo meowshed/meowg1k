@@ -13,7 +13,7 @@ supersedes: []
 
 A declaration file may now load a runtime module and is refused when it calls
 one: every module resolves in both phases and each builtin checks the phase
-(from https://github.com/retran/meowg1k/pull/123, high). The check is
+(from https://github.com/meowshed/meowg1k/pull/123, high). The check is
 `running(eval, "<module>.<call>")`, which returns the run state or fails with
 `StarError::ModuleUnavailable` during declaration (from
 crates/meow-star/src/run.rs:950-970, high).
@@ -30,11 +30,11 @@ adding a module (from CLAUDE.md `<starlark_runtime>`, high).
 ## Why
 
 `R-STAR-084` says only `load` and `@std//env` are callable during declaration
-(from https://github.com/retran/meowg1k/pull/123, high). Refusing the load
+(from https://github.com/meowshed/meowg1k/pull/123, high). Refusing the load
 itself made `load("@std//path", "join")` at the top of a file that also declares
-a tool impossible (from https://github.com/retran/meowg1k/pull/123, high).
+a tool impossible (from https://github.com/meowshed/meowg1k/pull/123, high).
 Checking in each builtin is also what makes `R-STAR-011` hold without a
-mechanism of its own (from https://github.com/retran/meowg1k/pull/123, high):
+mechanism of its own (from https://github.com/meowshed/meowg1k/pull/123, high):
 both phases resolve a module through the one function `std_module`, so a
 module can't exist in one phase and not the other (from
 crates/meow-star/src/loader.rs:427-443, high).
@@ -43,11 +43,11 @@ crates/meow-star/src/loader.rs:427-443, high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Refuse the `load` of a runtime module during declaration, as the first implementation in #121 did | One check at the loader covers every module, so a new builtin can't forget it (reasoned from crates/meow-star/src/loader.rs:427-443, low) | A file that declares a tool couldn't load a module at its top for a handler to use (from https://github.com/retran/meowg1k/pull/123, high) |
+| Refuse the `load` of a runtime module during declaration, as the first implementation in #121 did | One check at the loader covers every module, so a new builtin can't forget it (reasoned from crates/meow-star/src/loader.rs:427-443, low) | A file that declares a tool couldn't load a module at its top for a handler to use (from https://github.com/meowshed/meowg1k/pull/123, high) |
 | Two module tables, one per phase, with the declaration table holding only `env` | The declaration phase can't reach a runtime builtin at all, because none is in its table (reasoned from crates/meow-star/src/modules.rs:1-17, low) | A module could then exist in one phase and not the other, which is the drift REQ-2416 and the one-table rule exist to prevent (from crates/meow-star/src/modules.rs:5-12 and CLAUDE.md `one_context_builder`, high) |
 
 Doing nothing was the first alternative: it was the code that had merged in
-pull request 121 (from https://github.com/retran/meowg1k/pull/123, high).
+pull request 121 (from https://github.com/meowshed/meowg1k/pull/123, high).
 
 ## What it costs
 
@@ -56,7 +56,7 @@ sites across `modules.rs`, `capability.rs`, `capability_http.rs` and
 `value.rs` (from `grep -c "running(eval"` over crates/meow-star/src, high).
 Each module needs its own refusal test, and pull request 123 changed behaviour
 that had merged in pull request 121 (from
-https://github.com/retran/meowg1k/pull/123 and
+https://github.com/meowshed/meowg1k/pull/123 and
 crates/meow-star/tests/running.rs, high). `@std//git` doesn't call `running`
 itself: it reaches the check through `run_words`, after checking its arguments,
 so a declaration-time `git.diff(revision = "-x")` fails on the argument rather

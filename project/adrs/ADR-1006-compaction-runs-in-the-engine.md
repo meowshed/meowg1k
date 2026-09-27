@@ -34,9 +34,9 @@ The specification and the history name no third place for compaction to run.
 The engine owns a model call it didn't make before, and a token estimate of four
 characters to a token that decides when to make it (from
 crates/meow-agent/src/compaction.rs:37-48 and
-https://github.com/retran/meowg1k/pull/120, high). `meow-agent` emits the
+https://github.com/meowshed/meowg1k/pull/120, high). `meow-agent` emits the
 compaction and doesn't write it, so whoever persists has to turn the event into
-the session record (from https://github.com/retran/meowg1k/pull/120, high).
+the session record (from https://github.com/meowshed/meowg1k/pull/120, high).
 
 ## What would reverse it
 
@@ -64,7 +64,7 @@ crates/meow-star/src/run.rs:757-768, high).
    `a_failed_compaction_fails_the_run_rather_than_sending_an_over_long_context`
    (from crates/meow-agent/tests/spec.rs:842-944, high).
 2. No file under `.meow/` in this repository calls a compaction function (from
-   https://github.com/retran/meowg1k/pull/137, high).
+   https://github.com/meowshed/meowg1k/pull/137, high).
 
 ## What this does not settle
 

@@ -166,5 +166,5 @@ vendor API. `meow-star` declares agents to it, `meow-ui` observes it and
 | One concurrent invocation fails | The others continue, and its result is an outcome with a stop reason other than `finished` [REQ-1056] [REQ-1057] (from docs/spec/agent.md [R-AGENT-061], high) |
 | The shared budget is exhausted during concurrent invocations | The engine starts no new invocation [REQ-1059] (from docs/spec/agent.md [R-AGENT-062], high) |
 | The sink returns an error | For every event kind alike, the engine stops delivering to that sink, records a `Note` event naming the error and continues the run [REQ-1063] [REQ-1064] [REQ-1065] [REQ-1066] [REQ-1067] [REQ-1068] (from docs/spec/agent.md [R-AGENT-071], high) |
-| A budget caps cost for an agent whose model declares no price | The workspace fails to load [REQ-1078] (from https://github.com/retran/meowg1k/issues/168, high) |
+| A budget caps cost for an agent whose model declares no price | The workspace fails to load [REQ-1078] (from https://github.com/meowshed/meowg1k/issues/168, high) |
 | The final response fails schema validation | The engine retries it per [R-LLM-051], then stops with `failed` [REQ-1072] (from docs/spec/agent.md [R-AGENT-081], high) |

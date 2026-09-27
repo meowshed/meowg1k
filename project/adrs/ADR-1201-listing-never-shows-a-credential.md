@@ -35,7 +35,7 @@ A user who wants to see a stored credential reads `~/.meow/auth.json` with `cat`
 in place of a `meow` command. (from docs/spec/auth.md Decisions, medium) That
 remedy holds only while the store is a file: issue 166 moves credentials to the
 platform secret store, where `cat` no longer reaches them (from
-https://github.com/retran/meowg1k/issues/166, high).
+https://github.com/meowshed/meowg1k/issues/166, high).
 
 ## What would reverse it
 
@@ -50,14 +50,14 @@ the time it was stored, so nothing a listing reads can return part of a secret
 (from crates/meow-cli/src/auth.rs:87-104, high). A person typing a key sees it
 echoed, because portable echo suppression needs a terminal crate and raw mode,
 and the prompt says the key will be visible (from
-https://github.com/retran/meowg1k/pull/153, high).
+https://github.com/meowshed/meowg1k/pull/153, high).
 
 ## How I will know it was realised
 
 1. `nothing_ever_prints_the_credential` in crates/meow-cli/tests/auth.rs
    passes; it checks five commands, not only `auth list` (from
    crates/meow-cli/tests/auth.rs:99-130 and
-   https://github.com/retran/meowg1k/pull/153, high).
+   https://github.com/meowshed/meowg1k/pull/153, high).
 2. `a_credential_can_be_stored_listed_and_removed` in the same file passes
    (from crates/meow-cli/tests/auth.rs:67-98, high).
 
@@ -65,7 +65,7 @@ https://github.com/retran/meowg1k/pull/153, high).
 
 - A secret a handler put into a prompt, which lands in the session log. That is
   a separate problem with a separate answer, redaction on export (from
-  https://github.com/retran/meowg1k/issues/166, high).
+  https://github.com/meowshed/meowg1k/issues/166, high).
 - The `--key` flag of `meow auth login`, which puts the key in shell history
   and exists for scripts that already hold it somewhere safer (from
-  https://github.com/retran/meowg1k/pull/153, high).
+  https://github.com/meowshed/meowg1k/pull/153, high).

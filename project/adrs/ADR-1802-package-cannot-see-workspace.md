@@ -35,7 +35,7 @@ Decisions, high).
 | Do nothing: resolve every `//` load against the workspace, as the loader does today | No check of which file makes the load, so the loader stays one dispatch on the prefix (from crates/meow-star/src/loader.rs:90-118, high). | It is the first option in effect, and loses for the same reason (reasoned from crates/meow-star/src/loader.rs:121-126, medium). |
 
 Neither the source nor the history names a third option (from
-docs/spec/packages.md and https://github.com/retran/meowg1k/pull/157, medium).
+docs/spec/packages.md and https://github.com/meowshed/meowg1k/pull/157, medium).
 
 ## What it costs
 

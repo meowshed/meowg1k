@@ -14,5 +14,5 @@ verification: behavioural
 A `ToolResult` event MAY carry an empty output, recording the call's identifier,
 duration and error without what the tool returned.
 
-(from https://github.com/retran/meowg1k/pull/129 and
+(from https://github.com/meowshed/meowg1k/pull/129 and
 crates/meow-star/src/run.rs:728, high)

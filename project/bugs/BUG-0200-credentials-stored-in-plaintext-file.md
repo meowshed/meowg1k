@@ -22,14 +22,14 @@ At `d67ae50`, on any platform:
 2. Run `cat ~/.meow/auth.json`.
 
 The key is in the file in plain text (from
-https://github.com/retran/meowg1k/issues/166, high).
+https://github.com/meowshed/meowg1k/issues/166, high).
 
 ## What the system does
 
 `~/.meow/auth.json` holds API keys and OAuth refresh tokens as plaintext JSON.
 It is created `0600`, refused if its mode is wider, and written atomically, and
 no command prints from it, but the secret is still a file on disk that meowg1k
-owns (from https://github.com/retran/meowg1k/issues/166, high). No keychain code
+owns (from https://github.com/meowshed/meowg1k/issues/166, high). No keychain code
 exists: `crates/meow-cli/src/auth.rs` is file-only (from
 crates/meow-cli/src/auth.rs, high).
 

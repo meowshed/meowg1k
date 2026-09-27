@@ -27,15 +27,15 @@ from v0.2.x and [R-AGENT-071], high)
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: discard some sink errors and propagate others, as v0.2.x did | A handler's abort logic works on streamed text, because `makeCallback` propagates its error (from https://github.com/retran/meowg1k/pull/89#discussion_r2895914526, high) | A bug in an event handler is fatal for text deltas and silent for tool events (from docs/spec/agent.md Changes from v0.2.x, high) |
-| Propagate every sink error and abort the run, as a review of v0.2.x suggested | A handler's abort logic in `on_event` takes effect (from https://github.com/retran/meowg1k/pull/89#discussion_r2895914526, high) | Rendering is not the work, so a broken sink must not destroy a run in progress (from docs/spec/agent.md [R-AGENT-071], high) |
-| Discard every sink error | The run never stops on a rendering fault (reasoned from docs/spec/agent.md [R-AGENT-071], low) | A broken sink must not fail silently either, which is the half v0.2.x got wrong for tool events (from https://github.com/retran/meowg1k/pull/118 and docs/spec/agent.md [R-AGENT-071], high) |
+| Do nothing: discard some sink errors and propagate others, as v0.2.x did | A handler's abort logic works on streamed text, because `makeCallback` propagates its error (from https://github.com/meowshed/meowg1k/pull/89#discussion_r2895914526, high) | A bug in an event handler is fatal for text deltas and silent for tool events (from docs/spec/agent.md Changes from v0.2.x, high) |
+| Propagate every sink error and abort the run, as a review of v0.2.x suggested | A handler's abort logic in `on_event` takes effect (from https://github.com/meowshed/meowg1k/pull/89#discussion_r2895914526, high) | Rendering is not the work, so a broken sink must not destroy a run in progress (from docs/spec/agent.md [R-AGENT-071], high) |
+| Discard every sink error | The run never stops on a rendering fault (reasoned from docs/spec/agent.md [R-AGENT-071], low) | A broken sink must not fail silently either, which is the half v0.2.x got wrong for tool events (from https://github.com/meowshed/meowg1k/pull/118 and docs/spec/agent.md [R-AGENT-071], high) |
 
 ## What it costs
 
 A script's `on_event` callback can't stop a run by failing, because its error
 only detaches the sink (reasoned from
-https://github.com/retran/meowg1k/pull/89#discussion_r2895914526 and
+https://github.com/meowshed/meowg1k/pull/89#discussion_r2895914526 and
 crates/meow-agent/src/engine.rs:504-511, low). After the first error the sink
 sees nothing more of the run, so a renderer that failed once shows no ending
 (from crates/meow-agent/src/engine.rs:504-515, high).

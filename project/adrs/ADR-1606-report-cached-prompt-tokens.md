@@ -35,7 +35,7 @@ high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: report no cached prompt tokens, as v0.2.x does | One field fewer to read from each vendor (reasoned from crates/meow-llm/src/lib.rs:62-65, low) | It makes the main cost lever of a well-built agent invisible (from docs/spec/llm.md, high) |
-| Report the count as zero when the provider says nothing, as an earlier draft of the spec did | A plain integer that adds up without an absent case (reasoned from crates/meow-core/src/usage.rs:48-53, low) | "No cache hits" can't be told from "this provider doesn't say"; the draft contradicted the rule two lines above it (from https://github.com/retran/meowg1k/pull/111, high) |
+| Report the count as zero when the provider says nothing, as an earlier draft of the spec did | A plain integer that adds up without an absent case (reasoned from crates/meow-core/src/usage.rs:48-53, low) | "No cache hits" can't be told from "this provider doesn't say"; the draft contradicted the rule two lines above it (from https://github.com/meowshed/meowg1k/pull/111, high) |
 
 Neither the code nor the forge history names a third option.
 

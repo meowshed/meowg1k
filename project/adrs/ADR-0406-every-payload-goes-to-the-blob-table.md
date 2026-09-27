@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `R-STORE-010` permits inlining a payload under 512 bytes, and this store
-declines the permission (from https://github.com/retran/meowg1k/pull/113, high).
+declines the permission (from https://github.com/meowshed/meowg1k/pull/113, high).
 
 Once this is accepted, `Store::put_blob` writes every payload, whatever its
 size, to the `blobs` table, and `INLINE_LIMIT` stays only as the documented
@@ -29,15 +29,15 @@ medium).
 
 A `BLOB` column already stores a small value in the row SQLite writes anyway, so
 the second path buys nothing and costs a branch on every read (from
-https://github.com/retran/meowg1k/pull/113, high). The requirement asks that the
+https://github.com/meowshed/meowg1k/pull/113, high). The requirement asks that the
 choice be invisible, which it is either way (from
-https://github.com/retran/meowg1k/pull/113, high).
+https://github.com/meowshed/meowg1k/pull/113, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Keep a payload under 512 bytes inline | A small payload is read with its event row, with no second lookup in `blobs` (reasoned from crates/meow-store/src/blob.rs:60-76, low) | It buys nothing, because a `BLOB` column already stores a small value in the row, and it costs a branch on every read (from https://github.com/retran/meowg1k/pull/113, high) |
+| Keep a payload under 512 bytes inline | A small payload is read with its event row, with no second lookup in `blobs` (reasoned from crates/meow-store/src/blob.rs:60-76, low) | It buys nothing, because a `BLOB` column already stores a small value in the row, and it costs a branch on every read (from https://github.com/meowshed/meowg1k/pull/113, high) |
 | Keep every payload in the event row and have no blob table | One read per event and no reference counts to keep (reasoned from crates/meow-store/src/session.rs:144-180, low) | An agent that reads the same 40 KB file at steps 3, 7 and 11 would store it three times, and a naive log is dominated by duplicated tool output (from docs/design/0.3.0-sessions.md, lines 78-81, high) |
 
 Doing nothing isn't an option here: `R-STORE-010` requires content addressing
@@ -58,7 +58,7 @@ transaction as the copy (from crates/meow-store/src/session.rs:128-180, high).
 
 - Reading payloads through `blobs` shows up as a measured cost on the rebuild
   path, which a small value kept in the event row would avoid (reasoned from
-  https://github.com/retran/meowg1k/pull/113, low).
+  https://github.com/meowshed/meowg1k/pull/113, low).
 
 ## Consequences
 

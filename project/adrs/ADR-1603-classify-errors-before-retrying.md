@@ -28,14 +28,14 @@ Retrying every error that isn't a hard quota error makes an invalid API key cost
 the full backoff schedule before it surfaces (from docs/spec/llm.md, high). The
 classification came before the happy path, because retry behaviour is what the
 v0.2.x gateway got wrong and it is hard to retrofit (from
-https://github.com/retran/meowg1k/pull/117, high).
+https://github.com/meowshed/meowg1k/pull/117, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: retry every error that isn't a hard quota error, as `RetryWithBackoff` in v0.2.x's `internal/adapters/gateway/retry.go` does | One rule and no per-provider mapping; a failure that looks fatal still gets another try (reasoned from `git show v0.2.1:internal/adapters/gateway/retry.go`, low) | An invalid API key costs the full backoff schedule before it surfaces (from docs/spec/llm.md, high); with v0.2.x's five tries from 2 s that is 30 s of waiting (reasoned from the same file, `DefaultRetryConfig`, medium) |
-| Tell a spent quota apart by matching the error text, as v0.2.x's `isHardQuotaError` does | Needs nothing from the provider's response but its message (from `git show v0.2.1:internal/adapters/gateway/retry.go`, high) | It broke whenever a provider reworded an error (from https://github.com/retran/meowg1k/pull/117, high) |
+| Tell a spent quota apart by matching the error text, as v0.2.x's `isHardQuotaError` does | Needs nothing from the provider's response but its message (from `git show v0.2.1:internal/adapters/gateway/retry.go`, high) | It broke whenever a provider reworded an error (from https://github.com/meowshed/meowg1k/pull/117, high) |
 | Retry nothing, and surface every error | No delay on any failure (reasoned from crates/meow-llm/src/retry.rs, low) | Refusing a rate limit costs the run (from docs/spec/llm.md [R-LLM-037], high) |
 
 ## What it costs
@@ -46,7 +46,7 @@ Where a vendor has no clean signal the mapping guesses: Gemini's
 `RESOURCE_EXHAUSTED` counts as a spent quota only when no `Retry-After` came
 with it, so a provider that sends neither is retried when it shouldn't be (from
 crates/meow-llm/src/gemini.rs:168-172, high;
-https://github.com/retran/meowg1k/pull/133, high).
+https://github.com/meowshed/meowg1k/pull/133, high).
 
 A status outside the two lists is `Fatal`, so a retryable status the lists
 don't name, such as Anthropic's 529 "overloaded", surfaces at once (from
@@ -61,7 +61,7 @@ crates/meow-llm/src/error.rs:133-136, high; Anthropic's status code, medium).
 ## Consequences
 
 - A `Fatal` error reaches the caller with zero delay (from
-  https://github.com/retran/meowg1k/pull/117, high).
+  https://github.com/meowshed/meowg1k/pull/117, high).
 - A credential that won't renew is `Fatal`, which ADR-0462 records (from
   crates/meow-llm/src/error.rs:140-148, high).
 - Nothing outside the tests calls `with_retry`: no provider, the engine or the

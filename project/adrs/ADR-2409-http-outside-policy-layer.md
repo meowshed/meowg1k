@@ -30,8 +30,8 @@ crates/meow-star/src/capability_http.rs:19-23, which cites the same reason).
 
 | Option | Better at | Why it lost |
 | ------ | --------- | ----------- |
-| Put `http` behind the policy layer | Every network call is judged, including one a handler makes with a URL a model supplied (reasoned from docs/spec/starlark.md, Decisions, low). | It puts a prompt in front of the author's own program (from docs/spec/starlark.md, Decisions, high). A check inside a capability module would also give permissions two places to be decided (from https://github.com/retran/meowg1k/pull/123, high). |
-| A host allowlist inside the `http` module | A handler's call can't reach a host the workspace didn't name, whoever chose the URL (reasoned from https://github.com/retran/meowg1k/pull/145, low). | An allowlist belongs to the policy layer for model-driven calls, and a handler's own calls are the author's own program; a workspace that wants one writes a tool that checks the URL and gives the model that tool (from https://github.com/retran/meowg1k/pull/145, high). |
+| Put `http` behind the policy layer | Every network call is judged, including one a handler makes with a URL a model supplied (reasoned from docs/spec/starlark.md, Decisions, low). | It puts a prompt in front of the author's own program (from docs/spec/starlark.md, Decisions, high). A check inside a capability module would also give permissions two places to be decided (from https://github.com/meowshed/meowg1k/pull/123, high). |
+| A host allowlist inside the `http` module | A handler's call can't reach a host the workspace didn't name, whoever chose the URL (reasoned from https://github.com/meowshed/meowg1k/pull/145, low). | An allowlist belongs to the policy layer for model-driven calls, and a handler's own calls are the author's own program; a workspace that wants one writes a tool that checks the URL and gives the model that tool (from https://github.com/meowshed/meowg1k/pull/145, high). |
 
 Doing nothing isn't an option: no Go file at v0.2.1 mentions a policy, so there
 was no prior gate to keep (from `git grep -il policy v0.2.1 -- '*.go'`, high).

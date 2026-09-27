@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 A command is a list of words, never one string, and the error says why rather
-than just refusing (from https://github.com/retran/meowg1k/pull/135, high).
+than just refusing (from https://github.com/meowshed/meowg1k/pull/135, high).
 
 What works now: `shell.run` and `shell.capture` take a list of strings, run the
 first word as the program with the rest as its arguments and no shell between,
@@ -31,7 +31,7 @@ crates/meow-policy/src/policy.rs:321, medium).
 
 A string would be split by a shell, and `R-POLICY-006` asks the policy to judge
 a command line, which it can't do for a line it never saw the shape of (from
-https://github.com/retran/meowg1k/pull/135, high). The pull request's
+https://github.com/meowshed/meowg1k/pull/135, high). The pull request's
 `R-POLICY-006` is the multi-path rule in the spec at that commit; the
 obligation it describes, judging the full command line, is `R-POLICY-004`, which
 is what `addresses:` names (from `git show 7bd211c:docs/spec/policy.md`, high).
@@ -40,8 +40,8 @@ is what `addresses:` names (from `git show 7bd211c:docs/spec/policy.md`, high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: accept a command as one string and run it with `sh -c`, as v0.2.x's `shell` module did | Pipes, `&&` and redirection work as a user types them, in one argument (from v0.2.1:internal/core/starlark/module_shell.go:32, high) | A shell splits it, and the policy can't judge a line it never saw the shape of (from https://github.com/retran/meowg1k/pull/135, high) |
-| Accept both, splitting a string into words without a shell | A one-word command such as `"ls"` reads naturally, with no list around it (reasoned from crates/meow-star/src/capability.rs:326, low) | The source doesn't weigh it; the error exists so a string is refused with its reason, which a silent split would hide (from https://github.com/retran/meowg1k/pull/135, high) |
+| Do nothing: accept a command as one string and run it with `sh -c`, as v0.2.x's `shell` module did | Pipes, `&&` and redirection work as a user types them, in one argument (from v0.2.1:internal/core/starlark/module_shell.go:32, high) | A shell splits it, and the policy can't judge a line it never saw the shape of (from https://github.com/meowshed/meowg1k/pull/135, high) |
+| Accept both, splitting a string into words without a shell | A one-word command such as `"ls"` reads naturally, with no list around it (reasoned from crates/meow-star/src/capability.rs:326, low) | The source doesn't weigh it; the error exists so a string is refused with its reason, which a silent split would hide (from https://github.com/meowshed/meowg1k/pull/135, high) |
 
 A third option isn't named by the code, the history or the design documents,
 so the table stops at two.
@@ -83,5 +83,5 @@ crates/meow-star/tests/running.rs:919, high).
   matches it (from crates/meow-star/src/run.rs:557 and
   crates/meow-policy/src/policy.rs:321, medium).
 - The environment a command inherits: `shell.run` sets the working directory
-  and nothing else (from https://github.com/retran/meowg1k/pull/135, "What is
+  and nothing else (from https://github.com/meowshed/meowg1k/pull/135, "What is
   not covered", high).

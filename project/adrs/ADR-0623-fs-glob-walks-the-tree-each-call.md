@@ -14,12 +14,12 @@ supersedes: []
 `fs.glob(pattern)` walks every directory under the workspace root on each call,
 skips any directory named `.data`, matches each file's path relative to the
 root, written with `/`, against the pattern and returns the matches sorted
-(from https://github.com/retran/meowg1k/pull/135 and
+(from https://github.com/meowshed/meowg1k/pull/135 and
 crates/meow-star/src/capability.rs:142-185, high). An invalid pattern fails
 with the pattern named (from crates/meow-star/src/capability.rs:150-152, high).
 
 Once this is accepted, it works as stated; it has no cache and prunes nothing
-beyond `.data` (from https://github.com/retran/meowg1k/pull/135, high).
+beyond `.data` (from https://github.com/meowshed/meowg1k/pull/135, high).
 
 ## Why
 
@@ -29,23 +29,23 @@ high). The order is stable so a handler that writes its results to a file
 produces the same file twice (from crates/meow-star/src/capability.rs:180-181,
 high). A full walk is fine for a repository, and the workspace boundary already
 keeps it out of a home directory (from
-https://github.com/retran/meowg1k/pull/135, high).
+https://github.com/meowshed/meowg1k/pull/135, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Cache the walk between calls | A handler that globs in a loop doesn't walk the tree each time (from https://github.com/retran/meowg1k/pull/135, high) | Not needed for a repository-sized tree, and a cache has to know when files change (reasoned from https://github.com/retran/meowg1k/pull/135, low) |
-| Walk as the index does, obeying `.gitignore` and `.meowignore`, as `search.files` does | Skips `target/` and `.git/`, and agrees with `search.files` about what exists (reasoned from docs/requirements/REQ-2442-search-obeys-index-walk.md, low) | Not taken in #135, which names "no early pruning beyond skipping `.data`" as a known limit (from https://github.com/retran/meowg1k/pull/135, high) |
+| Cache the walk between calls | A handler that globs in a loop doesn't walk the tree each time (from https://github.com/meowshed/meowg1k/pull/135, high) | Not needed for a repository-sized tree, and a cache has to know when files change (reasoned from https://github.com/meowshed/meowg1k/pull/135, low) |
+| Walk as the index does, obeying `.gitignore` and `.meowignore`, as `search.files` does | Skips `target/` and `.git/`, and agrees with `search.files` about what exists (reasoned from docs/requirements/REQ-2442-search-obeys-index-walk.md, low) | Not taken in #135, which names "no early pruning beyond skipping `.data`" as a known limit (from https://github.com/meowshed/meowg1k/pull/135, high) |
 
 Doing nothing isn't an option, because `fs.glob` was new in #135 (from
-https://github.com/retran/meowg1k/pull/135, high).
+https://github.com/meowshed/meowg1k/pull/135, high).
 
 ## What it costs
 
 Each call reads every directory in the workspace, `.git/` and build output
 included, which is wrong for a very large tree (from
-https://github.com/retran/meowg1k/pull/135, high). The walk follows a linked
+https://github.com/meowshed/meowg1k/pull/135, high). The walk follows a linked
 directory, so a link to an ancestor would walk without end (reasoned from
 crates/meow-star/src/capability.rs:166, low). A directory named `.data`
 anywhere is skipped, not only `.meow/.data/` (from

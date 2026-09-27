@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `ctx.session.set` writes a `Note` with level `state`, and `get` reads from
-memory within the run (from https://github.com/retran/meowg1k/pull/129, high).
+memory within the run (from https://github.com/meowshed/meowg1k/pull/129, high).
 
 Once this is accepted, `ctx.session.set` stores the value in the run's memory
 and appends a `Note` with level `state` and the message `key=value`, and
@@ -25,20 +25,20 @@ crates/meow-cli/src/session.rs:97 and crates/meow-cli/src/session.rs:75, high).
 
 The log has ten kinds and none of them is a key-value pair, and making the value
 replayable needs an eleventh kind, which is a schema migration and a
-specification amendment (from https://github.com/retran/meowg1k/pull/129, high).
+specification amendment (from https://github.com/meowshed/meowg1k/pull/129, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| An eleventh event kind for a key-value pair | A rebuild could read the value back (from https://github.com/retran/meowg1k/pull/129, high) | It needs a schema migration and a specification amendment (from https://github.com/retran/meowg1k/pull/129, high) |
+| An eleventh event kind for a key-value pair | A rebuild could read the value back (from https://github.com/meowshed/meowg1k/pull/129, high) | It needs a schema migration and a specification amendment (from https://github.com/meowshed/meowg1k/pull/129, high) |
 | Typed rows keyed by name beside the log, as the design describes | A resumed session would see what the original left behind (from docs/design/0.3.0-sessions.md section 7, high) | A row outside the log is state the log doesn't define, and REQ-2230 allows such a copy only if the log can rebuild it (reasoned from docs/requirements/REQ-2230-state-copy-may-be-denormalised.md, low) |
 | Do nothing: keep the value in memory and write nothing to the log | No note per `set`, so the log holds only what the run did (reasoned from crates/meow-cli/src/session.rs:127, low) | A value a handler stored should be replayable with the run that stored it, not live only in the process (from crates/meow-cli/src/session.rs:131, high) |
 
 ## What it costs
 
 A rebuild can't read the value back (from
-https://github.com/retran/meowg1k/pull/129, high). The design promises that a
+https://github.com/meowshed/meowg1k/pull/129, high). The design promises that a
 resumed session sees what the original left behind, and this doesn't deliver it
 (from docs/design/0.3.0-sessions.md section 7, high). The value is written as
 text, so a reader of the log gets `key=value` with the value in its display form
@@ -74,6 +74,6 @@ crates/meow-cli/src/session.rs:127, low).
 ## What this does not settle
 
 - How a resumed run would get the values back: through an eleventh kind or by
-  reading the notes (from https://github.com/retran/meowg1k/pull/129, high).
+  reading the notes (from https://github.com/meowshed/meowg1k/pull/129, high).
 - Whether a failed session write should fail the run, as the design says, or be
   dropped, as `record` does now (from crates/meow-cli/src/session.rs:140, high).

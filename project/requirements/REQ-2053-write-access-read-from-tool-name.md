@@ -14,5 +14,5 @@ verification: behavioural
 A tool call MUST reach the policy as a write when the tool's name contains
 `write`, `remove`, `append` or `mkdir`, and as a read otherwise.
 
-(from https://github.com/retran/meowg1k/pull/127 and
+(from https://github.com/meowshed/meowg1k/pull/127 and
 crates/meow-star/src/run.rs:527, high)

@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `search.text` and `search.files` go through the port rather than becoming
-capabilities beside `fs` (from https://github.com/retran/meowg1k/pull/142,
+capabilities beside `fs` (from https://github.com/meowshed/meowg1k/pull/142,
 high).
 
 With this in place, both calls are methods of the `Search` port, and the binary
@@ -25,18 +25,18 @@ crates/meow-cli/src/index.rs:380-442, high).
 ## Why
 
 `R-STAR-019` asks them to reach exactly the files the index reaches, and that
-walk lives in `meow-index` (from https://github.com/retran/meowg1k/pull/142,
+walk lives in `meow-index` (from https://github.com/meowshed/meowg1k/pull/142,
 high). A port costs nothing and keeps one `.gitignore` deciding what is
 searchable however a handler searches (from
-https://github.com/retran/meowg1k/pull/142, high).
+https://github.com/meowshed/meowg1k/pull/142, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Capabilities beside `fs` | A pure function with no port, like the other modules that need no state (from crates/meow-star/src/port.rs:194-199, medium) | They'd need a new edge from `meow-star` to `meow-index`, which the architecture doesn't have (from https://github.com/retran/meowg1k/pull/142, high) |
+| Capabilities beside `fs` | A pure function with no port, like the other modules that need no state (from crates/meow-star/src/port.rs:194-199, medium) | They'd need a new edge from `meow-star` to `meow-index`, which the architecture doesn't have (from https://github.com/meowshed/meowg1k/pull/142, high) |
 | A port whose `text` and `files` answer an empty list when no index is built | Nothing to wire for a workspace without an index (reasoned from crates/meow-cli/src/index.rs:255-262, low) | A handler searching a workspace that never ran `meow index build` was told there was nothing in it (from crates/meow-cli/src/index.rs:255-262 and crates/meow-cli/tests/surface.rs:774-781, high) |
-| Do nothing: only `search.code`, which needs an index | No new calls to keep (reasoned from https://github.com/retran/meowg1k/pull/142, low) | A workspace where `meow index build` has never run should still be searchable (from https://github.com/retran/meowg1k/pull/142, high) |
+| Do nothing: only `search.code`, which needs an index | No new calls to keep (reasoned from https://github.com/meowshed/meowg1k/pull/142, low) | A workspace where `meow index build` has never run should still be searchable (from https://github.com/meowshed/meowg1k/pull/142, high) |
 
 ## What it costs
 
@@ -44,7 +44,7 @@ Every implementor of `Search` has to implement `text` and `files`, including
 the test doubles and the refusing ports (from crates/meow-star/src/port.rs:340
 and crates/meow-star/tests/running.rs:201, high). `search.text` reads each file
 the walk returns and scans it line by line, so its cost grows with the walked
-files and not with an index (from https://github.com/retran/meowg1k/pull/142,
+files and not with an index (from https://github.com/meowshed/meowg1k/pull/142,
 high).
 
 ## What would reverse it
@@ -59,7 +59,7 @@ new edge (reasoned from CLAUDE.md, architecture table, low).
   calls that need one say so (from crates/meow-cli/tests/surface.rs:782 and
   crates/meow-cli/tests/search.rs:44, high).
 - A hit from `search.text` carries a score of 1.0, so every search returns one
-  shape (from https://github.com/retran/meowg1k/pull/142, high).
+  shape (from https://github.com/meowshed/meowg1k/pull/142, high).
 - Paths are reported relative to the canonical root with `/`, which a defect on
   Windows and through symbolic links forced (from
   crates/meow-cli/src/index.rs:278-290, high).
@@ -80,7 +80,7 @@ medium).
 
 - Whether `search.text` is fast enough on a large workspace; the pull request
   says a workspace where it is too slow wants `search.code` (from
-  https://github.com/retran/meowg1k/pull/142, high).
+  https://github.com/meowshed/meowg1k/pull/142, high).
 - `Unindexed` walks with `Walk::default()`, not a walk built from the
   workspace's declaration; today `Walk` carries only `max_bytes`, so the two
   agree, but a future walk setting would need wiring here too (from

@@ -30,7 +30,7 @@ docs/design/0.3.0-plan.md M8, high).
 | --- | --- | --- |
 | Do nothing: no machine-readable mode, as in v0.2.x | Nothing to version and no schema to keep stable for other tools (reasoned from docs/design/0.3.0-tui.md section 3, low) | The tool can't be composed with anything, and `meow review \| jq` is impossible (from docs/design/0.3.0-tui.md section 3, high) |
 | A separate event vocabulary for the live stream | The live stream could shape its events for a reader without touching the log's schema (reasoned from crates/meow-core/src/view.rs:1-12, low) | It must be kept level with the log by hand, and that is how a schema drifts (from docs/design/0.3.0-plan.md M8, high) |
-| Two types that agree, checked by a test or by review | Each crate owns its own type and changes it on its own schedule (reasoned from https://github.com/retran/meowg1k/pull/128, low) | Export shares the live renderer's types in place of agreeing with them, so the requirement holds by construction and not by review (from https://github.com/retran/meowg1k/pull/128, high) |
+| Two types that agree, checked by a test or by review | Each crate owns its own type and changes it on its own schedule (reasoned from https://github.com/meowshed/meowg1k/pull/128, low) | Export shares the live renderer's types in place of agreeing with them, so the requirement holds by construction and not by review (from https://github.com/meowshed/meowg1k/pull/128, high) |
 
 ## What it costs
 
@@ -73,4 +73,4 @@ crates/meow-cli/src/wire.rs:665-674, high).
   docs/design/0.3.0-sessions.md section 9 describes; today it prints markdown
   (from crates/meow-cli/src/wire.rs:665-674, high).
 - The markdown export's layout, which is `format!` calls in one function with
-  no template (from https://github.com/retran/meowg1k/pull/128, high).
+  no template (from https://github.com/meowshed/meowg1k/pull/128, high).

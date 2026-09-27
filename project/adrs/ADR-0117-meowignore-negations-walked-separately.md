@@ -35,7 +35,7 @@ docs/design/0.3.0-plan.md M10, high).
 
 The plan, the code and the pull request weigh no third way to re-include a file
 (from docs/design/0.3.0-plan.md M10 and
-https://github.com/retran/meowg1k/pull/130, high).
+https://github.com/meowshed/meowg1k/pull/130, high).
 
 ## What it costs
 

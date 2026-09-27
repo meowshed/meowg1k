@@ -21,11 +21,11 @@ That becomes `meow review`, with `--help`, an exit code you can put in front of
 ## Install
 
 Download an archive for your platform from the
-[releases page](https://github.com/retran/meowg1k/releases), verify it against
+[releases page](https://github.com/meowshed/meowg1k/releases), verify it against
 `SHA256SUMS`, and put `meow` on your `PATH`. Or build it:
 
 ```bash
-cargo install --git https://github.com/retran/meowg1k meow-cli
+cargo install --git https://github.com/meowshed/meowg1k meow-cli
 ```
 
 ## Start

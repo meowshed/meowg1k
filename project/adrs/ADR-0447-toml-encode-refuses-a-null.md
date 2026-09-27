@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `toml.encode` refuses a null rather than dropping the key (from
-https://github.com/retran/meowg1k/pull/141, high).
+https://github.com/meowshed/meowg1k/pull/141, high).
 
 Once accepted, a handler that encodes a null to TOML gets an error it can act
 on, not a file missing a key (from crates/meow-star/src/modules.rs:258-262,
@@ -23,13 +23,13 @@ refusal (from crates/meow-star/tests, medium).
 ## Why
 
 TOML has no null, and silently losing a key is worse than an error a handler can
-act on (from https://github.com/retran/meowg1k/pull/141, high).
+act on (from https://github.com/meowshed/meowg1k/pull/141, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: drop a key whose value is null, as v0.2.x's `toml.stringify` did by handing the value to `BurntSushi/toml` | Any dict a handler builds encodes, including one read from JSON with a null in it (reasoned from v0.2.1:internal/core/starlark/module_toml.go:46, low) | A key disappears silently (from https://github.com/retran/meowg1k/pull/141, high) |
+| Do nothing: drop a key whose value is null, as v0.2.x's `toml.stringify` did by handing the value to `BurntSushi/toml` | Any dict a handler builds encodes, including one read from JSON with a null in it (reasoned from v0.2.1:internal/core/starlark/module_toml.go:46, low) | A key disappears silently (from https://github.com/meowshed/meowg1k/pull/141, high) |
 | Write a null as an empty string | The key survives with a value every TOML reader accepts (reasoned from crates/meow-star/src/modules.rs:258, low) | The source doesn't weigh it as a default; the code leaves that choice to the handler, which "can encode `""` or omit the key itself" (from crates/meow-star/src/modules.rs:258, high) |
 
 A third option isn't named by the code, the history or the design documents,

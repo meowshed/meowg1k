@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 A `.md` prompt file loads as a module with one symbol rather than through a
-builtin of its own (from https://github.com/retran/meowg1k/pull/122, high). The
+builtin of its own (from https://github.com/meowshed/meowg1k/pull/122, high). The
 symbol is `text`, bound to the file's contents, so a declaration writes
 `load("//lib/style.md", "text")` (from crates/meow-star/src/loader.rs:288-298
 and crates/meow-star/tests/agents.rs `a_prompt_file_loads_as_a_string`, high).
@@ -27,7 +27,7 @@ crates/meow-star/tests/agents.rs `a_prompt_file_loads_as_a_string`, high).
 
 The escape check, the cycle check and the evaluate-once cache then apply to it
 without being written a second time (from
-https://github.com/retran/meowg1k/pull/122, high). A markdown file has no
+https://github.com/meowshed/meowg1k/pull/122, high). A markdown file has no
 Starlark in it, so it becomes a module with one symbol rather than something to
 evaluate (from crates/meow-star/src/loader.rs:220-224, high).
 
@@ -35,7 +35,7 @@ evaluate (from crates/meow-star/src/loader.rs:220-224, high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| A builtin of its own for prompt files | A call such as `meow.prompt("lib/style.md")` returns the string directly, with no symbol name to learn (reasoned from crates/meow-star/src/loader.rs:288-298, low) | The escape check, the cycle check and the evaluate-once cache would be written a second time (from https://github.com/retran/meowg1k/pull/122, high) |
+| A builtin of its own for prompt files | A call such as `meow.prompt("lib/style.md")` returns the string directly, with no symbol name to learn (reasoned from crates/meow-star/src/loader.rs:288-298, low) | The escape check, the cycle check and the evaluate-once cache would be written a second time (from https://github.com/meowshed/meowg1k/pull/122, high) |
 
 Doing nothing was not an option, because REQ-2501 requires a `.md` file under
 `.meow/lib/` to be loadable as a string (from docs/spec/starlark.md

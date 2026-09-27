@@ -58,7 +58,7 @@ Sensitive values are redacted in the prompt as they are in the transcript and in
 every export (from docs/spec/policy.md [R-POLICY-060], high). The prompt is
 committed to the transcript, so the question and its answer stay readable after
 it closes (from docs/spec/tui.md [R-TUI-060] and
-https://github.com/retran/meowg1k/pull/127, high). A rule records the file and
+https://github.com/meowshed/meowg1k/pull/127, high). A rule records the file and
 line it was written at, so the prompt can point there (from
 crates/meow-policy/tests/spec.rs:502, high).
 

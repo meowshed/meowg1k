@@ -36,7 +36,7 @@ Decisions, high).
 | Do nothing: keep no cache and fetch on every run | No cache to verify or clean (reasoned from docs/spec/packages.md [R-PKG-020], low). | A workspace that has fetched once must work offline, and a load must never fetch (from docs/spec/packages.md [R-PKG-012] [R-PKG-020], high). |
 
 Neither the source nor the history names a third key for the cache (from
-docs/spec/packages.md and https://github.com/retran/meowg1k/pull/157, medium).
+docs/spec/packages.md and https://github.com/meowshed/meowg1k/pull/157, medium).
 
 ## What it costs
 
@@ -44,7 +44,7 @@ The loader hashes the whole cached tree on every load, sorted paths and bytes,
 and doesn't trust a stamp file (from crates/meow-star/src/package.rs:105-133,
 high). That is kilobytes and microseconds for Starlark files, and a large
 package would want the result cached against modification times (from
-https://github.com/retran/meowg1k/pull/157, high).
+https://github.com/meowshed/meowg1k/pull/157, high).
 
 ## What would reverse it
 
@@ -57,7 +57,7 @@ https://github.com/retran/meowg1k/pull/157, high).
 Two workspaces pinning the same package share one copy, and a changed pin can't
 be served the old bytes (from docs/spec/packages.md [R-PKG-021], high). A
 package already cached under its hash isn't downloaded again (from
-https://github.com/retran/meowg1k/pull/162, high). Moving a file inside a
+https://github.com/meowshed/meowg1k/pull/162, high). Moving a file inside a
 package changes its hash, because the hash covers the paths as well as the
 bytes (from crates/meow-star/tests/packages.rs `moving_a_file_changes_the_hash`,
 high).
@@ -78,4 +78,4 @@ high).
   more (from crates/meow-cli/src/fetch.rs, where `remove_dir_all` touches only
   the staging directory, medium).
 - Whether the tree hash is cached against modification times for a large
-  package (from https://github.com/retran/meowg1k/pull/157, high).
+  package (from https://github.com/meowshed/meowg1k/pull/157, high).

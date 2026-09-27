@@ -12,9 +12,9 @@ supersedes: []
 ## Decision
 
 `out`, `ask`, `stdin` and `session` are ports rather than types (from
-https://github.com/retran/meowg1k/pull/123, high). `search` is a port too,
+https://github.com/meowshed/meowg1k/pull/123, high). `search` is a port too,
 because `meow-index` lives beside the Starlark runtime rather than under it
-(from https://github.com/retran/meowg1k/pull/132, high).
+(from https://github.com/meowshed/meowg1k/pull/132, high).
 
 Once this is accepted, `meow-star` declares five traits, `Events`, `Ask`,
 `Stdin`, `Session` and `Search`, and `meow-cli` implements each one against the
@@ -25,23 +25,23 @@ crates/meow-cli/src/render.rs:57 and crates/meow-cli/src/index.rs:172, high).
 A run with no terminal or no index still works through the do-nothing ports in
 `port::quiet` and through `Unindexed`, where `search.code` is what fails (from
 crates/meow-star/src/port.rs:289-340, crates/meow-cli/src/index.rs:402 and
-https://github.com/retran/meowg1k/pull/132, high).
+https://github.com/meowshed/meowg1k/pull/132, high).
 
 ## Why
 
 The terminal and the session log live in crates that depend on `meow-star`, so
-they arrive as traits (from https://github.com/retran/meowg1k/pull/123, high).
+they arrive as traits (from https://github.com/meowshed/meowg1k/pull/123, high).
 A capability is reached with `load` and not off the handler context, so the
 index can't be a context member either (from
-https://github.com/retran/meowg1k/pull/132, high).
+https://github.com/meowshed/meowg1k/pull/132, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Concrete types for the terminal and the session log | No trait to implement and no dynamic dispatch between a handler and the terminal (reasoned from crates/meow-star/src/port.rs:28-97, low) | They live in crates that depend on `meow-star` (from https://github.com/retran/meowg1k/pull/123, high) |
-| Do nothing: let the Starlark runtime import the adapters directly, as v0.2.x did | One import and no seam, which is how `internal/core/starlark` reached `internal/adapters/gateway` in v0.2.x (from docs/design/0.3.0-architecture.md:138-139, high) | The architecture forbids reproducing that broken boundary (from docs/design/0.3.0-architecture.md:138-139, high), and the handler context would need a terminal to be tested (from https://github.com/retran/meowg1k/pull/123, high) |
-| Make search a member of the handler context | A handler would reach the index without a `load` line (reasoned from crates/meow-star/src/port.rs:142-147, low) | `R-STAR-021` says a capability is reached with `load` and not off the handler context (from https://github.com/retran/meowg1k/pull/132, high) |
+| Concrete types for the terminal and the session log | No trait to implement and no dynamic dispatch between a handler and the terminal (reasoned from crates/meow-star/src/port.rs:28-97, low) | They live in crates that depend on `meow-star` (from https://github.com/meowshed/meowg1k/pull/123, high) |
+| Do nothing: let the Starlark runtime import the adapters directly, as v0.2.x did | One import and no seam, which is how `internal/core/starlark` reached `internal/adapters/gateway` in v0.2.x (from docs/design/0.3.0-architecture.md:138-139, high) | The architecture forbids reproducing that broken boundary (from docs/design/0.3.0-architecture.md:138-139, high), and the handler context would need a terminal to be tested (from https://github.com/meowshed/meowg1k/pull/123, high) |
+| Make search a member of the handler context | A handler would reach the index without a `load` line (reasoned from crates/meow-star/src/port.rs:142-147, low) | `R-STAR-021` says a capability is reached with `load` and not off the handler context (from https://github.com/meowshed/meowg1k/pull/132, high) |
 
 ## What it costs
 
@@ -60,13 +60,13 @@ crates/meow-cli/src/session.rs:141, high).
 
 - The terminal, the session log or the index moving into a crate that
   `meow-star` depends on, which removes the dependency direction that forces a
-  trait (reasoned from https://github.com/retran/meowg1k/pull/123 and
+  trait (reasoned from https://github.com/meowshed/meowg1k/pull/123 and
   crates/meow-star/Cargo.toml, low).
 
 ## Consequences
 
 A test drives a handler without a terminal, which is most of what made the run
-phase testable at all (from https://github.com/retran/meowg1k/pull/123, high).
+phase testable at all (from https://github.com/meowshed/meowg1k/pull/123, high).
 `meow-star` depends on no terminal, store or index crate: its dependencies are
 `meow-agent`, `meow-core`, `meow-llm` and `meow-policy` (from
 crates/meow-star/Cargo.toml, high).

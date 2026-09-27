@@ -13,7 +13,7 @@ supersedes: []
 
 A provider with no credential is skipped rather than refused at startup, and the
 failure arrives when something asks for that provider, naming it (from
-https://github.com/retran/meowg1k/pull/126, high).
+https://github.com/meowshed/meowg1k/pull/126, high).
 
 Once this is accepted, a run whose providers all have a credential starts, and
 `meow doctor` lists the providers with none and exits 6 (from
@@ -30,17 +30,17 @@ built 2026-09-20, after which neither run.rs nor wire.rs changed, high).
 
 A workspace may declare three providers and a run may need one, so failing on a
 missing key for an unused provider would be wrong (from
-https://github.com/retran/meowg1k/pull/126, high).
+https://github.com/meowshed/meowg1k/pull/126, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Refuse at startup when any declared provider has no credential | Fails before any model call spends money, and reports every missing key in one place (reasoned from crates/meow-cli/src/wire.rs:1394, low) | A run that needs one provider would fail on a key for a provider it doesn't use (from https://github.com/retran/meowg1k/pull/126, high) |
+| Refuse at startup when any declared provider has no credential | Fails before any model call spends money, and reports every missing key in one place (reasoned from crates/meow-cli/src/wire.rs:1394, low) | A run that needs one provider would fail on a key for a provider it doesn't use (from https://github.com/meowshed/meowg1k/pull/126, high) |
 | Build each provider only when a model on it is first asked for, as v0.2.x deferred building its model services until a command ran (from `git show v0.2.1:cmd/starlark.go`, lines 62 to 64, high) | Builds nothing a run doesn't use, and the failure could name the three places at the point of use (reasoned, low) | The runtime takes a fixed map of engines built by the binary, and `meow-star` can't reach the credential store to build one later (reasoned from crates/meow-cli/src/wire.rs:1394 and REQ-1203, low) |
 
 Doing nothing isn't an option here: before this change no binary existed to
-decide it (from https://github.com/retran/meowg1k/pull/126, high).
+decide it (from https://github.com/meowshed/meowg1k/pull/126, high).
 
 ## What it costs
 
@@ -54,7 +54,7 @@ reports the wrong cause today (from crates/meow-star/src/run.rs:263, high).
 
 - The commands a workspace declares routinely use every provider it declares,
   so skipping one never lets a run finish that refusing would have stopped
-  (reasoned from https://github.com/retran/meowg1k/pull/126, low).
+  (reasoned from https://github.com/meowshed/meowg1k/pull/126, low).
 
 ## Consequences
 

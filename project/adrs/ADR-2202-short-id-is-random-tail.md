@@ -44,7 +44,7 @@ accumulate (from docs/spec/session.md [R-SESSION-034], high).
 The tail isn't guaranteed unique. The binary fills the entropy from the clock's
 sub-second nanoseconds and the process identifier, not a random number
 generator (from crates/meow-cli/src/wire.rs:928-938 and
-https://github.com/retran/meowg1k/pull/129, high). The last eight characters
+https://github.com/meowshed/meowg1k/pull/129, high). The last eight characters
 are the low 24 bits of the process identifier and the low 16 bits of the
 nanoseconds, so two sessions minted in one process share a tail about once in
 65,536 pairs, and a person who meets a shared tail types a longer suffix
@@ -58,7 +58,7 @@ crates/meow-core/src/id.rs:36-53, low).
   crates/meow-session/src/resolve.rs:69-106, low).
 - A need for identifiers that are unguessable, which the pull request that
   introduced the entropy names as the condition for changing it (from
-  https://github.com/retran/meowg1k/pull/129, high).
+  https://github.com/meowshed/meowg1k/pull/129, high).
 
 ## Consequences
 

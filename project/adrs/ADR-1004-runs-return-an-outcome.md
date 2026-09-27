@@ -29,7 +29,7 @@ Changes from v0.2.x and [R-AGENT-001], high)
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: return a bare string and raise on `max_iterations`, as v0.2.x did | The simplest return type: a caller that only wants the text gets a `str` (reasoned from docs/design/0.3.0-architecture.md section 2, low) | A caller can't tell why the run stopped, and the error discards the transcript the run paid for, also for a model that returns empty text (from docs/spec/agent.md Changes from v0.2.x, high) |
-| Return an outcome for most stops and an error for cancellation, as an early draft did | Cancellation propagates like any other interrupted call (reasoned from https://github.com/retran/meowg1k/pull/111, low) | The two requirements contradicted each other, and an error discards the transcript, so cancellation now returns an outcome too (from https://github.com/retran/meowg1k/pull/111 and docs/spec/agent.md [R-AGENT-001], high) |
+| Return an outcome for most stops and an error for cancellation, as an early draft did | Cancellation propagates like any other interrupted call (reasoned from https://github.com/meowshed/meowg1k/pull/111, low) | The two requirements contradicted each other, and an error discards the transcript, so cancellation now returns an outcome too (from https://github.com/meowshed/meowg1k/pull/111 and docs/spec/agent.md [R-AGENT-001], high) |
 
 The specification and the history name no third shape for a run's result.
 
@@ -37,7 +37,7 @@ The specification and the history name no third shape for a run's result.
 
 Every caller has to check the stop reason, because a caller that can't tell a
 finished answer from a budget stop will treat a partial one as complete (from
-https://github.com/retran/meowg1k/pull/120, high). Starlark exposes it as
+https://github.com/meowshed/meowg1k/pull/120, high). Starlark exposes it as
 `r.stop` and `r.ok` for that reason (from docs/design/0.3.0-starlark-api.md
 section 5.2, high).
 

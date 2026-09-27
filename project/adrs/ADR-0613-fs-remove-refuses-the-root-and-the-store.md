@@ -13,7 +13,7 @@ supersedes: []
 
 `fs.remove` refuses the workspace root and every path inside `.meow/.data/`,
 saying the path isn't something it will delete (from
-https://github.com/retran/meowg1k/pull/135 and
+https://github.com/meowshed/meowg1k/pull/135 and
 crates/meow-star/src/capability.rs:207-216, high).
 
 Once this is accepted, both refusals work, and every other path inside the
@@ -24,23 +24,23 @@ crates/meow-star/src/capability.rs:218-223, high).
 
 A handler that means to delete its own project can say so with a command,
 where the intent is unmistakable (from
-https://github.com/retran/meowg1k/pull/135, high). Confinement isn't policy,
+https://github.com/meowshed/meowg1k/pull/135, high). Confinement isn't policy,
 because policy governs what a model decided and a handler is the workspace
 author's own code; a path that escapes is a mistake whoever made it, and the
 cheapest place to notice is before the call (from
-https://github.com/retran/meowg1k/pull/135, high).
+https://github.com/meowshed/meowg1k/pull/135, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: `fs.remove` takes any path inside the workspace | One rule for every `fs` call, the workspace boundary (reasoned from crates/meow-star/src/capability.rs:44, low) | One call with `"."` or `".meow/.data"` deletes the project or its sessions and store (reasoned from crates/meow-star/src/capability.rs:218-223, low) |
-| Put `fs` behind the policy layer and let a rule protect the store | The workspace chooses what is protected (reasoned from https://github.com/retran/meowg1k/pull/135, low) | It asks the author to approve their own script, a prompt nobody reads (from https://github.com/retran/meowg1k/pull/135, high) |
+| Put `fs` behind the policy layer and let a rule protect the store | The workspace chooses what is protected (reasoned from https://github.com/meowshed/meowg1k/pull/135, low) | It asks the author to approve their own script, a prompt nobody reads (from https://github.com/meowshed/meowg1k/pull/135, high) |
 
 ## What it costs
 
 A handler that wants to clear the store or the project runs a shell command
-(from https://github.com/retran/meowg1k/pull/135, high).
+(from https://github.com/meowshed/meowg1k/pull/135, high).
 
 ## What would reverse it
 

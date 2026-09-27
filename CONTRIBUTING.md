@@ -14,7 +14,7 @@ You need [mise](https://mise.jdx.dev/) and `git`. Everything else, including
 the Rust toolchain and every tool a task invokes, comes from `mise.toml`.
 
 ```bash
-git clone https://github.com/retran/meowg1k.git
+git clone https://github.com/meowshed/meowg1k.git
 cd meowg1k
 mise install
 mise run build      # -> target/debug/meow
@@ -173,8 +173,8 @@ changelog is in `CHANGELOG.md`; do not paste it into the annotation.
 
 ## Getting help
 
-Open a [discussion](https://github.com/retran/meowg1k/discussions) for a
-question, an [issue](https://github.com/retran/meowg1k/issues) for a defect or
+Open a [discussion](https://github.com/meowshed/meowg1k/discussions) for a
+question, an [issue](https://github.com/meowshed/meowg1k/issues) for a defect or
 a proposal.
 
 ## License

@@ -20,7 +20,7 @@ A regular expression module that sometimes returns a string and sometimes a list
 forces every caller to test the type first. A time module that knows about zones
 turns every comparison into a question about where the machine is (from
 docs/spec/starlark.md, Decisions, high). What handlers measure is durations
-(from https://github.com/retran/meowg1k/pull/140, high).
+(from https://github.com/meowshed/meowg1k/pull/140, high).
 
 ## Alternatives
 
@@ -28,14 +28,14 @@ docs/spec/starlark.md, Decisions, high). What handlers measure is durations
 | ------ | --------- | ----------- |
 | A `re` module whose result is sometimes a string and sometimes a list | A pattern with no groups gives the matched text directly, with no `[0]` (reasoned from crates/meow-star/src/modules.rs `re_module`, low). | Every caller has to test the type first (from docs/spec/starlark.md, Decisions, high). |
 | A `time` module that knows about zones | A handler could print local wall-clock time for the person at the terminal (reasoned from crates/meow-star/src/modules.rs `time_module`, low). | Every comparison becomes a question about where the machine is (from docs/spec/starlark.md, Decisions, high). |
-| Do nothing: no `re` or `time` module, as before PR #140 | No new surface and no new direct dependencies (reasoned from https://github.com/retran/meowg1k/pull/140, low). | The design table had promised fifteen modules and had eight, and these two need no port, so they came first (from https://github.com/retran/meowg1k/pull/140, high). |
+| Do nothing: no `re` or `time` module, as before PR #140 | No new surface and no new direct dependencies (reasoned from https://github.com/meowshed/meowg1k/pull/140, low). | The design table had promised fifteen modules and had eight, and these two need no port, so they came first (from https://github.com/meowshed/meowg1k/pull/140, high). |
 
 ## What it costs
 
 A handler that wants the matched text writes `m[0]` (from
 crates/meow-star/src/modules.rs `re.match`, high). Every call compiles its
 pattern, which costs microseconds, and a handler matching in a hot loop over a
-large corpus pays it each time (from https://github.com/retran/meowg1k/pull/140,
+large corpus pays it each time (from https://github.com/meowshed/meowg1k/pull/140,
 high). A handler can't show a person local time: `time.format` rejects `%Z`
 with "requires IANA time zone identifier" and prints `%z` as `+0000` whatever
 `TZ` is (from a probe of `target/debug/meow` built on 2026-09-27 with
@@ -47,15 +47,15 @@ A requirement that a handler print local time for a person would reopen the
 `time` half, because `time.format` can't produce it today (reasoned from the
 probe above, low). A measured cost of compiling a pattern per call would add a
 cache keyed on the pattern, and that doesn't change the surface (from
-https://github.com/retran/meowg1k/pull/140, high).
+https://github.com/meowshed/meowg1k/pull/140, high).
 
 ## Consequences
 
 `re.match` returns `None` for no match and a list for a match, and inside the
 list a group that took no part is `None`, which is how a handler tells "matched
-empty" from "did not match" (from https://github.com/retran/meowg1k/pull/140,
+empty" from "did not match" (from https://github.com/meowshed/meowg1k/pull/140,
 high). `re.find_all` takes a `limit`, because a pattern that can match empty is
-unbounded on a long subject (from https://github.com/retran/meowg1k/pull/140,
+unbounded on a long subject (from https://github.com/meowshed/meowg1k/pull/140,
 high). `time.parse` of `2026-01-01T00:00:00+02:00` returns the UTC instant
 `1767218400` (from the probe above, high). Formatting for a human is the job of
 `time.format`, the only place a zone could ever enter (from
@@ -78,6 +78,6 @@ promises (reasoned from crates/meow-star/tests/running.rs, medium).
 
 The layout vocabulary of `time.format`: it passes `layout` to `jiff`'s
 `strftime`, so the accepted fields are `jiff`'s and [R-STAR-014] fixes only the
-scale and the default (from https://github.com/retran/meowg1k/pull/140, high).
+scale and the default (from https://github.com/meowshed/meowg1k/pull/140, high).
 Whether `time.format` should ever take a zone: today it takes none (from
 crates/meow-star/src/modules.rs `time.format`, high).

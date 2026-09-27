@@ -14,5 +14,5 @@ verification: behavioural
 `csv.parse` MUST take a `header` argument, `True` by default, saying whether the
 first record names the columns.
 
-(from https://github.com/retran/meowg1k/pull/141 and
+(from https://github.com/meowshed/meowg1k/pull/141 and
 crates/meow-star/src/modules.rs:313, high)

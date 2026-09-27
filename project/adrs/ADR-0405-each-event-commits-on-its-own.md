@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `append_event` commits on its own, and another connection sees the event at once
-(from https://github.com/retran/meowg1k/pull/113, high).
+(from https://github.com/meowshed/meowg1k/pull/113, high).
 
 Once this is accepted, both store append paths, `append_event` and
 `append_with_payload`, run one `INSERT` in autocommit mode, so each event is
@@ -24,20 +24,20 @@ unbuilt (reasoned from the same files, low).
 
 One transaction per turn held the single write lock across tool execution, which
 blocks every other session and loses a long tool's result on a crash (from
-https://github.com/retran/meowg1k/pull/111, high). The log is append-only, so a
+https://github.com/meowshed/meowg1k/pull/111, high). The log is append-only, so a
 half-written turn is a true record of how far the run got (from
-https://github.com/retran/meowg1k/pull/113, high).
+https://github.com/meowshed/meowg1k/pull/113, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: keep the first `R-STORE-020`, "All writes belonging to one agent turn MUST be committed in a single transaction" (from commit e39cd2f, docs/spec/store.md, high) | A crash loses at most the turn in flight, and no reader sees a half-written turn (from docs/design/0.3.0-sessions.md at commit ad3f907, section 3.1, high) | It holds the single write lock across tool execution, blocking every other session and losing a long tool's result on a crash (from https://github.com/retran/meowg1k/pull/111, high) |
+| Do nothing: keep the first `R-STORE-020`, "All writes belonging to one agent turn MUST be committed in a single transaction" (from commit e39cd2f, docs/spec/store.md, high) | A crash loses at most the turn in flight, and no reader sees a half-written turn (from docs/design/0.3.0-sessions.md at commit ad3f907, section 3.1, high) | It holds the single write lock across tool execution, blocking every other session and losing a long tool's result on a crash (from https://github.com/meowshed/meowg1k/pull/111, high) |
 | Buffer a turn's events in memory and commit them together once its tools finish | The write lock is held only for the commit, and the turn still lands whole (reasoned from docs/design/0.3.0-sessions.md at commit ad3f907, "Writes are batched per turn", low) | A crash during a long tool still loses that tool's result, which the requirement names as a reason against a turn-wide write (from docs/requirements/REQ-2624-no-transaction-across-tool-execution.md, high) |
 
 The history names one option besides the decision, and the buffered variant
 is a reading of the same first design; no third was recorded (from commit
-e39cd2f and https://github.com/retran/meowg1k/pull/111, medium).
+e39cd2f and https://github.com/meowshed/meowg1k/pull/111, medium).
 
 ## What it costs
 
@@ -56,7 +56,7 @@ row (from crates/meow-session/src/log.rs:141-172, medium).
 - Tool execution moves out of the write path so that no turn-wide transaction
   would hold the write lock while a tool runs, which removes the reason given
   for this decision (reasoned from
-  https://github.com/retran/meowg1k/pull/111, low).
+  https://github.com/meowshed/meowg1k/pull/111, low).
 
 ## Consequences
 

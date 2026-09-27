@@ -13,5 +13,5 @@ verification: behavioural
 
 `git.status` MUST return `git`'s porcelain v1 output as text.
 
-(from https://github.com/retran/meowg1k/pull/136 and
+(from https://github.com/meowshed/meowg1k/pull/136 and
 crates/meow-star/src/capability_git.rs:91, high)

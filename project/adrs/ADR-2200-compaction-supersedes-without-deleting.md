@@ -36,7 +36,7 @@ section 3, high).
 | --- | --- | --- |
 | Mark compacted events obsolete in the log, as v0.2.x's `ctx.session.mark_obsolete(ids)` did (the do-nothing option) | A smaller log, and one rebuild that needs no range lookup, because the obsolete events are gone (reasoned from docs/design/0.3.0-sessions.md section 2, low) | Mutating the log means a compacted run can no longer be replayed in full (from docs/spec/session.md, high) |
 | Delete the superseded events and keep only the summary | The smallest log, and a model rebuild that is a plain read (reasoned from crates/meow-session/src/log.rs:237-267, low) | It breaks the append-only rule every other property depends on, and the original messages are gone (from docs/design/0.3.0-sessions.md section 3, high) |
-| One rebuild function with a flag choosing summary or originals | One walk to maintain in place of two (from https://github.com/retran/meowg1k/pull/116, high) | A shared function with a boolean is how the two readings would drift back together (from crates/meow-session/src/log.rs:234-236, high) |
+| One rebuild function with a flag choosing summary or originals | One walk to maintain in place of two (from https://github.com/meowshed/meowg1k/pull/116, high) | A shared function with a boolean is how the two readings would drift back together (from crates/meow-session/src/log.rs:234-236, high) |
 
 (from docs/spec/session.md, high)
 

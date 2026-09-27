@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `Relay` lives in `meow-star`, not in `meow-ui` (from
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 Once this is accepted, `Relay` implements the engine's `Sink`, turns each
 `AgentEvent` into a `ViewEvent` and sends it through the `Events` port, and
@@ -20,34 +20,34 @@ Once this is accepted, `Relay` implements the engine's `Sink`, turns each
 crates/meow-star/src/run.rs:605-616, crates/meow-star/src/run.rs:676 and
 crates/meow-ui/Cargo.toml, high). What still doesn't work is
 `RunStart.model`, which stays empty because the engine reports the agent and
-not the model it resolved (from https://github.com/retran/meowg1k/pull/124 and
+not the model it resolved (from https://github.com/meowshed/meowg1k/pull/124 and
 crates/meow-star/src/run.rs:685, high).
 
 ## Why
 
 `meow-ui` isn't allowed to know the engine exists, and that boundary is what
 lets a renderer be driven from a recorded log (from
-https://github.com/retran/meowg1k/pull/124, high). `Relay` also keeps the state
+https://github.com/meowshed/meowg1k/pull/124, high). `Relay` also keeps the state
 the view needs and the engine doesn't: the name a tool call was made under, the
 step count and what has been spent (from
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Put the mapping in `meow-ui` | The renderers and the mapping to what they read sit in one crate (reasoned from crates/meow-star/src/run.rs:605-610, low) | `meow-ui` would have to know the engine exists (from https://github.com/retran/meowg1k/pull/124, high) |
+| Put the mapping in `meow-ui` | The renderers and the mapping to what they read sit in one crate (reasoned from crates/meow-star/src/run.rs:605-610, low) | `meow-ui` would have to know the engine exists (from https://github.com/meowshed/meowg1k/pull/124, high) |
 | Have the engine emit `ViewEvent` itself | No mapping layer at all, since `ViewEvent` lives in `meow-core`, which `meow-agent` can already reach (reasoned from crates/meow-core/src/view.rs:30 and CLAUDE.md, section "architecture", low) | The engine would carry state it has no reason to repeat on every event, such as the tool name per call, the step count and the spend (from crates/meow-star/src/run.rs:612-615, high) |
 
 Doing nothing isn't an option here, because before this change no renderer
 existed to receive the engine's events (from
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## What it costs
 
 - `RunStart.model` is carried and not filled, and filling it means threading
   the model name through `AgentEvent`, an `R-AGENT-*` change (from
-  https://github.com/retran/meowg1k/pull/124, high).
+  https://github.com/meowshed/meowg1k/pull/124, high).
 - `Relay` has since taken on writing the session log as well, so one type both
   shows a run and records it (from crates/meow-star/src/run.rs:648-655 and
   commit 549ffb0, high).
@@ -65,7 +65,7 @@ https://github.com/retran/meowg1k/pull/124, high).
 
 - Every renderer test replays a recorded `Vec<ViewEvent>` with no engine
   behind it (from crates/meow-ui/tests/renderers.rs:17-72 and
-  https://github.com/retran/meowg1k/pull/124, high).
+  https://github.com/meowshed/meowg1k/pull/124, high).
 - `Relay` is the only place that knows the current tool, the elapsed time, the
   step count and the budget consumed at once, so it builds the live region's
   progress event (from crates/meow-star/src/run.rs:657-674, high).

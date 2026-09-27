@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 Identifier entropy comes from the clock and the process id, not a random number
-generator (from https://github.com/retran/meowg1k/pull/129, high).
+generator (from https://github.com/meowshed/meowg1k/pull/129, high).
 
 Once accepted, identifiers are unique within a workspace without a random
 number generator: the short form is the low 24 bits of the process id and the
@@ -27,7 +27,7 @@ crates/meow-cli/src/wire.rs:922-927, high).
 
 An identifier has to be unique within a workspace, not unguessable, and one
 fewer dependency is worth more than randomness nothing depends on (from
-https://github.com/retran/meowg1k/pull/129, high). The dependency saved is a
+https://github.com/meowshed/meowg1k/pull/129, high). The dependency saved is a
 direct one for `meow-cli` only: `rand` 0.9 was already in the build through
 `meow-llm`, which uses it for retry jitter, a day before this choice (from
 crates/meow-llm/Cargo.toml:13, crates/meow-llm/src/retry.rs:77 and
@@ -37,13 +37,13 @@ crates/meow-llm/Cargo.toml:13, crates/meow-llm/src/retry.rs:77 and
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| A random number generator, as the design's ULID has | Unguessable identifiers, and a tail with 40 random bits whoever creates the session (from https://github.com/retran/meowg1k/pull/129, medium; docs/design/0.3.0-sessions.md section 4, high) | Nothing depends on randomness, and it costs a dependency (from https://github.com/retran/meowg1k/pull/129, high) |
+| A random number generator, as the design's ULID has | Unguessable identifiers, and a tail with 40 random bits whoever creates the session (from https://github.com/meowshed/meowg1k/pull/129, medium; docs/design/0.3.0-sessions.md section 4, high) | Nothing depends on randomness, and it costs a dependency (from https://github.com/meowshed/meowg1k/pull/129, high) |
 | The timestamp alone, with no entropy part | The shortest identifier and no source of entropy to choose (reasoned from crates/meow-core/src/id.rs:37, low) | Two sessions created in the same millisecond would collide, and the short form is the tail precisely so that they don't (from crates/meow-core/src/id.rs:90, high) |
 | A UUID, as v0.2.x used | A standard format any tool can read (reasoned from docs/design/0.3.0-sessions.md section 2, low) | It doesn't sort by creation time and nobody types one (from docs/design/0.3.0-sessions.md section 2, high) |
 
 Doing nothing isn't an option here, because every session needs an identifier
 and the Rust tree had no earlier one to keep (from
-https://github.com/retran/meowg1k/pull/129, medium).
+https://github.com/meowshed/meowg1k/pull/129, medium).
 
 ## What it costs
 
@@ -60,7 +60,7 @@ crates/meow-cli/src/wire.rs:936, high).
 ## What would reverse it
 
 - Identifiers need to be unguessable; the pull request names this as the line to
-  change then (from https://github.com/retran/meowg1k/pull/129, high).
+  change then (from https://github.com/meowshed/meowg1k/pull/129, high).
 - Two sessions in one workspace are observed to share a short identifier, for
   example when one process creates several sessions (reasoned from
   crates/meow-cli/src/wire.rs:928, low).

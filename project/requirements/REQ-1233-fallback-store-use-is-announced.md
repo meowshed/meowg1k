@@ -14,4 +14,4 @@ verification: behavioural
 The credential store MUST say so when it uses the fallback file
 `~/.meow/auth.json`.
 
-(from https://github.com/retran/meowg1k/issues/166, high)
+(from https://github.com/meowshed/meowg1k/issues/166, high)

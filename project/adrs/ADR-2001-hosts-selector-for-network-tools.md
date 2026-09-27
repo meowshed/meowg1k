@@ -34,7 +34,7 @@ damage (from docs/spec/policy.md, high).
 | --- | --- | --- |
 | Wait for an agent that needs a `hosts` selector | No selector is built or tested before a tool needs it (reasoned from docs/spec/policy.md, Decisions, low) | Until then only an all-or-nothing network rule exists, which forces the choice between no network and unrestricted egress (from docs/spec/policy.md, high) |
 | Do nothing: an all-or-nothing network rule | A network rule is one line, matched on the tool name alone (reasoned from crates/meow-policy/src/policy.rs:297-340, low) | Egress is where a prompt-injected agent does the most damage (from docs/spec/policy.md, high) |
-| Check the URL inside the tool the workspace writes, and give the model that tool | Needs nothing from the policy layer, which is what the `http` module's own pull request suggests for a handler's calls (from https://github.com/retran/meowg1k/pull/145, high) | A check inside each tool is a second enforcement point beside the engine, and two are two places for a decision to differ (reasoned from docs/spec/policy.md, Decisions, low) |
+| Check the URL inside the tool the workspace writes, and give the model that tool | Needs nothing from the policy layer, which is what the `http` module's own pull request suggests for a handler's calls (from https://github.com/meowshed/meowg1k/pull/145, high) | A check inside each tool is a second enforcement point beside the engine, and two are two places for a decision to differ (reasoned from docs/spec/policy.md, Decisions, low) |
 
 ## What it costs
 
@@ -71,6 +71,6 @@ crates/meow-star/src/capability_http.rs:19-23, high).
 
 - Redirects: the `http` module follows up to ten, and the selector judges only
   the host of the first request (from crates/meow-star/src/capability_http.rs:45
-  and 187, and https://github.com/retran/meowg1k/pull/145, medium).
+  and 187, and https://github.com/meowshed/meowg1k/pull/145, medium).
 - How a tool whose address argument isn't named `url` declares its host (from
   crates/meow-star/src/run.rs:521-524, high).

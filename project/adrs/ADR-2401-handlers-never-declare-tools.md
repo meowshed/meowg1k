@@ -27,7 +27,7 @@ predicted without triggering it (from docs/spec/starlark.md, Decisions, high).
 | ------ | --------- | ----------- |
 | Let a handler generate tools at run time | Generated tools would be useful (from docs/spec/starlark.md, Decisions, high). | The tool set becomes unknowable before a run, which breaks `meow policy explain` (from docs/spec/starlark.md, Decisions, high). |
 | Do nothing: leave the question open, as the draft spec did | A workspace author could decide per case (reasoned from git show e39cd2f -- docs/spec/starlark.md, low). | The draft listed it as an open question and recommended forbidding it for the same reason, and e39cd2f closed it that way (from git show e39cd2f -- docs/spec/starlark.md, high). |
-| Accept `meow.policy` inside a handler and apply it from that point on | A handler could tighten its own permissions mid-run (reasoned from crates/meow-star/src/declare.rs `policy`, low). | A policy written inside a handler would be applied after the calls it was meant to govern, which reads as a permission bug (from crates/meow-star/src/declare.rs `policy` and https://github.com/retran/meowg1k/pull/121, high). |
+| Accept `meow.policy` inside a handler and apply it from that point on | A handler could tighten its own permissions mid-run (reasoned from crates/meow-star/src/declare.rs `policy`, low). | A policy written inside a handler would be applied after the calls it was meant to govern, which reads as a permission bug (from crates/meow-star/src/declare.rs `policy` and https://github.com/meowshed/meowg1k/pull/121, high). |
 
 ## What it costs
 
@@ -48,7 +48,7 @@ unknowable before a run (reasoned from docs/spec/starlark.md, Decisions, low).
 because the tool set is known before a run (from docs/spec/starlark.md,
 Decisions, high). The trust fingerprint is taken over the declared agent, tool,
 command and policy lines, so a tool that appeared only at run time would escape
-what the person agreed to (from https://github.com/retran/meowg1k/pull/154,
+what the person agreed to (from https://github.com/meowshed/meowg1k/pull/154,
 high). The refusal names the phase: `<call> can only be called while .meow/ is
 being loaded` (from crates/meow-star/src/error.rs `NotDeclaring`, high).
 

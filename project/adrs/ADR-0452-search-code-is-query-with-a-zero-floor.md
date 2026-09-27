@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `index.query` is `search.code` with the knobs, and `code` is `query` with a
-floor of zero (from https://github.com/retran/meowg1k/pull/142, high).
+floor of zero (from https://github.com/meowshed/meowg1k/pull/142, high).
 
 With this in place, the binary's `Searcher::code` calls `Searcher::query` with
 `min_score` 0.0, and `index.query` takes `min_score` as an integer or a float
@@ -26,13 +26,13 @@ high).
 ## Why
 
 With one implementation the two can't drift (from
-https://github.com/retran/meowg1k/pull/142, high).
+https://github.com/meowshed/meowg1k/pull/142, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Two implementations | Each call can be tuned on its own (reasoned from crates/meow-star/src/port.rs:147-171, low) | They can drift (from https://github.com/retran/meowg1k/pull/142, high) |
+| Two implementations | Each call can be tuned on its own (reasoned from crates/meow-star/src/port.rs:147-171, low) | They can drift (from https://github.com/meowshed/meowg1k/pull/142, high) |
 | Do nothing: `search.code` only, with no floor | One call to learn (reasoned from crates/meow-star/src/port.rs:156-160, low) | [R-STAR-024] asks `query` to take the floor below which a hit is not worth returning (from docs/spec/starlark.md [R-STAR-024], high) |
 
 The source names no third option.
@@ -56,7 +56,7 @@ different arguments (reasoned from crates/meow-star/src/port.rs:156-160, low).
   gets the same hits at a floor of zero (from
   crates/meow-star/src/port.rs:156-160, high).
 - `min_score = 0` and `min_score = 0.4` both work (from
-  https://github.com/retran/meowg1k/pull/142, high).
+  https://github.com/meowshed/meowg1k/pull/142, high).
 
 ## How I will know it was realised
 

@@ -14,9 +14,9 @@ supersedes: []
 A tool call reaches the policy with the arguments named `path`, `file`, `paths`
 and `files` as its paths, `command` as its command line and the host of `url` as
 its host, and as a write when the tool's name contains `write`, `remove`,
-`append` or `mkdir` (from https://github.com/retran/meowg1k/pull/127 and
+`append` or `mkdir` (from https://github.com/meowshed/meowg1k/pull/127 and
 crates/meow-star/src/run.rs:525-566, high). A tool that wants to be governed
-uses those names (from https://github.com/retran/meowg1k/pull/127, high).
+uses those names (from https://github.com/meowshed/meowg1k/pull/127, high).
 
 Once this is accepted, every call an agent makes is described this way before
 the decision, and each path is resolved against the workspace root with
@@ -28,14 +28,14 @@ crates/meow-star/src/run.rs:571-582, high).
 The engine doesn't know which argument is a path and which is a command line,
 and a declaration has no way to say so, so the name is the only signal left
 (from crates/meow-star/src/run.rs:520-524 and
-https://github.com/retran/meowg1k/pull/127, high).
+https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: no description of the call, as before #127 | No convention for a tool author to learn (reasoned from https://github.com/retran/meowg1k/pull/127, low) | `describe_call` was `None`, so no policy decision was ever taken (from https://github.com/retran/meowg1k/pull/127, high) |
-| The declaration marks which argument is a path, a command or a URL | A tool is governed whatever its authors call its arguments (from https://github.com/retran/meowg1k/pull/127, high) | A declaration has no way to say it yet, and that would need a requirement of its own (from https://github.com/retran/meowg1k/pull/127, high) |
+| Do nothing: no description of the call, as before #127 | No convention for a tool author to learn (reasoned from https://github.com/meowshed/meowg1k/pull/127, low) | `describe_call` was `None`, so no policy decision was ever taken (from https://github.com/meowshed/meowg1k/pull/127, high) |
+| The declaration marks which argument is a path, a command or a URL | A tool is governed whatever its authors call its arguments (from https://github.com/meowshed/meowg1k/pull/127, high) | A declaration has no way to say it yet, and that would need a requirement of its own (from https://github.com/meowshed/meowg1k/pull/127, high) |
 
 ## What it costs
 
@@ -45,12 +45,12 @@ reaches the policy with no paths, and a tool that writes under another name,
 crates/meow-star/src/run.rs:527-540, low). A path that doesn't exist yet is
 judged lexically and not with symbolic links resolved, the one place
 REQ-2005's guarantee is weaker than it reads (from
-https://github.com/retran/meowg1k/pull/127, high).
+https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## What would reverse it
 
 - A tool declaration gains a way to mark an argument as a path, a command or a
-  URL (from https://github.com/retran/meowg1k/pull/127, high).
+  URL (from https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## Consequences
 
@@ -72,4 +72,4 @@ https://github.com/retran/meowg1k/pull/127, high).
 
 - How a tool declares which of its arguments the policy should judge, which
   #127 says deserves a requirement (from
-  https://github.com/retran/meowg1k/pull/127, high).
+  https://github.com/meowshed/meowg1k/pull/127, high).

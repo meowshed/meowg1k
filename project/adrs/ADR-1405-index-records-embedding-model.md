@@ -35,14 +35,14 @@ Nothing in v0.2.x records which embedding model built the index, so changing the
 model silently produces nonsense scores (from docs/spec/index.md, high). Two
 models put different meanings in the same coordinates, so a query across them
 produces numbers that look like scores and are not (from
-https://github.com/retran/meowg1k/pull/131, high).
+https://github.com/meowshed/meowg1k/pull/131, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: record nothing, as in v0.2.x | Changing the model needs no rebuild and no error to handle (reasoned from docs/spec/index.md, low) | Changing the model silently produces nonsense scores (from docs/spec/index.md, high) |
-| Record and check the vector dimension | Catches two models with the same name and different dimensions (from https://github.com/retran/meowg1k/pull/131, high) | The model name catches the case that actually happens, which is changing the model; nothing enforces a dimension (from https://github.com/retran/meowg1k/pull/131, high) |
+| Record and check the vector dimension | Catches two models with the same name and different dimensions (from https://github.com/meowshed/meowg1k/pull/131, high) | The model name catches the case that actually happens, which is changing the model; nothing enforces a dimension (from https://github.com/meowshed/meowg1k/pull/131, high) |
 | Rebuild the index when a query finds another model | The query answers without the caller acting (reasoned from crates/meow-index/src/error.rs:31-50, low) | A query must not build an index implicitly, because that would turn a typo into several minutes and a bill (from docs/spec/index.md [R-INDEX-041] and crates/meow-index/src/error.rs:31-36, high) |
 
 ## What it costs
@@ -57,7 +57,7 @@ crates/meow-llm/src/voyage.rs:40-44, high).
 
 - The provider API returns the model and dimension with every vector, so the
   index can check each stored vector rather than one name (reasoned from
-  https://github.com/retran/meowg1k/pull/131, low).
+  https://github.com/meowshed/meowg1k/pull/131, low).
 
 ## Consequences
 
@@ -87,7 +87,7 @@ high).
   without re-embedding the old chunks, which contradicts [R-INDEX-051] (from
   crates/meow-index/src/index.rs:245-248, high).
 - The vector dimension. Nothing enforces one (from
-  https://github.com/retran/meowg1k/pull/131, high).
+  https://github.com/meowshed/meowg1k/pull/131, high).
 - Whether deleting `index.model` on `clear` fits [R-INDEX-052], which says
   `clear` leaves the key-value store untouched. The entry is the index's own,
   and the test expects it gone (from crates/meow-index/src/index.rs:147-152 and

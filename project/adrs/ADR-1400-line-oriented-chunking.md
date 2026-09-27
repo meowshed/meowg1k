@@ -34,9 +34,9 @@ language without one (from docs/spec/index.md, high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: keep v0.2.x's splitter, which cuts on blank-line paragraphs, then lines, and counts size and overlap in runes | Paragraphs of prose stay whole, and a chunk's size is exact in characters (from `git show v0.2.1:internal/core/chunker/plain_text_strategy.go`, medium) | Overlap in runes and boundaries on lines can't both be exact, and an overlong line is cut without being reported, so a minified file makes the line rule and the size rule quietly unsatisfiable (from docs/spec/index.md [R-INDEX-012] [R-INDEX-014] and https://github.com/retran/meowg1k/pull/130, medium) |
+| Do nothing: keep v0.2.x's splitter, which cuts on blank-line paragraphs, then lines, and counts size and overlap in runes | Paragraphs of prose stay whole, and a chunk's size is exact in characters (from `git show v0.2.1:internal/core/chunker/plain_text_strategy.go`, medium) | Overlap in runes and boundaries on lines can't both be exact, and an overlong line is cut without being reported, so a minified file makes the line rule and the size rule quietly unsatisfiable (from docs/spec/index.md [R-INDEX-012] [R-INDEX-014] and https://github.com/meowshed/meowg1k/pull/130, medium) |
 | A syntax-aware splitter using tree-sitter | Better chunk boundaries (from docs/spec/index.md, high) | It costs a grammar per language, a build dependency and a fallback for every language without one (from docs/spec/index.md, high) |
-| Count chunk size in tokens with a real tokenizer | An exact fit to the embedding model's input limit (from https://github.com/retran/meowg1k/pull/130, high) | It's another dependency per model family; the chunker estimates four characters to a token, the same estimate compaction uses, and the provider's own refusal is the authority (from https://github.com/retran/meowg1k/pull/130, high) |
+| Count chunk size in tokens with a real tokenizer | An exact fit to the embedding model's input limit (from https://github.com/meowshed/meowg1k/pull/130, high) | It's another dependency per model family; the chunker estimates four characters to a token, the same estimate compaction uses, and the provider's own refusal is the authority (from https://github.com/meowshed/meowg1k/pull/130, high) |
 
 ## What it costs
 
@@ -45,14 +45,14 @@ docs/spec/index.md, medium). A chunk can start in the middle of a definition,
 so a result can show the tail of one function and the head of the next
 (reasoned from crates/meow-index/src/chunk.rs:10-18, low). Retrieval quality
 has never been measured against an alternative, so the size of that cost is
-unknown (from https://github.com/retran/meowg1k/pull/111, high).
+unknown (from https://github.com/meowshed/meowg1k/pull/111, high).
 
 ## What would reverse it
 
 - A recall number that justifies the tree-sitter dependency (from
   docs/spec/index.md, high). The pull request that closed the open questions
   lists the chunking strategy among four decisions that want a measurement
-  rather than an argument (from https://github.com/retran/meowg1k/pull/111,
+  rather than an argument (from https://github.com/meowshed/meowg1k/pull/111,
   high).
 
 ## Consequences
@@ -84,7 +84,7 @@ crates/meow-index/Cargo.toml, high).
 - How a chunk is sized against a provider's limit in tokens. The character
   limit is a stand-in, and a provider's refusal is handled by
   [R-INDEX-020] and [R-INDEX-021] (from
-  https://github.com/retran/meowg1k/pull/130, high).
+  https://github.com/meowshed/meowg1k/pull/130, high).
 - Whether a syntax-aware splitter would improve recall on this repository.
-  Nothing measures recall yet (from https://github.com/retran/meowg1k/pull/131,
+  Nothing measures recall yet (from https://github.com/meowshed/meowg1k/pull/131,
   high).

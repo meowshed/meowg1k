@@ -13,5 +13,5 @@ verification: behavioural
 
 A fetch MUST give up when the download hasn't finished within 120 seconds.
 
-(from https://github.com/retran/meowg1k/pull/162 and
+(from https://github.com/meowshed/meowg1k/pull/162 and
 crates/meow-cli/src/fetch.rs:18 and :99, high)

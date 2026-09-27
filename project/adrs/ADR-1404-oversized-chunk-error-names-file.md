@@ -35,14 +35,14 @@ v0.2.x's `llmEmbed` gives a generic failure message for a single oversized chunk
 (from docs/spec/index.md, high). A caller told "input too large" and nothing
 else has to bisect their own repository to find out where (from
 crates/meow-index/src/error.rs:58-60 and
-https://github.com/retran/meowg1k/pull/131, high).
+https://github.com/meowshed/meowg1k/pull/131, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: a generic size error, as v0.2.x's `llmEmbed` gives | No mapping from a batch position back to a chunk row (reasoned from crates/meow-index/src/index.rs:260-275, low) | It doesn't name the file, so the caller has to bisect the repository (from docs/spec/index.md and crates/meow-index/src/error.rs:58-60, high) |
-| Trust the chunker's character limit to keep every chunk small enough, so no chunk is ever refused | No refusal path at all (reasoned from crates/meow-index/src/chunk.rs:20-26, low) | The limit is a stand-in of four characters to a token, and the provider's own limit is the authority (from https://github.com/retran/meowg1k/pull/130, high) |
+| Trust the chunker's character limit to keep every chunk small enough, so no chunk is ever refused | No refusal path at all (reasoned from crates/meow-index/src/chunk.rs:20-26, low) | The limit is a stand-in of four characters to a token, and the provider's own limit is the authority (from https://github.com/meowshed/meowg1k/pull/130, high) |
 
 The history names no third option; these two are all that the specification,
 the code and the pull requests record.

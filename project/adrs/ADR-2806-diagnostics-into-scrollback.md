@@ -35,7 +35,7 @@ live frame (from docs/spec/tui.md, high).
 
 No third option appears in the design documents or the pull request history
 (from docs/design/0.3.0-tui.md section 5.1 and
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## What it costs
 

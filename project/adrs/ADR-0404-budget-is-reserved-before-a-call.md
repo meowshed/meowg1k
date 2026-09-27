@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 Budget is reserved, not checked and then charged (from
-https://github.com/retran/meowg1k/pull/118, high).
+https://github.com/meowshed/meowg1k/pull/118, high).
 
 Once this is accepted, `Ledger::reserve_step` checks every axis and takes the
 step under one lock, so no two callers can take the same last step, and
@@ -26,13 +26,13 @@ crates/meow-agent/src/budget.rs:198-234, medium).
 ## Why
 
 Three concurrent sub-agents could each observe the same remaining budget and
-each spend it (from https://github.com/retran/meowg1k/pull/111, high).
+each spend it (from https://github.com/meowshed/meowg1k/pull/111, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: check the remaining budget before a call and charge after it | One simple read before the call and one write after, with no reservation to reconcile (reasoned from crates/meow-agent/src/budget.rs:193-234, low) | Concurrent sub-agents each observe the same remaining amount and each spend it (from https://github.com/retran/meowg1k/pull/111, high) |
+| Do nothing: check the remaining budget before a call and charge after it | One simple read before the call and one write after, with no reservation to reconcile (reasoned from crates/meow-agent/src/budget.rs:193-234, low) | Concurrent sub-agents each observe the same remaining amount and each spend it (from https://github.com/meowshed/meowg1k/pull/111, high) |
 | Run sub-agents one at a time, so nothing shares a budget concurrently | No race exists to guard against (reasoned from crates/meow-agent/src/budget.rs:113-116, low) | Fan-out runs branches concurrently against one caller ledger, which ADR-0414 records (from docs/adrs/ADR-0414-fan-out-branches-share-the-caller-ledger.md, medium) |
 | Reserve every axis, tokens and cost included, from an estimate before the call | The token and cost axes could not be overspent either (reasoned from crates/meow-agent/src/budget.rs:229-234, low) | A call's token use and cost are known only once the provider reports them, so the ledger charges them after the call (from crates/meow-agent/src/budget.rs:228-234, medium) |
 
@@ -43,7 +43,7 @@ descendants (from crates/meow-agent/src/budget.rs:117-131, high). A child
 ledger has to read the shared counter once and derive its allowance from that
 same reading, and reading it twice let six branches against a caller with
 three steps finish four (from crates/meow-agent/src/budget.rs:164-170 and
-https://github.com/retran/meowg1k/pull/144, high).
+https://github.com/meowshed/meowg1k/pull/144, high).
 
 ## What would reverse it
 
@@ -58,7 +58,7 @@ https://github.com/retran/meowg1k/pull/144, high).
   crates/meow-agent/src/budget.rs:193-226, high).
 - The reservation scheme is correct only because a child's base plus its limit
   equals its caller's cap, which is why `child` takes the lock once (from
-  https://github.com/retran/meowg1k/pull/144, high).
+  https://github.com/meowshed/meowg1k/pull/144, high).
 
 ## How I will know it was realised
 

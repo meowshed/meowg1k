@@ -12,10 +12,10 @@ supersedes: []
 ## Decision
 
 A reference by name resolves after every file has been evaluated, not as each
-declaration is made (from https://github.com/retran/meowg1k/pull/121, high).
+declaration is made (from https://github.com/meowshed/meowg1k/pull/121, high).
 This covers names only: `meow.command` takes a value, so the tool or agent it
 exposes must be bound before the line that exposes it, as any Starlark name
-must (from https://github.com/retran/meowg1k/pull/123 and
+must (from https://github.com/meowshed/meowg1k/pull/123 and
 crates/meow-star/src/declare.rs, high).
 
 Once accepted, an agent can name a tool declared later in the same file or in
@@ -26,7 +26,7 @@ work: a dangling reference fails without a file, line or column
 ## Why
 
 Declaration order inside and between files then stops mattering (from
-https://github.com/retran/meowg1k/pull/121, high). Resolving as each
+https://github.com/meowshed/meowg1k/pull/121, high). Resolving as each
 declaration is made would mean an agent couldn't name a model declared below
 it, which is a rule nobody would guess from reading a file top to bottom (from
 crates/meow-star/src/registry.rs:349-356, high). Markdown agents under
@@ -39,7 +39,7 @@ crates/meow-star/src/loader.rs:410-417, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: resolve each reference at first use | Loading does no cross-checking, and a workspace with a broken agent still runs its other commands (reasoned from crates/meow-star/src/registry.rs:361, low) | REQ-2478 requires a missing provider, model or tool to fail at load time and not at first use (from docs/spec/starlark.md [R-STAR-032], high) |
-| Resolve each reference as its declaration is made | The error arises inside the evaluation of the line that names the missing thing, so it can carry that line's location (reasoned from crates/meow-star/src/error.rs:57-66, low) | Declaration order inside and between files would matter (from https://github.com/retran/meowg1k/pull/121, high) |
+| Resolve each reference as its declaration is made | The error arises inside the evaluation of the line that names the missing thing, so it can carry that line's location (reasoned from crates/meow-star/src/error.rs:57-66, low) | Declaration order inside and between files would matter (from https://github.com/meowshed/meowg1k/pull/121, high) |
 
 ## What it costs
 
@@ -82,7 +82,7 @@ crates/meow-star/src/registry.rs:361-440, high).
 
 - `meow.command` later took the tool or agent value rather than its name, so
   the thing it exposes has to exist before the line exposing it (from
-  https://github.com/retran/meowg1k/pull/123, high). REQ-2479 now states both
+  https://github.com/meowshed/meowg1k/pull/123, high). REQ-2479 now states both
   rules: a reference by name is resolved at the end, and a call taking a value
   needs that value bound first, as any Starlark name does (from
   docs/requirements/REQ-2479-references-resolved-after-all-declarations.md,

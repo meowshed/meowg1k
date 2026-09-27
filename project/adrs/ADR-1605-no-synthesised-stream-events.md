@@ -33,7 +33,7 @@ Events synthesised from a completed response report progress that never occurred
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: synthesise stream events from a completed response, as v0.2.x's `llama.go` does | Every provider gives a caller events, so a display has one path (reasoned from `git show v0.2.1:internal/adapters/gateway/llama.go`, lines 304-321, low) | It reports progress that never occurred (from docs/spec/llm.md, high) |
-| Require every provider to stream | A caller never meets an unsupported stream (reasoned from https://github.com/retran/meowg1k/pull/110, low) | A provider with no endpoint could meet it only by synthesising; the contradiction between [R-LLM-001] and [R-LLM-022] was resolved by making streaming a declared capability, like tool calling (from https://github.com/retran/meowg1k/pull/110, high) |
+| Require every provider to stream | A caller never meets an unsupported stream (reasoned from https://github.com/meowshed/meowg1k/pull/110, low) | A provider with no endpoint could meet it only by synthesising; the contradiction between [R-LLM-001] and [R-LLM-022] was resolved by making streaming a declared capability, like tool calling (from https://github.com/meowshed/meowg1k/pull/110, high) |
 
 Neither the code nor the forge history names a third option.
 
@@ -55,7 +55,7 @@ crates/meow-agent/src/engine.rs:235-243, high).
 - `llama.cpp`'s server, which v0.2.x synthesised events for, is now served by
   the OpenAI-shaped provider and streams natively (from
   crates/meow-cli/src/wire.rs:1360, high; crates/meow-llm/src/openai.rs:6,
-  high; https://github.com/retran/meowg1k/pull/133, high).
+  high; https://github.com/meowshed/meowg1k/pull/133, high).
 - `check_supported` refuses a streamed request to such a provider before any
   request is sent, per [REQ-1602] (from crates/meow-llm/src/provider.rs:107-114,
   high).

@@ -72,7 +72,7 @@ high).
   `Note` with level `state`, and `get` reads from memory within the run, so a
   resumed session doesn't see what the original left behind; making it
   replayable needs an eleventh event kind (from
-  https://github.com/retran/meowg1k/pull/129 and
+  https://github.com/meowshed/meowg1k/pull/129 and
   crates/meow-cli/src/session.rs:122-136, high).
 - A size limit on the store, which no requirement sets (reasoned from
   docs/requirements/REQ-2632-durable-workspace-key-value-table.md, low).

@@ -29,17 +29,17 @@ Five copies of a streaming parser is five places for a tool-call index to be
 handled differently (from docs/design/0.3.0-plan.md M11, high). A streamed tool
 call arrives by position, with only the first chunk carrying the identifier,
 which is the kind of detail that gets copied wrong (from
-https://github.com/retran/meowg1k/pull/133, high).
+https://github.com/meowshed/meowg1k/pull/133, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: one implementation per vendor, as v0.2.x had with `openai.go`, `openrouter.go`, `llama.go` and `copilot.go` | Each vendor's quirks stay in its own file, and a change for one can't break another (reasoned from v0.2.1:internal/adapters/gateway/, low) | Five copies of a streaming parser are five places to handle a tool-call index differently (from docs/design/0.3.0-plan.md M11, high); the four v0.2.1 files total 2,320 lines (from `git show v0.2.1:internal/adapters/gateway/<file>.go \| wc -l`, high) |
-| One implementation for every vendor, Gemini and Anthropic included | One parser for the whole provider layer (reasoned from crates/meow-llm/src/openai.rs:13-14, low) | Gemini's shape differs: contents in place of messages, a system prompt in its own field and a tool result with no identifier; Anthropic's blocks differ too (from https://github.com/retran/meowg1k/pull/133 and crates/meow-llm/src/openai.rs:13-14, high) |
+| One implementation for every vendor, Gemini and Anthropic included | One parser for the whole provider layer (reasoned from crates/meow-llm/src/openai.rs:13-14, low) | Gemini's shape differs: contents in place of messages, a system prompt in its own field and a tool result with no identifier; Anthropic's blocks differ too (from https://github.com/meowshed/meowg1k/pull/133 and crates/meow-llm/src/openai.rs:13-14, high) |
 
 The pull request and the plan weigh no third split (from
-https://github.com/retran/meowg1k/pull/133 and docs/design/0.3.0-plan.md M11,
+https://github.com/meowshed/meowg1k/pull/133 and docs/design/0.3.0-plan.md M11,
 high).
 
 ## What it costs
@@ -48,7 +48,7 @@ A vendor that copied OpenAI's shape and differs in one more place needs a
 builder option on the shared type, as Copilot's editor headers did (from
 crates/meow-llm/src/openai.rs:71-79 and crates/meow-llm/src/copilot.rs:25-40,
 high). No live call is tested, so what is untested is that each real endpoint
-accepts the bodies built here (from https://github.com/retran/meowg1k/pull/133,
+accepts the bodies built here (from https://github.com/meowshed/meowg1k/pull/133,
 high).
 
 ## What would reverse it
@@ -62,7 +62,7 @@ high).
 Switching providers is a configuration change and never a code change, and a
 local `llama.cpp` server is a first-class provider (from docs/philosophy.md
 section 4, high). `copilot.rs` is about sixty lines: an address, four headers
-and emulated schema (from https://github.com/retran/meowg1k/pull/156 and
+and emulated schema (from https://github.com/meowshed/meowg1k/pull/156 and
 crates/meow-llm/src/copilot.rs, high). The binary maps `openai`, `openrouter`,
 `llama` and `copilot` onto `OpenAi` with different addresses and schema modes
 (from crates/meow-cli/src/wire.rs:1331-1366, high).
@@ -83,7 +83,7 @@ crates/meow-llm/src/copilot.rs, high). The binary maps `openai`, `openrouter`,
 
 - The embedding model: `OpenAi::embed` hard-codes `text-embedding-3-small`,
   because `Provider::embed` has no model parameter (from
-  https://github.com/retran/meowg1k/pull/133, high).
+  https://github.com/meowshed/meowg1k/pull/133, high).
 - Whether each vendor's real endpoint accepts the bodies built here, since the
-  tests run against recordings (from https://github.com/retran/meowg1k/pull/133,
+  tests run against recordings (from https://github.com/meowshed/meowg1k/pull/133,
   high).

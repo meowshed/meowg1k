@@ -14,4 +14,4 @@ verification: behavioural
 The refusal of a request over a ceiling MUST name which limit it hit and when
 that limit frees up.
 
-(from https://github.com/retran/meowg1k/issues/167, high)
+(from https://github.com/meowshed/meowg1k/issues/167, high)

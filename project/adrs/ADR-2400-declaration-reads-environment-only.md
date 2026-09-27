@@ -26,8 +26,8 @@ Decisions, high).
 | Option | Better at | Why it lost |
 | ------ | --------- | ----------- |
 | Forbid every runtime module during declaration, `@std//env` included | Loading `.meow/` would read nothing from the machine, so a declaration would evaluate the same everywhere (reasoned from docs/spec/starlark.md [R-STAR-083], low). | Credentials are resolved in the environment, so forbidding it would make the normal configuration impossible (from docs/spec/starlark.md, Decisions, high). |
-| Do nothing: keep [R-STAR-083] alone, which forbade side effects during declaration with no carve-out | No second rule to keep consistent with the first (reasoned from PR #110, low). | The design document's own `env.require` example broke it, which is one of the ten defects PR #110 found (from https://github.com/retran/meowg1k/pull/110, high). |
-| Let declaration call every module, as a handler can | A declaration could compute what it declares from files or commands (reasoned from docs/spec/starlark.md [R-STAR-083], low). | [R-STAR-083] forbids a declaration file to write files, run commands or make network requests, and the trust prompt is safe only because declaring reaches nothing (from docs/spec/starlark.md [R-STAR-083] and https://github.com/retran/meowg1k/pull/154, high). |
+| Do nothing: keep [R-STAR-083] alone, which forbade side effects during declaration with no carve-out | No second rule to keep consistent with the first (reasoned from PR #110, low). | The design document's own `env.require` example broke it, which is one of the ten defects PR #110 found (from https://github.com/meowshed/meowg1k/pull/110, high). |
+| Let declaration call every module, as a handler can | A declaration could compute what it declares from files or commands (reasoned from docs/spec/starlark.md [R-STAR-083], low). | [R-STAR-083] forbids a declaration file to write files, run commands or make network requests, and the trust prompt is safe only because declaring reaches nothing (from docs/spec/starlark.md [R-STAR-083] and https://github.com/meowshed/meowg1k/pull/154, high). |
 
 ## What it costs
 
@@ -55,8 +55,8 @@ loaded `` (from crates/meow-star/src/modules.rs module header and
 crates/meow-star/src/error.rs `ModuleUnavailable`, high). `meow trust` and
 `meow pkg` load a workspace before anyone agreed to run it, and that is safe
 because loading reaches no file, program or network (from
-https://github.com/retran/meowg1k/pull/154 and
-https://github.com/retran/meowg1k/pull/159, high). This repository's own
+https://github.com/meowshed/meowg1k/pull/154 and
+https://github.com/meowshed/meowg1k/pull/159, high). This repository's own
 `.meow/meow.star` reads its keys with `get` from `@std//env` (from
 .meow/meow.star, high).
 

@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 A session holds one or more runs, each opened by `Started` and closed by
-`Finished` (from https://github.com/retran/meowg1k/pull/110, high).
+`Finished` (from https://github.com/meowshed/meowg1k/pull/110, high).
 
 Once this is accepted, `Sessions::start` appends the first `Started`,
 `Sessions::finish` closes the open run and refuses when none is open, and
@@ -24,13 +24,13 @@ Nothing in this decision is left unbuilt (reasoned from the same file, low).
 
 `R-SESSION-005` required `Finished` to be the last event of a session, while
 `R-SESSION-050` had resume append after it, and the two couldn't both hold (from
-https://github.com/retran/meowg1k/pull/110, high).
+https://github.com/meowshed/meowg1k/pull/110, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: `Finished` is the last event of a session | A session has one ending, so its state is a property of the whole session (reasoned from docs/design/0.3.0-sessions.md, "the state _is_ the `Finished` event", low) | Resume appends after it, so the requirement and resume contradict each other (from https://github.com/retran/meowg1k/pull/110, high) |
+| Do nothing: `Finished` is the last event of a session | A session has one ending, so its state is a property of the whole session (reasoned from docs/design/0.3.0-sessions.md, "the state _is_ the `Finished` event", low) | Resume appends after it, so the requirement and resume contradict each other (from https://github.com/meowshed/meowg1k/pull/110, high) |
 | Resume by rewriting or removing the old `Finished` | `Finished` stays the last event and a session keeps one ending (reasoned from REQ-2208, low) | The log is append-only, and resuming has to continue a session without rewriting the event that ended it (from docs/requirements/REQ-2208-resume-appends-started-event.md, high) |
 | Resume into a new session | Each session keeps exactly one run (reasoned from REQ-2237, low) | Resuming has to append to the same session and continue its sequence (from crates/meow-session/src/log.rs:90-93 and docs/requirements/REQ-2237-resume-creates-no-new-session.md, high) |
 

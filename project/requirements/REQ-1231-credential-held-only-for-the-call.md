@@ -14,4 +14,4 @@ verification: behavioural
 A credential MUST be held in memory only for the duration of the call that uses
 it.
 
-(from https://github.com/retran/meowg1k/issues/166, high)
+(from https://github.com/meowshed/meowg1k/issues/166, high)
