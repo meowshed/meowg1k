@@ -3,18 +3,19 @@
 # practice for is left out.
 
 # Each verb is a mise task, because mise owns the toolchain and the tasks here
-# and `mise run all` is the gate CI mirrors. `typecheck` sits outside `all`,
-# because clippy under `lint` already type-checks every target.
+# and `mise run all` is the gate CI mirrors. The `check` verb runs the
+# `typecheck` task, which sits outside `all` because clippy under the `lint`
+# verb, the `check` task, already type-checks every target.
 [verbs]
-fmt = "mise run fmt-check"
+format = "mise run fmt-check"
 lint = "mise run check"
-typecheck = "mise run typecheck"
+check = "mise run typecheck"
 test = "mise run test"
 build = "mise run build"
 
-# Conventional commits, enforced by the conventional-pre-commit hook. All 147
-# commits on the trunk follow the format, none has a subject over 72 characters, and
-# every one carries a Signed-off-by trailer.
+# Conventional commits, enforced by the conventional-pre-commit hook. Every
+# commit on the trunk follows the format, keeps its subject within 72
+# characters and carries a Signed-off-by trailer.
 [commits]
 subject_limit = 72
 trailers = ["Signed-off-by"]
@@ -35,7 +36,7 @@ spec = "none"
 test = "none"
 
 # main is the only long-lived branch and every change lands by squash merge.
-# All 147 commits on the trunk carry a signature, and commit.gpgsign is on.
+# Every commit on the trunk carries a signature, and commit.gpgsign is on.
 [git]
 trunk = "main"
 require_signatures = true

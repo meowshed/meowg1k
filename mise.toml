@@ -50,7 +50,7 @@ description = "Build every crate in release"
 run = "cargo clippy --workspace --all-targets -- -D warnings"
 description = "Run clippy with warnings denied"
 
-# Type-checks without linting, for the typecheck verb. Not part of `all`,
+# Type-checks without linting, for the harness's `check` verb. Not part of `all`,
 # because `check` already compiles every target under clippy.
 [tasks.typecheck]
 run = "cargo check --workspace --all-targets --locked"

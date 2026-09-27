@@ -36,8 +36,8 @@ no requirement covers, because v0.2.x collected behaviour nobody decided on: a
 context built twice, an agent loop returning a bare string, a retry that backed
 off on authentication failures. Each requirement is one file, `REQ-NNNN`, in
 its topic's block of 200, uses one RFC 2119 keyword and states one testable
-obligation at a boundary; `meow-method template requirement` has the form and
-`meow-method check` enforces it. When an implementation contradicts a requirement,
+obligation at a boundary; `paw template requirement` has the form and
+`paw check` enforces it. When an implementation contradicts a requirement,
 stop, and propose the amendment as its own reviewable change, with the reason,
 the requirements and tests it touches, and the migration. Rewording a
 requirement to match the code loses the reason it was written.
