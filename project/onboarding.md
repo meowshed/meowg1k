@@ -65,9 +65,9 @@ held without exception or had one clear majority.
 | --- | --- | --- |
 | `docs/spec/*.md` (10 files and a README) | migrated | Removed; SPC-1000 to SPC-2800, REQ-1000 to REQ-2859, ADR-1000 to ADR-2806 |
 | `docs/design/*.md` (6 files) | migrated | Removed; ADR-0100 to ADR-0121 and ADR-0600 to ADR-0623; the plan's milestones are executed history git keeps |
-| `docs/philosophy.md` | migrated | Removed; folded into the vision's ranked quality goals and their enforcement table, at the owner's instruction |
-| `docs/vision.md` | migrated | Rewritten as `project/vision.md` |
-| `docs/README.md` | migrated | Rewritten as `project/README.md`, the record's index |
+| `docs/philosophy.md` | migrated | project/vision.md |
+| `docs/vision.md` | migrated | project/vision.md |
+| `docs/README.md` | migrated | project/README.md |
 | `CLAUDE.md` | cited | The constitution; its record paths, `R-*` examples and the `miette` claim were corrected to match the record and the code |
 | `README.md` | cited | Front page; its documentation links now point at `project/` |
 | `CONTRIBUTING.md` | cited | Contributor workflow; its requirement section now describes `REQ-*` files |
