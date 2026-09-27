@@ -21,19 +21,19 @@ requirement and decision stays a draft until the owner approves it.
 
 ## Verbs
 
-All five verbs resolve, from `meow-verbs status`:
+All five verbs resolve, from `meow-verbs status` (0.3.0):
 
 | Verb | Command |
 | --- | --- |
-| fmt | `mise run fmt-check` |
+| format | `mise run fmt-check` |
 | lint | `mise run check` |
-| typecheck | `mise run typecheck` |
+| check | `mise run typecheck` |
 | test | `mise run test` |
 | build | `mise run build` |
 
 `mise run all` is the gate, and CI's `gates-agree` job fails when it and CI list
-different checks. `typecheck` sits outside `all`, because clippy under `check`
-already type-checks every target.
+different checks. The `check` verb's task, `typecheck`, sits outside `all`,
+because clippy under the `lint` verb already type-checks every target.
 
 ## Conventions
 
@@ -166,9 +166,10 @@ because onboarding changes no behaviour.
 
 1. Approve the drafts: the requirements by topic, then the decisions that
    address them. The repository keeps working throughout, because nothing it
-   runs reads the record. Once done, `meow-method status` shows requirements in
+   runs reads the record. Once done, `paw status` shows requirements in
    force and coverage becomes meaningful.
 2. Triage `project/bugs/`, starting with the critical ones, and fix each as its
    own task. Once done, each defect's regression test passes and it closes.
-3. Run `meow-method onboarding remove` to remove this report. Once done, the
-   record describes only the present.
+3. Run `paw onboarding remove` to finish. It removes each document this report
+   marks migrated, superseded or discarded and keeps each one marked cited.
+   Once done, the record describes only the present.
