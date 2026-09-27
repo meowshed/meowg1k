@@ -1,7 +1,7 @@
 ---
 id: BUG-0201
 artifact: bug
-status: draft
+status: approved
 severity: major
 violates: REQ-1073
 found: 2026-09-27
