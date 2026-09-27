@@ -69,7 +69,7 @@ type-checks every target.
 
 ## Branches and commits
 
-Work on a branch off `dev`. Never commit to `dev` directly, including for a
+Work on a branch off `main`. Never commit to `main` directly, including for a
 one-line fix: a change that skipped review is invisible to everyone who reads
 the pull request log to learn what happened.
 
@@ -110,7 +110,7 @@ not ready. The body has four parts:
    should look at with more care than usual.
 
 Squash merge, always. The branch's history is working material - the order in
-which you happened to discover things - and it is noise in `dev`. Check the
+which you happened to discover things - and it is noise in `main`. Check the
 squash message before confirming: GitHub builds it from the branch commits, so
 anything you left in an intermediate one reappears there.
 
@@ -150,7 +150,7 @@ Three things have to be true before the tag exists:
 1. `CHANGELOG.md` has a section for the version, with the date.
 2. `version` in the workspace `Cargo.toml` matches the tag without its `v`.
    The workflow checks this and refuses the release if they disagree.
-3. The tagged commit is on `dev`. The workflow checks this too, because a tag
+3. The tagged commit is on `main`. The workflow checks this too, because a tag
    can point at any object in the repository and a release built from an
    unreviewed commit is the one failure nothing else catches.
 

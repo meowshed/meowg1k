@@ -1,6 +1,6 @@
 # What meowg1k is
 
-Status: describes `dev` as it stands. Not a plan.
+Status: describes `main` as it stands. Not a plan.
 
 meowg1k is a runtime for AI commands you write yourself. The binary supplies
 the parts that are hard to build and boring to rebuild: model providers, a

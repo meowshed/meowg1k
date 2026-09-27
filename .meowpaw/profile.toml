@@ -13,7 +13,7 @@ test = "mise run test"
 build = "mise run build"
 
 # Conventional commits, enforced by the conventional-pre-commit hook. All 147
-# commits on dev follow the format, none has a subject over 72 characters, and
+# commits on the trunk follow the format, none has a subject over 72 characters, and
 # every one carries a Signed-off-by trailer.
 [commits]
 subject_limit = 72
@@ -34,10 +34,10 @@ refactor = "none"
 spec = "none"
 test = "none"
 
-# dev is the only long-lived branch and every change lands by squash merge.
-# All 147 commits on dev carry a signature, and commit.gpgsign is on.
+# main is the only long-lived branch and every change lands by squash merge.
+# All 147 commits on the trunk carry a signature, and commit.gpgsign is on.
 [git]
-trunk = "dev"
+trunk = "main"
 require_signatures = true
 
 # docs/spec holds the numbered requirements and docs/design the decisions

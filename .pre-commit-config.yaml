@@ -199,5 +199,5 @@ ci:
   autofix_commit_msg: |
     ci(pre-commit): auto fixes from hooks
   autofix_prs: true
-  autoupdate_branch: "dev"
+  autoupdate_branch: "main"
   autoupdate_schedule: weekly
