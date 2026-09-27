@@ -17,24 +17,24 @@ When a vendor answers a streaming request with a status other than success,
 this as "a stream that fails before its first line"; the code checks the
 status, so a stream that starts and then breaks reports through the channel,
 and I've written REQ-1651 to what the code does (from
-https://github.com/retran/meowg1k/pull/125 and
+https://github.com/meowshed/meowg1k/pull/125 and
 crates/meow-llm/src/http.rs:171-178, high).
 
 ## Why
 
 A failed stream never produces a line, so a caller waiting on its channel
 can't tell that from a model that is thinking (from
-https://github.com/retran/meowg1k/pull/125 and
+https://github.com/meowshed/meowg1k/pull/125 and
 crates/meow-llm/src/http.rs:130-133, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Report the status through the channel, as its first item | One path for every failure, before or during the stream (reasoned from crates/meow-llm/src/http.rs:171-178, low) | The caller has to read the channel to find out the request was refused, and a caller that waits on it first looks hung (from https://github.com/retran/meowg1k/pull/125, high) |
+| Report the status through the channel, as its first item | One path for every failure, before or during the stream (reasoned from crates/meow-llm/src/http.rs:171-178, low) | The caller has to read the channel to find out the request was refused, and a caller that waits on it first looks hung (from https://github.com/meowshed/meowg1k/pull/125, high) |
 
 Doing nothing isn't an option here, because the transport was new in #125 and
-had to do one or the other (from https://github.com/retran/meowg1k/pull/125,
+had to do one or the other (from https://github.com/meowshed/meowg1k/pull/125,
 high).
 
 ## What it costs

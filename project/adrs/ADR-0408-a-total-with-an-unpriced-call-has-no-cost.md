@@ -13,7 +13,7 @@ supersedes: []
 
 An unpriced model records an absent cost rather than zero, and a total including
 one unpriced call reports no cost at all (from
-https://github.com/retran/meowg1k/pull/116, high). `Usage::cost_micros` is an
+https://github.com/meowshed/meowg1k/pull/116, high). `Usage::cost_micros` is an
 `Option<u64>` in millionths of a unit of currency, and `Usage::add` gives `None`
 unless both sides carry a cost (from crates/meow-core/src/usage.rs:24-58, high).
 
@@ -28,7 +28,7 @@ crates/meow-llm/src/gemini.rs:281 and crates/meow-llm/src/lib.rs:66, high).
 ## Why
 
 A number that silently omits part of the spend is worse than no number (from
-https://github.com/retran/meowg1k/pull/116, high). Recording an unpriced call as
+https://github.com/meowshed/meowg1k/pull/116, high). Recording an unpriced call as
 zero would make an unpriced model read as a free one (from
 docs/spec/session.md [R-SESSION-021], high).
 
@@ -37,7 +37,7 @@ docs/spec/session.md [R-SESSION-021], high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: the design's `cost_usd: Decimal`, a number on every `Usage` event | Every total is a number, and summing needs no case for a missing value (from docs/design/0.3.0-sessions.md:56, high) | An unpriced model would record zero and read as a free one (from docs/spec/session.md [R-SESSION-021], high) |
-| Sum the costs of the priced calls | A partly priced session still shows a figure, which is a lower bound on the spend (reasoned from crates/meow-core/src/usage.rs:54-57, low) | The number silently omits part of the spend (from https://github.com/retran/meowg1k/pull/116, high) |
+| Sum the costs of the priced calls | A partly priced session still shows a figure, which is a lower bound on the spend (reasoned from crates/meow-core/src/usage.rs:54-57, low) | The number silently omits part of the spend (from https://github.com/meowshed/meowg1k/pull/116, high) |
 | An absent cost that makes the whole total absent (chosen) | A reported figure is always the whole spend (from crates/meow-core/src/usage.rs:41-44, high) | It won |
 
 ## What it costs
@@ -58,7 +58,7 @@ crates/meow-core/src/view.rs:129-130, high).
   crates/meow-core/src/usage.rs:24-30, low).
 - `Usage` gains a count of unpriced calls, so a partial sum can say what it
   leaves out and stops omitting it silently (reasoned from the reason PR 116
-  gives, https://github.com/retran/meowg1k/pull/116, low).
+  gives, https://github.com/meowshed/meowg1k/pull/116, low).
 
 ## Consequences
 

@@ -19,7 +19,7 @@ one, and every event reaches it through one `Renderer` trait (from
 crates/meow-ui/src/lib.rs:28-74 and crates/meow-cli/src/render.rs:72-116,
 high). The engine's own events and a script's `ctx.out` calls travel down the
 same channel, so a renderer sees one vocabulary (from
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## Why
 
@@ -32,22 +32,22 @@ docs/spec/tui.md, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: three rendering stacks at once, as in v0.2.x | Each stack was already written and suited one job: a progress logger, a full interactive program and reusable widgets (from docs/design/0.3.0-tui.md section 3, medium) | Each owns the cursor and which one wins is timing-dependent (from docs/spec/tui.md, high) |
-| One stream for the engine's events and a second for a script's output | Script output stays apart from engine events, so neither type grows for the other's sake (reasoned from https://github.com/retran/meowg1k/pull/124, low) | A renderer would see two vocabularies instead of one (from https://github.com/retran/meowg1k/pull/124, high) |
+| One stream for the engine's events and a second for a script's output | Script output stays apart from engine events, so neither type grows for the other's sake (reasoned from https://github.com/meowshed/meowg1k/pull/124, low) | A renderer would see two vocabularies instead of one (from https://github.com/meowshed/meowg1k/pull/124, high) |
 
 The design documents and the pull request history show no third option weighed
 against one stream (from docs/design/0.3.0-tui.md section 4 and
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## What it costs
 
 The engine's `AgentEvent` has to be mapped to a `ViewEvent` somewhere, and
 `meow-ui` may not know the engine, so a `Relay` in `meow-star` does it and keeps
 the state the view needs: the name a tool call was made under, the step count
-and what has been spent (from https://github.com/retran/meowg1k/pull/124,
+and what has been spent (from https://github.com/meowshed/meowg1k/pull/124,
 high). A renderer isn't `Sync`, so every event passes through one mutex (from
 crates/meow-cli/src/render.rs:15-21, high). A field the engine doesn't report
 stays empty, as `RunStart.model` does (from crates/meow-star/src/run.rs:685 and
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## What would reverse it
 

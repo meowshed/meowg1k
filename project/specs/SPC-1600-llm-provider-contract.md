@@ -103,7 +103,7 @@ schema is returned parsed, not as a string [REQ-1646].
 The provider transport verifies a vendor's certificate against the operating
 system's root certificate store [REQ-1650]. It gives up connecting after 30
 seconds [REQ-1652] and puts no deadline on a whole response [REQ-1653] (from
-https://github.com/retran/meowg1k/pull/125, high).
+https://github.com/meowshed/meowg1k/pull/125, high).
 
 ### Cancellation
 

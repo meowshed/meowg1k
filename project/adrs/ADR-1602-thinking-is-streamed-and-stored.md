@@ -19,7 +19,7 @@ OpenAI-shaped servers read `reasoning_content` or `reasoning`, and Gemini never
 reads reasoning, so its `thinking` is always absent (from
 crates/meow-llm/src/anthropic.rs:203-205, 413-414, high;
 crates/meow-llm/src/openai.rs:222-229, high;
-https://github.com/retran/meowg1k/pull/133, high). The engine copies the
+https://github.com/meowshed/meowg1k/pull/133, high). The engine copies the
 response's thinking onto the assistant message it keeps in the run's history,
 and Anthropic sends it back first on the next turn (from
 crates/meow-agent/src/engine.rs:271-274, high;
@@ -37,11 +37,11 @@ high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Stream thinking and never store it, the spec's first answer | Thinking is bulky and only useful to watch, so dropping it keeps the record small (from docs/spec/llm.md, high) | Wrong on a fact: Anthropic requires thinking blocks back on a later turn that continues a tool call, so discarding them breaks resume and multi-turn tool use (from https://github.com/retran/meowg1k/pull/111, high) |
+| Stream thinking and never store it, the spec's first answer | Thinking is bulky and only useful to watch, so dropping it keeps the record small (from docs/spec/llm.md, high) | Wrong on a fact: Anthropic requires thinking blocks back on a later turn that continues a tool call, so discarding them breaks resume and multi-turn tool use (from https://github.com/meowshed/meowg1k/pull/111, high) |
 
 Neither the code nor the forge history names a second option, and doing nothing
 is the row above: the spec's first answer was the prior state (from
-https://github.com/retran/meowg1k/pull/111, high).
+https://github.com/meowshed/meowg1k/pull/111, high).
 
 ## What it costs
 
@@ -93,4 +93,4 @@ high; `grep -rn '"thinking"' crates/*/src`, high).
   is unverified here (from crates/meow-llm/src/anthropic.rs:101-106, 203-205,
   high; Anthropic's API requirement, low).
 - Reading Gemini's reasoning, which is a model setting rather than a request
-  field (from https://github.com/retran/meowg1k/pull/133, high).
+  field (from https://github.com/meowshed/meowg1k/pull/133, high).

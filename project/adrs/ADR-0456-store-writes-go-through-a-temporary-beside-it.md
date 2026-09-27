@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 Writing is a temporary file beside the target, then a rename (from
-https://github.com/retran/meowg1k/pull/153, high).
+https://github.com/meowshed/meowg1k/pull/153, high).
 
 Once this is accepted, `write_json` writes the whole file to `<target>.new`
 with mode `0600`, calls `sync_all` on it and renames it over the target (from
@@ -25,9 +25,9 @@ survive a power loss (reasoned from crates/meow-cli/src/auth.rs:254, low).
 ## Why
 
 A rename across filesystems isn't atomic, so the temporary file goes beside the
-target rather than in `/tmp` (from https://github.com/retran/meowg1k/pull/153,
+target rather than in `/tmp` (from https://github.com/meowshed/meowg1k/pull/153,
 high). A truncated credential store locks the user out of every provider at once
-(from https://github.com/retran/meowg1k/pull/153, high).
+(from https://github.com/meowshed/meowg1k/pull/153, high).
 
 ## Alternatives
 
@@ -37,7 +37,7 @@ high). A truncated credential store locks the user out of every provider at once
 | Do nothing: write the file in place, as v0.2.x's `persistCopilotToken` did with `os.WriteFile` | One call and no temporary file (from `git show v0.2.1:cmd/auth.go`, medium) | A process that dies mid-write leaves a truncated file, and a truncated store locks the user out of every provider at once (from docs/spec/auth.md [R-AUTH-012], high) |
 
 The code and the history name no third option (from
-https://github.com/retran/meowg1k/pull/153, medium).
+https://github.com/meowshed/meowg1k/pull/153, medium).
 
 ## What it costs
 

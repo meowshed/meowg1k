@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 The staleness hash covers the chunking parameters, not just the content (from
-https://github.com/retran/meowg1k/pull/131, high).
+https://github.com/meowshed/meowg1k/pull/131, high).
 
 What works now: `Index::update` hashes the text `lines=N overlap=N max=N`
 followed by the file's content, compares it with the hash stored for the path,
@@ -28,13 +28,13 @@ docs/spec/index.md, Storage, high).
 
 Hashing content alone would leave chunks that look current after somebody
 changed the chunk size, and those chunks answer queries (from
-https://github.com/retran/meowg1k/pull/131, high).
+https://github.com/meowshed/meowg1k/pull/131, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: hash the content alone, as v0.2.x keyed each document version on its content hash | One hash per file content, shared by any chunking, so a change of chunk size costs no re-embedding (reasoned from v0.2.1:internal/adapters/sqlite/index/migrations.go, low) | Chunks look current after a change to the chunk size, and they answer queries (from https://github.com/retran/meowg1k/pull/131, high) |
+| Do nothing: hash the content alone, as v0.2.x keyed each document version on its content hash | One hash per file content, shared by any chunking, so a change of chunk size costs no re-embedding (reasoned from v0.2.1:internal/adapters/sqlite/index/migrations.go, low) | Chunks look current after a change to the chunk size, and they answer queries (from https://github.com/meowshed/meowg1k/pull/131, high) |
 | Record the chunking parameters once beside the index and refuse or clear on a change, the way the embedding model is recorded | One comparison per update in place of one per file, and a clear message naming the change (reasoned from docs/spec/index.md `R-INDEX-051`, low) | The source doesn't weigh it; a per-file hash also re-chunks only the files a change actually affects and needs no second code path (reasoned from crates/meow-index/src/index.rs:191, low) |
 
 ## What it costs
@@ -79,7 +79,7 @@ crates/meow-index/tests/index.rs:179, high).
 
 - Whether a change of embedding dimension under the same model name should make
   the index stale; nothing enforces a vector dimension (from
-  https://github.com/retran/meowg1k/pull/131, "What is not covered", high).
+  https://github.com/meowshed/meowg1k/pull/131, "What is not covered", high).
 - Whether a change of the walk's `max_bytes` limit belongs in the hash; it isn't
   there, and a file it newly excludes is removed by `R-INDEX-031` instead (from
   crates/meow-index/src/index.rs:222, medium).

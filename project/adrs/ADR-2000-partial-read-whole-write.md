@@ -39,7 +39,7 @@ chose (from docs/spec/policy.md, high).
 | Do nothing: judge the call once, not per path | One decision per call, with no per-path bookkeeping (reasoned from crates/meow-policy/src/policy.rs:300-316, low) | REQ-2010 requires one evaluation per resolved path, so a single decision can't express a partial result (from docs/spec/policy.md [R-POLICY-006], high) |
 
 The first option was the spec's first answer, and a trade-off pass over the
-requirements replaced it (from https://github.com/retran/meowg1k/pull/111,
+requirements replaced it (from https://github.com/meowshed/meowg1k/pull/111,
 high).
 
 ## What it costs

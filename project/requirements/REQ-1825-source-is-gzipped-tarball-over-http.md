@@ -13,5 +13,5 @@ verification: behavioural
 
 A package source MUST be a gzipped tar archive fetched over HTTP or HTTPS.
 
-(from https://github.com/retran/meowg1k/pull/162 and
+(from https://github.com/meowshed/meowg1k/pull/162 and
 crates/meow-cli/src/fetch.rs:190, high)

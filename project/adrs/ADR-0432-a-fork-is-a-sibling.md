@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 A fork is a sibling, not a descendant (from
-https://github.com/retran/meowg1k/pull/128, high).
+https://github.com/meowshed/meowg1k/pull/128, high).
 
 Once this is accepted, a fork is a session with no parent that records its
 origin session and sequence in a column of its own, and its copied events hold
@@ -26,14 +26,14 @@ crates/meow-session/tests/fork.rs, high).
 Making a fork a child of its origin would put it under the deletion rule of
 `R-SESSION-080`, so collecting the origin would take the fork with it, the
 opposite of what the reference counting is for (from
-https://github.com/retran/meowg1k/pull/128, high).
+https://github.com/meowshed/meowg1k/pull/128, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: no fork, as in v0.2.x | Nothing to reference-count and no second kind of link between sessions (reasoned from docs/design/0.3.0-sessions.md section 6, low) | A failed run is a dead end, and investigating step 9 of 40 costs a full rerun where a fork costs one step (from docs/design/0.3.0-sessions.md sections 2 and 6, high) |
-| Make a fork a child of its origin | The parent link already exists, so the fork would show in the origin's tree with no new column (reasoned from crates/meow-store/src/migrations.rs:44, low) | Collecting the origin would delete the fork (from https://github.com/retran/meowg1k/pull/128, high) |
+| Make a fork a child of its origin | The parent link already exists, so the fork would show in the origin's tree with no new column (reasoned from crates/meow-store/src/migrations.rs:44, low) | Collecting the origin would delete the fork (from https://github.com/meowshed/meowg1k/pull/128, high) |
 
 ## What it costs
 

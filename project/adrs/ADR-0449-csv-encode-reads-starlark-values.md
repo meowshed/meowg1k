@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `csv.encode` reads the Starlark values directly, where a dict keeps insertion
-order (from https://github.com/retran/meowg1k/pull/141, high).
+order (from https://github.com/meowshed/meowg1k/pull/141, high).
 
 With this in place, `csv.encode` writes the header in the order the first
 dict's keys were inserted, and a list of lists writes no header (from
@@ -24,13 +24,13 @@ sorted key order (from crates/meow-star/src/modules.rs:479, high).
 
 `serde_json::Map` sorts its keys, so going through JSON would have renamed a
 CSV's first column to whichever name sorts first (from
-https://github.com/retran/meowg1k/pull/141, high).
+https://github.com/meowshed/meowg1k/pull/141, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Encode through the JSON value | One conversion shared with `json`, `yaml`, `toml` and `xml`, which all start from `to_json_value` (from crates/meow-star/src/modules.rs:137-205, medium) | `serde_json::Map` sorts keys and reorders the columns (from https://github.com/retran/meowg1k/pull/141, high) |
+| Encode through the JSON value | One conversion shared with `json`, `yaml`, `toml` and `xml`, which all start from `to_json_value` (from crates/meow-star/src/modules.rs:137-205, medium) | `serde_json::Map` sorts keys and reorders the columns (from https://github.com/meowshed/meowg1k/pull/141, high) |
 | Read the Starlark values directly (chosen) | Keeps the column order the handler wrote (from crates/meow-star/src/modules.rs:375-378, high) | Chosen |
 
 Doing nothing was not an option, because `csv.encode` had to exist and accept

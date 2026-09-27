@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 The prompt is answered by a line, not a keypress (from
-https://github.com/retran/meowg1k/pull/127, high).
+https://github.com/meowshed/meowg1k/pull/127, high).
 
 Once this is accepted, the terminal approver puts the question up, reads one
 line from standard input and takes the question down, and the first character
@@ -26,19 +26,19 @@ crates/meow-cli/src/ask.rs:176 to 187, high).
 
 Raw mode would let `o` approve without Enter, and it would also put the terminal
 into a mode a panic could leave it in; a security question is a reasonable place
-to press Enter (from https://github.com/retran/meowg1k/pull/127, high).
+to press Enter (from https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: the engine treats `ask` as a refusal | Never blocks a run and never waits on a person (from https://github.com/retran/meowg1k/pull/127, high) | Right when nobody can be asked and wrong when somebody can (from https://github.com/retran/meowg1k/pull/127, high) |
-| Raw mode, answering with one keypress | `o` approves without Enter (from https://github.com/retran/meowg1k/pull/127, high) | A panic could leave the terminal in raw mode (from https://github.com/retran/meowg1k/pull/127, high) |
+| Do nothing: the engine treats `ask` as a refusal | Never blocks a run and never waits on a person (from https://github.com/meowshed/meowg1k/pull/127, high) | Right when nobody can be asked and wrong when somebody can (from https://github.com/meowshed/meowg1k/pull/127, high) |
+| Raw mode, answering with one keypress | `o` approves without Enter (from https://github.com/meowshed/meowg1k/pull/127, high) | A panic could leave the terminal in raw mode (from https://github.com/meowshed/meowg1k/pull/127, high) |
 
 ## What it costs
 
 Every approval takes a second key, Enter (from
-https://github.com/retran/meowg1k/pull/127, high). Only the first character is
+https://github.com/meowshed/meowg1k/pull/127, high). Only the first character is
 read, so a line such as `okay, but not that file` approves once (reasoned from
 crates/meow-cli/src/ask.rs:181 and crates/meow-policy/src/prompt.rs:121, low).
 
@@ -67,11 +67,11 @@ crates/meow-cli/src/ask.rs:181 and crates/meow-policy/src/prompt.rs:121, low).
    `an_unrecognised_key_is_not_an_approval` pass (from those tests, high).
 2. `meow --yes who` refuses with "the question was not answered", and `meow who
    < /dev/null` refuses with "needs a terminal" and doesn't block (from
-   https://github.com/retran/meowg1k/pull/127, high).
+   https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## What this does not settle
 
 - Where the prompt is drawn; the transcript placement is ADR-0110's decision
-  (from https://github.com/retran/meowg1k/pull/127, high).
+  (from https://github.com/meowshed/meowg1k/pull/127, high).
 - Whether a secret typed at the key prompt is echoed; ADR-0457 decides that.
 - How long "always" lasts; REQ-2842 fixes it at the current process.

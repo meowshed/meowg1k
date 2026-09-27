@@ -14,5 +14,5 @@ verification: static
 The provider transport MUST verify a vendor's certificate against the operating
 system's root certificate store.
 
-(from https://github.com/retran/meowg1k/pull/125 and
+(from https://github.com/meowshed/meowg1k/pull/125 and
 crates/meow-llm/Cargo.toml:14, high)

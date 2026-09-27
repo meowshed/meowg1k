@@ -55,7 +55,7 @@ first (reasoned from crates/meow-star/src/modules.rs:4-12, low).
   second copy to live (from crates/meow-star/src/modules.rs:10-12, high).
 - Every module resolves in both phases, and each builtin checks the phase, so a
   declaration file may `load` a module and fails only when it calls one (from
-  https://github.com/retran/meowg1k/pull/123, high).
+  https://github.com/meowshed/meowg1k/pull/123, high).
 
 ## How I will know it was realised
 

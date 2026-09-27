@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `Retry-After` reads only the seconds form (from
-https://github.com/retran/meowg1k/pull/125, high).
+https://github.com/meowshed/meowg1k/pull/125, high).
 
 Once this is accepted, a header holding a whole number of seconds sets the
 wait before the next attempt, and any other value, an HTTP date included, reads
@@ -24,13 +24,13 @@ high).
 
 No vendor here sends the HTTP-date form, and guessing wrong about a date is
 worse than falling back to the retry policy's own backoff, which already handles
-a missing header (from https://github.com/retran/meowg1k/pull/125, high).
+a missing header (from https://github.com/meowshed/meowg1k/pull/125, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Also parse the HTTP-date form | The HTTP-date form is legal (from https://github.com/retran/meowg1k/pull/125, high) | No vendor here sends it, and guessing wrong about a date is worse than the backoff fallback (from https://github.com/retran/meowg1k/pull/125, high) |
+| Also parse the HTTP-date form | The HTTP-date form is legal (from https://github.com/meowshed/meowg1k/pull/125, high) | No vendor here sends it, and guessing wrong about a date is worse than the backoff fallback (from https://github.com/meowshed/meowg1k/pull/125, high) |
 | Do nothing: ignore `Retry-After` and always use the backoff | One wait rule for every failure, with no server input to trust (reasoned from crates/meow-llm/src/retry.rs:34-47, low) | REQ-1630 requires honouring the header, and a server that says how long to wait knows better than an exponent (from crates/meow-llm/src/retry.rs:50-57, high) |
 
 No third option appears in the code, the history or the design documents.
@@ -49,7 +49,7 @@ crates/meow-llm/src/gemini.rs:169-172, medium).
 
 - A provider this tree talks to sending `Retry-After` as an HTTP date, seen in
   a recording or a reported failure (from
-  https://github.com/retran/meowg1k/pull/125, high).
+  https://github.com/meowshed/meowg1k/pull/125, high).
 
 ## Consequences
 

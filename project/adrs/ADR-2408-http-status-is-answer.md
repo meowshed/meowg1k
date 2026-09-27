@@ -38,7 +38,7 @@ Every handler that cares about success checks `status` or `ok` itself, and one
 that forgets treats an error page as data (reasoned from
 crates/meow-star/src/capability_http.rs:260-270, low). The response carries
 `ok` for 2xx as "the one judgement worth making here" to keep that check short
-(from https://github.com/retran/meowg1k/pull/145, high).
+(from https://github.com/meowshed/meowg1k/pull/145, high).
 
 ## What would reverse it
 
@@ -57,7 +57,7 @@ more handler code than it adds, and the reason in Why no longer holds
   crates/meow-star/src/capability_http.rs:211-247, high).
 - A redirect is followed up to ten times, so a handler sees a 3xx status only
   after that limit; the limit is `reqwest`'s policy rather than a requirement
-  (from https://github.com/retran/meowg1k/pull/145, high).
+  (from https://github.com/meowshed/meowg1k/pull/145, high).
 
 ## How I will know it was realised
 
@@ -65,7 +65,7 @@ The tests `a_404_is_a_response_rather_than_an_error`,
 `a_connection_that_is_refused_fails` and
 `a_response_carries_what_the_server_sent` in
 crates/meow-star/tests/running.rs pass against a real server on a loopback
-port, not a mocked client (from https://github.com/retran/meowg1k/pull/145,
+port, not a mocked client (from https://github.com/meowshed/meowg1k/pull/145,
 high).
 
 ## What this does not settle
@@ -76,6 +76,6 @@ high).
   crates/meow-star/src/capability_http.rs:250-270, high).
 - A binary body: the body is decoded as UTF-8 with `from_utf8_lossy`, because
   the Starlark dialect has no bytes type (from
-  https://github.com/retran/meowg1k/pull/145, high).
+  https://github.com/meowshed/meowg1k/pull/145, high).
 - The deadline, the read cap and cancellation, which REQ-2448 to REQ-2451 cover
   (from docs/spec/starlark.md [R-STAR-022], high).

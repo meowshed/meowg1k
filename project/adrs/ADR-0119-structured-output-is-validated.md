@@ -32,7 +32,7 @@ docs/design/0.3.0-starlark-api.md section 7, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: take a raw JSON Schema dictionary and return the model's text, as in v0.2.x | Any JSON Schema a caller writes goes to the provider, and the runtime has no validator to maintain (reasoned from docs/design/0.3.0-starlark-api.md section 7, low) | Every caller has to validate what the model produced (from docs/design/0.3.0-starlark-api.md section 7, high) |
-| Native structured output only, refusing a schema on a provider that lacks it | No retry loop, and every accepted schema is enforced by the vendor's API (reasoned from crates/meow-llm/src/openai.rs:330-333, low) | Schema support is never refused under [R-LLM-002], only satisfied two ways, and the draft that both refused and fell back was one of the contradictions the spec reconciled (from docs/requirements/REQ-1643-emulated-structured-output-validates-json.md and https://github.com/retran/meowg1k/pull/111, high) |
+| Native structured output only, refusing a schema on a provider that lacks it | No retry loop, and every accepted schema is enforced by the vendor's API (reasoned from crates/meow-llm/src/openai.rs:330-333, low) | Schema support is never refused under [R-LLM-002], only satisfied two ways, and the draft that both refused and fell back was one of the contradictions the spec reconciled (from docs/requirements/REQ-1643-emulated-structured-output-validates-json.md and https://github.com/meowshed/meowg1k/pull/111, high) |
 | A full JSON Schema validator as a dependency | Every JSON Schema keyword is checked, not only those `meow.schema` emits (reasoned from crates/meow-llm/src/schema.rs:13-16, low) | A dependency this doesn't need yet, since the schemas it checks are the ones this workspace emits (from crates/meow-llm/src/schema.rs:13-16, high) |
 
 ## What it costs
@@ -43,7 +43,7 @@ fields, enumerations and the numeric and string bounds only, so a schema
 written outside `meow.schema` can pass keywords it doesn't check (from
 crates/meow-llm/src/schema.rs:13-16, high). Gemini rejects schema keywords it
 doesn't know, so `additionalProperties`, `default` and `x-meow` are dropped
-before it is sent (from https://github.com/retran/meowg1k/pull/133, high).
+before it is sent (from https://github.com/meowshed/meowg1k/pull/133, high).
 
 ## What would reverse it
 

@@ -13,7 +13,7 @@ supersedes: []
 
 `yaml.encode` and `toml.encode` convert to the target's own value type
 explicitly rather than reusing the JSON value (from
-https://github.com/retran/meowg1k/pull/141, high).
+https://github.com/meowshed/meowg1k/pull/141, high).
 
 What works now: both encoders turn the Starlark value into a `serde_json`
 value, rebuild it node by node as a `serde_yaml_ng::Value` or a `toml::Value`
@@ -23,23 +23,23 @@ crates/meow-star/src/modules.rs:255, high). What still doesn't: a number that
 doesn't fit `i64` becomes an `f64` and may lose digits, and the keys of a
 mapping come out sorted, because the intermediate `serde_json::Map` sorts them
 (from crates/meow-star/src/modules.rs:298 and
-https://github.com/retran/meowg1k/pull/141, high).
+https://github.com/meowshed/meowg1k/pull/141, high).
 
 ## Why
 
 `starlark` turns on `serde_json`'s `arbitrary_precision`, so every number is
 stored as text behind a marker only `serde_json`'s own serialiser understands,
 and a `3` handed to `toml::to_string` came out as a table named
-`$serde_json::private::Number` (from https://github.com/retran/meowg1k/pull/141,
+`$serde_json::private::Number` (from https://github.com/meowshed/meowg1k/pull/141,
 high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: reuse the JSON value for every encoder | One path for every format and no conversion code to keep (reasoned from crates/meow-star/src/modules.rs:142, low) | Numbers don't survive a foreign serialiser (from https://github.com/retran/meowg1k/pull/141, high) |
-| Turn off `arbitrary_precision` | The JSON value would serialise correctly through any serde format (reasoned from crates/meow-star/src/modules.rs:222, low) | Features are additive across a workspace and `starlark` turns it on, so no crate here can turn it off (from https://github.com/retran/meowg1k/pull/141, high) |
-| Read the Starlark values directly, as `csv.encode` does | Keeps a dict's insertion order, which the JSON detour sorts away (from https://github.com/retran/meowg1k/pull/141, high) | The source doesn't weigh it for YAML and TOML; it was chosen for CSV only because column order is the output there (from https://github.com/retran/meowg1k/pull/141, high) |
+| Do nothing: reuse the JSON value for every encoder | One path for every format and no conversion code to keep (reasoned from crates/meow-star/src/modules.rs:142, low) | Numbers don't survive a foreign serialiser (from https://github.com/meowshed/meowg1k/pull/141, high) |
+| Turn off `arbitrary_precision` | The JSON value would serialise correctly through any serde format (reasoned from crates/meow-star/src/modules.rs:222, low) | Features are additive across a workspace and `starlark` turns it on, so no crate here can turn it off (from https://github.com/meowshed/meowg1k/pull/141, high) |
+| Read the Starlark values directly, as `csv.encode` does | Keeps a dict's insertion order, which the JSON detour sorts away (from https://github.com/meowshed/meowg1k/pull/141, high) | The source doesn't weigh it for YAML and TOML; it was chosen for CSV only because column order is the output there (from https://github.com/meowshed/meowg1k/pull/141, high) |
 
 ## What it costs
 
@@ -54,7 +54,7 @@ crates/meow-star/src/modules.rs:298, high).
 `starlark` no longer turning on `serde_json`'s `arbitrary_precision`, visible in
 `cargo tree -e features -i serde_json`, would let the JSON value go straight to
 `serde_yaml_ng` and `toml` (reasoned from
-https://github.com/retran/meowg1k/pull/141, low).
+https://github.com/meowshed/meowg1k/pull/141, low).
 
 ## Consequences
 

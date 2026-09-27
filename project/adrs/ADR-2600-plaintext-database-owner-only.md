@@ -85,4 +85,4 @@ to report (from crates/meow-store/src/lib.rs:114-121, high).
 - Where credentials live: that is ADR-0467, which moves them to the operating
   system's secret store (from docs/adrs/ADR-0467, high).
 - Redacting a secret a handler put in a prompt, which is export's job (from
-  <https://github.com/retran/meowg1k/issues/166>, What is not in scope, high).
+  <https://github.com/meowshed/meowg1k/issues/166>, What is not in scope, high).

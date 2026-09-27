@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 The plain renderer drops text deltas and writes a step's text once (from
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 Once this is accepted, the plain renderer ignores `TextDelta` and
 `ThinkingDelta` and writes a step's text when it receives a logged `Assistant`
@@ -27,20 +27,20 @@ crates/meow-star/src/run.rs:694-707, medium).
 
 A pipe that received a line per token would be unreadable, and `R-TUI-021` asks
 for the same information, not the same granularity (from
-https://github.com/retran/meowg1k/pull/124, high). The pull request invites
-disagreement (from https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high). The pull request invites
+disagreement (from https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Write each text delta as it arrives | The text appears as the model produces it, as it does in the terminal (reasoned from crates/meow-ui/src/tty.rs:274-277, low) | A pipe receiving a line per token is unreadable (from https://github.com/retran/meowg1k/pull/124, high) |
+| Write each text delta as it arrives | The text appears as the model produces it, as it does in the terminal (reasoned from crates/meow-ui/src/tty.rs:274-277, low) | A pipe receiving a line per token is unreadable (from https://github.com/meowshed/meowg1k/pull/124, high) |
 | Buffer the deltas in the renderer and write the text at the next step or tool call, as the terminal renderer does | Works from the live stream alone, so the text reaches a pipe without a logged `Assistant` event (from crates/meow-ui/src/tty.rs:263-277, medium) | The history doesn't say why the plain renderer takes the text from the logged event in place of buffering; the renderer's comment says only that the whole text is written once per step (from crates/meow-ui/src/plain.rs:69-72, low) |
 
 A consumer who wants every delta has `--format json`, which serialises each
 event it receives (from crates/meow-ui/src/json.rs:55-70, high). Doing nothing
 isn't an option here, because before this change there was no plain renderer
-(from https://github.com/retran/meowg1k/pull/124, high).
+(from https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## What it costs
 

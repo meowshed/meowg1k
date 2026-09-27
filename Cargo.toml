@@ -13,7 +13,7 @@ thiserror = "2"
 version = "0.3.0"
 edition = "2024"
 license = "Apache-2.0"
-repository = "https://github.com/retran/meowg1k"
+repository = "https://github.com/meowshed/meowg1k"
 
 
 # Every crate inherits these with `lints.workspace = true`.

@@ -36,7 +36,7 @@ docs/design/0.3.0-tui.md section 3, high).
 | --- | --- | --- |
 | Do nothing: keep v0.2.1's Bubble Tea program on the alternate screen | A full-screen layout the program controls, with mouse input, and the terminal restored cleanly on exit (from `git show v0.2.1:internal/adapters/output/tui/program.go`, lines 768-781, high) | On exit the screen is restored and the whole run is gone (from docs/design/0.3.0-tui.md section 5, high) |
 | A full-screen alternate-buffer interface in Rust (`Viewport::Fullscreen`) | The whole screen to lay out, not three rows (reasoned from docs/design/0.3.0-tui.md section 5.1, low) | On exit the screen is restored and the whole run is gone (from docs/design/0.3.0-tui.md section 5, high) |
-| A hand-rolled ANSI layer | No new dependency (reasoned from https://github.com/retran/meowg1k/pull/124, low) | `ratatui`'s inline viewport and `insert_before` are precisely the shape the design needs, and a hand-rolled layer would reimplement them (from docs/design/0.3.0-tui.md section 5.1 and https://github.com/retran/meowg1k/pull/124, high) |
+| A hand-rolled ANSI layer | No new dependency (reasoned from https://github.com/meowshed/meowg1k/pull/124, low) | `ratatui`'s inline viewport and `insert_before` are precisely the shape the design needs, and a hand-rolled layer would reimplement them (from docs/design/0.3.0-tui.md section 5.1 and https://github.com/meowshed/meowg1k/pull/124, high) |
 
 ## What it costs
 
@@ -44,7 +44,7 @@ docs/design/0.3.0-tui.md section 3, high).
 three rows for the life of the process and an approval prompt goes into the
 transcript (from docs/design/0.3.0-tui.md section 5.1, high). That cost forced
 an amendment of [R-TUI-016] and [R-TUI-060] on 2026-09-20 (from
-https://github.com/retran/meowg1k/pull/127, high). It also adds `ratatui` 0.30
+https://github.com/meowshed/meowg1k/pull/127, high). It also adds `ratatui` 0.30
 as a dependency of `meow-ui` (from crates/meow-ui/Cargo.toml:12, high).
 
 ## What would reverse it
@@ -69,7 +69,7 @@ as a dependency of `meow-ui` (from crates/meow-ui/Cargo.toml:12, high).
   its rows (from crates/meow-ui/src/tty.rs:124-139, high).
 - `meow-ui` is generic over the backend, so tests drive `TestBackend` and the
   renderer is testable without a terminal (from
-  https://github.com/retran/meowg1k/pull/124, high).
+  https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## How I will know it was realised
 

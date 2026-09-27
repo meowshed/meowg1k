@@ -14,7 +14,7 @@ supersedes: []
 In a Starlark agent declaration, a `budget` that omits an axis takes the
 default budget's value for that axis, so `budget: {steps: 5}` tightens one axis
 without quietly removing the other three (from
-https://github.com/retran/meowg1k/pull/122 and crates/meow-star/src/agent.rs,
+https://github.com/meowshed/meowg1k/pull/122 and crates/meow-star/src/agent.rs,
 high). The engine's own `Budget` type keeps REQ-1012: an axis left unset there
 is unbounded. The two don't conflict, because the declaration fills every axis
 before it reaches the engine (from crates/meow-star/src/agent.rs, high).
@@ -26,7 +26,7 @@ the cost axis can't fire until models carry a price (issue #168).
 ## Why
 
 A declaration that names one axis means to tighten that axis, not to lift the
-others (from https://github.com/retran/meowg1k/pull/122, medium). The design
+others (from https://github.com/meowshed/meowg1k/pull/122, medium). The design
 makes a bounded run the default and says an unbounded one requires saying so
 (from docs/design/0.3.0-starlark-api.md section 5.1, the `budget` row, high).
 
@@ -34,7 +34,7 @@ makes a bounded run the default and says an unbounded one requires saying so
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| An omitted axis becomes unbounded | It follows REQ-1012 as written, and a declaration can lift an axis by leaving it out (from docs/spec/agent.md [R-AGENT-012], high) | `budget: {steps: 5}` would quietly remove the other three bounds (from https://github.com/retran/meowg1k/pull/122, high) |
+| An omitted axis becomes unbounded | It follows REQ-1012 as written, and a declaration can lift an axis by leaving it out (from docs/spec/agent.md [R-AGENT-012], high) | `budget: {steps: 5}` would quietly remove the other three bounds (from https://github.com/meowshed/meowg1k/pull/122, high) |
 | Do nothing: `meow.agent` takes no `budget`, so every declared agent runs on the engine's default | Nothing to decide about a partial budget (reasoned from crates/meow-agent/src/budget.rs:28-45, low) | REQ-2489 requires `meow.agent` to accept `budget` (from docs/spec/starlark.md [R-STAR-040], high) |
 
 No third option appears in the code, the history or the design documents.

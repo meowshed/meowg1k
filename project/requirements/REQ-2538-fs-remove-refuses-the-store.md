@@ -13,5 +13,5 @@ verification: behavioural
 
 `fs.remove` MUST refuse `.meow/.data/` and every path inside it.
 
-(from https://github.com/retran/meowg1k/pull/135 and
+(from https://github.com/meowshed/meowg1k/pull/135 and
 crates/meow-star/src/capability.rs:211, high)

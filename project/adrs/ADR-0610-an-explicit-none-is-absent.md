@@ -13,7 +13,7 @@ supersedes: []
 
 A `meow` declaration builtin reads an explicit `None`, given for an optional
 keyword argument whose default is absent, as if the argument were left out
-(from https://github.com/retran/meowg1k/pull/126, high).
+(from https://github.com/meowshed/meowg1k/pull/126, high).
 
 Once this is accepted, it works for `meow.provider`'s `api_key` and `base_url`
 and `meow.model`'s `kind` through `NoneOr` with a `None` default, and for
@@ -28,15 +28,15 @@ argument with a default of its own, such as `required = True`, still refuses
 Starlark can't leave a keyword argument out conditionally, so
 `api_key = get("ANTHROPIC_API_KEY")` passes `None` when the variable is unset,
 and that is the line `meow init` writes; it failed with a type error until
-this changed (from https://github.com/retran/meowg1k/pull/126 and
+this changed (from https://github.com/meowshed/meowg1k/pull/126 and
 crates/meow-cli/src/wire.rs:984-989, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: an explicit `None` is a type error | A mistyped value can't pass silently as absent (reasoned from crates/meow-star/src/declare.rs:156-160, low) | The line `meow init` generates failed to load whenever the key was unset (from https://github.com/retran/meowg1k/pull/126, high) |
-| Leave the builtins strict and make every declaration file write an `if` around the argument | The builtin's signature says exactly what it takes (reasoned from https://github.com/retran/meowg1k/pull/126, low) | Every declaration file grows an `if` for each optional value it reads from the environment (from https://github.com/retran/meowg1k/pull/126, high) |
+| Do nothing: an explicit `None` is a type error | A mistyped value can't pass silently as absent (reasoned from crates/meow-star/src/declare.rs:156-160, low) | The line `meow init` generates failed to load whenever the key was unset (from https://github.com/meowshed/meowg1k/pull/126, high) |
+| Leave the builtins strict and make every declaration file write an `if` around the argument | The builtin's signature says exactly what it takes (reasoned from https://github.com/meowshed/meowg1k/pull/126, low) | Every declaration file grows an `if` for each optional value it reads from the environment (from https://github.com/meowshed/meowg1k/pull/126, high) |
 
 ## What it costs
 
@@ -47,7 +47,7 @@ crates/meow-star/src/declare.rs:74-76, low).
 ## What would reverse it
 
 - Starlark gains a way to omit a keyword argument conditionally (reasoned from
-  https://github.com/retran/meowg1k/pull/126, low).
+  https://github.com/meowshed/meowg1k/pull/126, low).
 
 ## Consequences
 

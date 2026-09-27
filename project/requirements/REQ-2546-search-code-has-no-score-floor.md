@@ -14,5 +14,5 @@ verification: behavioural
 `search.code` MUST return hits whatever their score, as `index.query` does with
 a floor of zero.
 
-(from https://github.com/retran/meowg1k/pull/142 and
+(from https://github.com/meowshed/meowg1k/pull/142 and
 crates/meow-cli/src/index.rs:173, high)

@@ -39,7 +39,7 @@ rebuilt on a schedule nobody owns (from docs/spec/llm.md, high).
 | --- | --- | --- |
 | Do nothing: build the token into the provider when it is created, as `OpenAi::new` still does for a fixed key | Nothing to do per request, and right for every provider whose key doesn't change (from docs/spec/llm.md, high) | A provider that exchanges a long-lived grant for a short-lived token would have to be rebuilt on a schedule nobody owns (from docs/spec/llm.md, high) |
 | Rebuild the provider when its token expires | Provider values stay immutable once built (reasoned from crates/meow-llm/src/openai.rs, low) | The rebuild runs on a schedule nobody owns (from docs/spec/llm.md, high) |
-| Renew inside one vendor's own gateway, as v0.2.x's `copilot.go` did with `refreshTokenIfNeeded` | Touches no shared trait, and holds a mutex across the exchange so concurrent requests renew once (from `git show v0.2.1:internal/adapters/gateway/copilot.go`, lines 161-168, high) | Copilot's request shape is OpenAI's, so a gateway of its own is a sixth copy of a streaming parser; `with_bearer` on the OpenAI provider needed no other call site changed (from https://github.com/retran/meowg1k/pull/156, high) |
+| Renew inside one vendor's own gateway, as v0.2.x's `copilot.go` did with `refreshTokenIfNeeded` | Touches no shared trait, and holds a mutex across the exchange so concurrent requests renew once (from `git show v0.2.1:internal/adapters/gateway/copilot.go`, lines 161-168, high) | Copilot's request shape is OpenAI's, so a gateway of its own is a sixth copy of a streaming parser; `with_bearer` on the OpenAI provider needed no other call site changed (from https://github.com/meowshed/meowg1k/pull/156, high) |
 
 ## What it costs
 
@@ -73,7 +73,7 @@ high).
 - A cancelled run stops a renewal before and during the exchange, so a
   cancelled run never sends a request (from
   crates/meow-llm/src/bearer.rs:130-152, high;
-  https://github.com/retran/meowg1k/pull/161, high).
+  https://github.com/meowshed/meowg1k/pull/161, high).
 - An exchange that answers without `expires_at` gets an expiry of 0, so its
   token is renewed on every request (from
   crates/meow-llm/src/bearer.rs:123, 189-195, medium).

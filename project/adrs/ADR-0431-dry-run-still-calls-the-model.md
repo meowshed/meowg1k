@@ -14,9 +14,9 @@ supersedes: []
 `--dry-run` decides policy, records what each call would have been and tells the
 model the call succeeded, and it says once that everything after the first
 placeholder is a plausible run rather than the run (from
-https://github.com/retran/meowg1k/pull/127, high). It plans tool calls, not
+https://github.com/meowshed/meowg1k/pull/127, high). It plans tool calls, not
 model calls, so it still calls the model (from
-https://github.com/retran/meowg1k/pull/127, high).
+https://github.com/meowshed/meowg1k/pull/127, high).
 
 Once this is accepted, a dry run replaces every declared tool with a planned
 one that writes `would run <tool>(<arguments>)` and returns a placeholder
@@ -31,16 +31,16 @@ crates/meow-star/src/run.rs:393, medium).
 ## Why
 
 What gets called is what the model asks for, so skipping the model would mean
-planning nothing (from https://github.com/retran/meowg1k/pull/127, high). What
+planning nothing (from https://github.com/meowshed/meowg1k/pull/127, high). What
 the model does next depends on a result it never received, which is why the
-divergence is stated (from https://github.com/retran/meowg1k/pull/127, high).
+divergence is stated (from https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: no `--dry-run` | No run can be mistaken for the real one, because every result is real (reasoned from REQ-2847, low) | REQ-2845 asks for a run that evaluates policy and plans tool calls without executing any (from docs/spec/tui.md [R-TUI-072], high) |
-| Skip the model during a dry run | Spends no tokens and sends nothing to a provider (reasoned from crates/meow-star/src/run.rs:387, low) | It would plan nothing, because what gets called is what the model asks for (from https://github.com/retran/meowg1k/pull/127, high) |
+| Skip the model during a dry run | Spends no tokens and sends nothing to a provider (reasoned from crates/meow-star/src/run.rs:387, low) | It would plan nothing, because what gets called is what the model asks for (from https://github.com/meowshed/meowg1k/pull/127, high) |
 
 ## What it costs
 
@@ -49,13 +49,13 @@ a real run does (reasoned from crates/meow-star/src/run.rs:387, which replaces
 only the tools, low). A person still answers each `ask` for a call that won't
 run (from crates/meow-agent/src/engine.rs:370, high). Everything after the
 first placeholder is a plausible run rather than the run (from
-https://github.com/retran/meowg1k/pull/127, high).
+https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## What would reverse it
 
 - A provider offers a way to plan tool calls without sampling a full turn, so
   the plan could be had without paying for the model calls (reasoned from
-  https://github.com/retran/meowg1k/pull/127, low).
+  https://github.com/meowshed/meowg1k/pull/127, low).
 
 ## Consequences
 

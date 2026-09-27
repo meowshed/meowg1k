@@ -13,7 +13,7 @@ supersedes: []
 
 `meow.agent_named("reviewer")` gives a markdown agent's value by name, and the
 name is checked at load time after every markdown agent has been read (from
-https://github.com/retran/meowg1k/pull/137, high).
+https://github.com/meowshed/meowg1k/pull/137, high).
 
 What works now: `meow.agent_named` records the reference during declaration and
 returns the same agent value `meow.agent` returns; the loader evaluates
@@ -30,16 +30,16 @@ crates/meow-star/src/registry.rs:428, high).
 
 A markdown agent is read after the file that would hold it, so
 `reviewer.run(...)` had nothing to bind to (from
-https://github.com/retran/meowg1k/pull/137, high). Checking at load time makes
+https://github.com/meowshed/meowg1k/pull/137, high). Checking at load time makes
 naming one that doesn't exist fail before anything runs, as `R-STAR-032` asks
-(from https://github.com/retran/meowg1k/pull/137, high).
+(from https://github.com/meowshed/meowg1k/pull/137, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: hold the markdown agent's value in a variable | No new builtin; a handler uses the agent like any other bound name (reasoned from crates/meow-star/src/declare.rs:299, low) | The agent is read after the file that would hold it (from https://github.com/retran/meowg1k/pull/137, high) |
-| Check the name when the handler runs | Nothing to record during declaration and nothing to resolve afterwards (reasoned from crates/meow-star/src/registry.rs:280, low) | A misspelt name would fail at first use, and `R-STAR-032` asks for load time (from https://github.com/retran/meowg1k/pull/137, high) |
+| Do nothing: hold the markdown agent's value in a variable | No new builtin; a handler uses the agent like any other bound name (reasoned from crates/meow-star/src/declare.rs:299, low) | The agent is read after the file that would hold it (from https://github.com/meowshed/meowg1k/pull/137, high) |
+| Check the name when the handler runs | Nothing to record during declaration and nothing to resolve afterwards (reasoned from crates/meow-star/src/registry.rs:280, low) | A misspelt name would fail at first use, and `R-STAR-032` asks for load time (from https://github.com/meowshed/meowg1k/pull/137, high) |
 | Read `.meow/agents/` before evaluating `meow.star` | A plain variable would then bind (reasoned from crates/meow-star/src/loader.rs:410, low) | The source doesn't weigh it; `meow.star` is the entry point and evaluates first by design, and REQ-2479 already makes declaration order irrelevant for references (reasoned from crates/meow-star/src/loader.rs:410, low) |
 
 ## What it costs
@@ -60,7 +60,7 @@ crates/meow-star/src/loader.rs:410, low).
 
 - A handler can call `reviewer.run(...)` on a markdown agent, and to the caller
   that value is the same as a Starlark agent's (from
-  https://github.com/retran/meowg1k/pull/137, "Requirement IDs", high).
+  https://github.com/meowshed/meowg1k/pull/137, "Requirement IDs", high).
 - `meow check` on a workspace naming a missing agent exits before any command
   runs (from crates/meow-star/tests/agents.rs:398, high).
 

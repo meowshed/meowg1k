@@ -12,10 +12,10 @@ supersedes: []
 ## Decision
 
 A fetch refuses an archive larger than 64 MiB and gives up when the download
-hasn't finished in 120 seconds (from https://github.com/retran/meowg1k/pull/162
+hasn't finished in 120 seconds (from https://github.com/meowshed/meowg1k/pull/162
 and crates/meow-cli/src/fetch.rs:17-25 and :97-100, high). Both numbers are
 chosen, not specified: REQ-1819 asks for a deadline and says nothing about how
-long (from https://github.com/retran/meowg1k/pull/162, high).
+long (from https://github.com/meowshed/meowg1k/pull/162, high).
 
 Once this is accepted, both limits work, but the size is checked after the
 whole body has been read into memory, so the cap protects the disk and not the

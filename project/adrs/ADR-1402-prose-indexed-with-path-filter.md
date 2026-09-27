@@ -40,7 +40,7 @@ index doesn't solve it by guessing (from docs/spec/index.md, high).
 | Do nothing: index prose as v0.2.x did and add no path filter | Nothing to build: v0.2.x already chunked `.md` and `.txt` with its plain-text strategy (from `git show v0.2.1:internal/core/chunker/service.go`, high) | A caller has no way to narrow the results, so prose dilutes code results with nothing to push back (reasoned from docs/spec/index.md, low) |
 | Exclude prose from the index | Less dilution of code results (from docs/spec/index.md, medium) | The design documents become unsearchable by the agents most likely to need them (from docs/spec/index.md, high) |
 | Let the index weight or separate prose by itself | The caller needs to pass nothing (reasoned from docs/spec/index.md, low) | The index would be guessing what a caller wants, and dilution is the caller's to solve with a filter (from docs/spec/index.md, high) |
-| Apply the path filter to the results after ranking | Simpler: the graph walk stays unfiltered (reasoned from crates/meow-index/src/index.rs:324-329, low) | It returns the best ten overall and then throws most of them away, so a filtered query can come back empty (from crates/meow-index/src/index.rs:324-329 and https://github.com/retran/meowg1k/pull/131, high) |
+| Apply the path filter to the results after ranking | Simpler: the graph walk stays unfiltered (reasoned from crates/meow-index/src/index.rs:324-329, low) | It returns the best ten overall and then throws most of them away, so a filtered query can come back empty (from crates/meow-index/src/index.rs:324-329 and https://github.com/meowshed/meowg1k/pull/131, high) |
 
 ## What it costs
 
@@ -49,7 +49,7 @@ Results can be diluted by prose, and the caller narrows them with a path filter
 every indexed chunk against the globs to build the list of nodes the walk may
 visit (from crates/meow-index/src/index.rs:413-432, high). The path filter
 adds `globset` to `meow-index`, which was already in the tree through
-`meow-policy` (from https://github.com/retran/meowg1k/pull/131, high).
+`meow-policy` (from https://github.com/meowshed/meowg1k/pull/131, high).
 
 ## What would reverse it
 
@@ -80,4 +80,4 @@ crates/meow-cli/src/surface.rs:284-288, high).
 - Whether a workspace should exclude its own prose. `.meowignore` still can,
   under [R-INDEX-001] (from docs/spec/index.md, medium).
 - The glob syntax. It is `globset`'s, shared with `meow-policy` (from
-  https://github.com/retran/meowg1k/pull/131, high).
+  https://github.com/meowshed/meowg1k/pull/131, high).

@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 Agreeing doesn't run the command: it says so and exits zero (from
-https://github.com/retran/meowg1k/pull/154, high).
+https://github.com/meowshed/meowg1k/pull/154, high).
 
 Once this is accepted, a "y" to "Run scripts from this workspace? [y/N]" records
 the agreement, prints "Agreed. `meow trust --withdraw` undoes it." and exits 0
@@ -26,17 +26,17 @@ high).
 
 The person answered a question about trust, not about whether to run this, and
 starting an agent off the back of a yes is the more surprising of the two (from
-https://github.com/retran/meowg1k/pull/154, high).
+https://github.com/meowshed/meowg1k/pull/154, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Run the command once the person agrees | The person gets what they typed with one answer and no second invocation (reasoned from crates/meow-cli/src/wire.rs:226, low) | It is the more surprising outcome, because the question was about trust (from https://github.com/retran/meowg1k/pull/154, high) |
+| Run the command once the person agrees | The person gets what they typed with one answer and no second invocation (reasoned from crates/meow-cli/src/wire.rs:226, low) | It is the more surprising outcome, because the question was about trust (from https://github.com/meowshed/meowg1k/pull/154, high) |
 | Do nothing: never ask at the terminal, and always refuse with "Run `meow trust` here" as a run with no terminal does | One path for every run, and agreeing is always a deliberate command (reasoned from crates/meow-cli/src/wire.rs:213, low) | REQ-1223 requires the first invocation to ask once (from docs/spec/auth.md [R-AUTH-030], high) |
 
 The code and the history name no third option (from
-https://github.com/retran/meowg1k/pull/154, medium).
+https://github.com/meowshed/meowg1k/pull/154, medium).
 
 ## What it costs
 

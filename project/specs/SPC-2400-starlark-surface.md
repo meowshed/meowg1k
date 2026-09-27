@@ -75,7 +75,7 @@ the loading scheme, and the diagnostics a user sees when any of them is wrong
   columns and a list of lists when it doesn't, and `csv.encode` takes either
   shape [REQ-2434] [REQ-2436] (from docs/spec/starlark.md [R-STAR-017], high).
 - `csv.parse` takes `header`, `True` by default, saying whether the first record
-  names the columns [REQ-2553] (from https://github.com/retran/meowg1k/pull/141,
+  names the columns [REQ-2553] (from https://github.com/meowshed/meowg1k/pull/141,
   high).
 - `xml.parse` returns a tree whose elements carry `tag`, `attrs`, `children` and
   `text`, never a flattened dictionary. `xml.encode` takes that tree or a tree
@@ -100,14 +100,14 @@ the loading scheme, and the diagnostics a user sees when any of them is wrong
 - `fs.glob` returns, sorted, every file in the workspace whose path relative to
   the workspace root matches the pattern, and never walks into a directory named
   `.data` [REQ-2550] [REQ-2551] (from
-  https://github.com/retran/meowg1k/pull/135, high).
+  https://github.com/meowshed/meowg1k/pull/135, high).
 - `fs` checks a relative path lexically, so it can follow a symbolic link inside
   the workspace that points outside it [REQ-2539] (from
-  https://github.com/retran/meowg1k/pull/135, high).
+  https://github.com/meowshed/meowg1k/pull/135, high).
 - `@std//git` runs the user's own `git` program as a subprocess [REQ-2540].
   `git.commit` commits what is staged and nothing else [REQ-2542], and
   `git.status` returns `git`'s porcelain v1 output as text [REQ-2543] (from
-  https://github.com/retran/meowg1k/pull/136, high).
+  https://github.com/meowshed/meowg1k/pull/136, high).
 
 ### The handler context
 
@@ -165,13 +165,13 @@ the loading scheme, and the diagnostics a user sees when any of them is wrong
   [REQ-2482] (from docs/spec/starlark.md [R-STAR-034], high).
 - `meow.model` takes an input and an output price per million tokens, as
   `input_per_mtok` and `output_per_mtok` [REQ-2530] (from
-  https://github.com/retran/meowg1k/issues/168, high).
+  https://github.com/meowshed/meowg1k/issues/168, high).
 - The `meow` global offers no preset declaration, because a named `meow.model`
   carries its own temperature [REQ-2533] (from docs/design/0.3.0-starlark-api.md
   section 4, high).
 - A declaration builtin treats an explicit `None`, given for an optional keyword
   argument whose default is absent, as if the argument were left out [REQ-2536]
-  (from https://github.com/retran/meowg1k/pull/126, high).
+  (from https://github.com/meowshed/meowg1k/pull/126, high).
 - `meow.index` names the model that embeds the workspace, can set the chunk
   size, the overlap and the file-size limit, and is declared at most once
   [REQ-2484] [REQ-2485] [REQ-2486] (from docs/spec/starlark.md [R-STAR-035],
@@ -184,7 +184,7 @@ the loading scheme, and the diagnostics a user sees when any of them is wrong
   [REQ-2488] [REQ-2489] (from docs/spec/starlark.md [R-STAR-040], high).
 - A `budget` that omits an axis takes that axis from the default budget, in
   Starlark and in frontmatter alike [REQ-2528] (from
-  https://github.com/retran/meowg1k/pull/122, high).
+  https://github.com/meowshed/meowg1k/pull/122, high).
 - An agent value goes in another agent's `tools` list and presents the same
   schema there as a tool declared with `meow.tool` [REQ-2490] [REQ-2491] (from
   docs/spec/starlark.md [R-STAR-041], high).
@@ -275,7 +275,7 @@ the loading scheme, and the diagnostics a user sees when any of them is wrong
   reason and is never returned as a partial value [REQ-2429] [REQ-2430] (from
   docs/spec/starlark.md [R-STAR-015], high).
 - `toml.encode` given a value holding `None` fails saying TOML has no null, and
-  drops no key [REQ-2529] (from https://github.com/retran/meowg1k/pull/141,
+  drops no key [REQ-2529] (from https://github.com/meowshed/meowg1k/pull/141,
   high).
 - A CSV record whose length disagrees with the header fails naming the record
   number [REQ-2435] (from docs/spec/starlark.md [R-STAR-017], high).
@@ -284,7 +284,7 @@ the loading scheme, and the diagnostics a user sees when any of them is wrong
   [R-STAR-022], high).
 - An `http` URL that doesn't begin with `http://` or `https://` is refused by
   name before any request [REQ-2544] (from
-  https://github.com/retran/meowg1k/pull/145, high).
+  https://github.com/meowshed/meowg1k/pull/145, high).
 - An `http` call that never reached a response - a name that doesn't resolve, a
   refused connection, a deadline - fails with what went wrong [REQ-2455] (from
   docs/spec/starlark.md [R-STAR-023], high).
@@ -295,11 +295,11 @@ the loading scheme, and the diagnostics a user sees when any of them is wrong
 - `search.code` in a workspace with no usable index fails saying why [REQ-2549]
   (from crates/meow-cli/src/index.rs:403, high).
 - `fs.remove` refuses the workspace root and every path inside `.meow/.data/`
-  [REQ-2537] [REQ-2538] (from https://github.com/retran/meowg1k/pull/135, high).
+  [REQ-2537] [REQ-2538] (from https://github.com/meowshed/meowg1k/pull/135, high).
 - `fs.glob` with a pattern that isn't a valid glob fails naming it [REQ-2552]
   (from crates/meow-star/src/capability.rs:150, high).
 - `@std//git` refuses a revision or a path a caller supplies that begins with
-  `-` [REQ-2541] (from https://github.com/retran/meowg1k/pull/136, high).
+  `-` [REQ-2541] (from https://github.com/meowshed/meowg1k/pull/136, high).
 
 ### Declarations
 

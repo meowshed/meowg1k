@@ -13,28 +13,28 @@ supersedes: []
 
 A package's source is a URL that answers with a gzipped tar archive, with
 `{version}` replaced by the declared version, and nothing else: no git and no
-local paths (from https://github.com/retran/meowg1k/pull/162 and
+local paths (from https://github.com/meowshed/meowg1k/pull/162 and
 crates/meow-cli/src/fetch.rs:70-77 and :184-192, high).
 
 Once this is accepted, `meow pkg update` and `meow pkg fetch` work for such a
 source, and `update` fetches exactly the declared version, since no range
-syntax is specified (from https://github.com/retran/meowg1k/pull/162, high).
+syntax is specified (from https://github.com/meowshed/meowg1k/pull/162, high).
 
 ## Why
 
 Git would need either a large dependency or shelling out, and that choice
-deserves its own thought (from https://github.com/retran/meowg1k/pull/162,
+deserves its own thought (from https://github.com/meowshed/meowg1k/pull/162,
 high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| A git repository as a source | Most Starlark libraries live in a repository, with no archive to publish (reasoned from https://github.com/retran/meowg1k/pull/162, low) | It needs a large dependency or a subprocess, a choice left for its own decision (from https://github.com/retran/meowg1k/pull/162, high) |
-| A local path as a source | A package under development loads without publishing (reasoned from https://github.com/retran/meowg1k/pull/162, low) | Not taken in #162, which names it among what isn't covered (from https://github.com/retran/meowg1k/pull/162, high) |
+| A git repository as a source | Most Starlark libraries live in a repository, with no archive to publish (reasoned from https://github.com/meowshed/meowg1k/pull/162, low) | It needs a large dependency or a subprocess, a choice left for its own decision (from https://github.com/meowshed/meowg1k/pull/162, high) |
+| A local path as a source | A package under development loads without publishing (reasoned from https://github.com/meowshed/meowg1k/pull/162, low) | Not taken in #162, which names it among what isn't covered (from https://github.com/meowshed/meowg1k/pull/162, high) |
 
 Doing nothing isn't an option, because fetching was new in #162 and needed one
-source kind (from https://github.com/retran/meowg1k/pull/162, high).
+source kind (from https://github.com/meowshed/meowg1k/pull/162, high).
 
 ## What it costs
 
@@ -44,7 +44,7 @@ from crates/meow-cli/src/fetch.rs:70-77, low).
 ## What would reverse it
 
 - Packages in use are published only as repositories (reasoned from
-  https://github.com/retran/meowg1k/pull/162, low).
+  https://github.com/meowshed/meowg1k/pull/162, low).
 
 ## Consequences
 
@@ -59,5 +59,5 @@ from crates/meow-cli/src/fetch.rs:70-77, low).
 
 ## What this does not settle
 
-- Version ranges in `update` (from https://github.com/retran/meowg1k/pull/162,
+- Version ranges in `update` (from https://github.com/meowshed/meowg1k/pull/162,
   high).

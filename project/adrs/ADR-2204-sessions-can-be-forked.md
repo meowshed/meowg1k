@@ -29,7 +29,7 @@ crates/meow-cli/src/surface.rs:197-212, high).
 v0.2.x had no fork, so investigating a run that went wrong at step 9 of 40 cost
 a full rerun (from docs/spec/session.md, high). Forking is cheap because the
 log is append-only: a fork copies the prefix and every blob it points at gains
-a referent (from https://github.com/retran/meowg1k/pull/128, high).
+a referent (from https://github.com/meowshed/meowg1k/pull/128, high).
 
 ## Alternatives
 

@@ -15,5 +15,5 @@ A `meow` declaration builtin MUST treat an explicit `None`, given for an
 optional keyword argument whose default is absent, as if the argument were left
 out.
 
-(from https://github.com/retran/meowg1k/pull/126 and
+(from https://github.com/meowshed/meowg1k/pull/126 and
 crates/meow-star/src/declare.rs:74 and :158, high)

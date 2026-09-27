@@ -27,7 +27,7 @@ docs/spec/starlark.md, Decisions, high).
 | ------ | --------- | ----------- |
 | Return rows and a separate header list | Keeps a header with repeated names intact, and a ragged record needs no rule (reasoned from crates/meow-star/src/modules.rs `csv.parse`, low). | Every caller zips them, the same work done once per handler in place of once in the module (from docs/spec/starlark.md, Decisions, high). |
 | Always return a list of lists | One shape for every file, whatever its first record holds (reasoned from crates/meow-star/src/modules.rs `csv.parse`, low). | It is the header-list option with the header left in the rows, so every caller still zips (reasoned from docs/spec/starlark.md, Decisions, low). |
-| Do nothing: no `csv` module, as before PR #141 | No new surface (reasoned from https://github.com/retran/meowg1k/pull/141, low). | The design table promised `csv`, and [R-STAR-015] requires it in the table (from https://github.com/retran/meowg1k/pull/141 and docs/spec/starlark.md [R-STAR-015], high). |
+| Do nothing: no `csv` module, as before PR #141 | No new surface (reasoned from https://github.com/meowshed/meowg1k/pull/141, low). | The design table promised `csv`, and [R-STAR-015] requires it in the table (from https://github.com/meowshed/meowg1k/pull/141 and docs/spec/starlark.md [R-STAR-015], high). |
 
 ## What it costs
 
@@ -51,7 +51,7 @@ A file whose first record is data and not names is the case `header = False`
 exists for (from docs/spec/starlark.md, Decisions, high). `csv.encode` reads the
 Starlark values directly and not through JSON, because `serde_json::Map` sorts
 its keys and would reorder a CSV's columns (from
-https://github.com/retran/meowg1k/pull/141, high).
+https://github.com/meowshed/meowg1k/pull/141, high).
 
 ## How I will know it was realised
 

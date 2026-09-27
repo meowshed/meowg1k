@@ -13,5 +13,5 @@ verification: behavioural
 
 The provider transport MUST give up connecting to a vendor after 30 seconds.
 
-(from https://github.com/retran/meowg1k/pull/125 and
+(from https://github.com/meowshed/meowg1k/pull/125 and
 crates/meow-llm/src/http.rs:24 and :47, high)

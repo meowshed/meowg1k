@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 The walk uses `ignore`, ripgrep's walker (from
-https://github.com/retran/meowg1k/pull/130, high).
+https://github.com/meowshed/meowg1k/pull/130, high).
 
 Once this is accepted, the index walk honours `.gitignore` and
 `.git/info/exclude` whether or not the workspace is a repository, and reads
@@ -25,13 +25,13 @@ crates/meow-index/src/walk.rs:113, high).
 ## Why
 
 That is where the `.gitignore` semantics anybody expects actually live (from
-https://github.com/retran/meowg1k/pull/130, high).
+https://github.com/meowshed/meowg1k/pull/130, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: reimplement the `.gitignore` semantics, as v0.2.x did with regular expressions in `internal/adapters/gitignore` | No new dependency, and every rule is code the project can read (from `git show v0.2.1:internal/adapters/gitignore/gitignore.go`, medium) | It reimplements the part users notice when it is subtly wrong (from https://github.com/retran/meowg1k/pull/130, high) |
+| Do nothing: reimplement the `.gitignore` semantics, as v0.2.x did with regular expressions in `internal/adapters/gitignore` | No new dependency, and every rule is code the project can read (from `git show v0.2.1:internal/adapters/gitignore/gitignore.go`, medium) | It reimplements the part users notice when it is subtly wrong (from https://github.com/meowshed/meowg1k/pull/130, high) |
 | Ask git for the file list with `git ls-files` | Git's own answer, exact by definition (reasoned from crates/meow-index/src/walk.rs:117, low) | A workspace need not be a repository, and its `.gitignore` still says what doesn't belong in the index (from crates/meow-index/src/walk.rs:117, high) |
 
 The code and the history name no third option.
@@ -40,10 +40,10 @@ The code and the history name no third option.
 
 One new dependency, `ignore` 0.4, which brings `globset`, `regex-automata`,
 `walkdir`, `crossbeam-deque` and four more crates into the build (from
-https://github.com/retran/meowg1k/pull/130 and Cargo.lock, high). A negation in
+https://github.com/meowshed/meowg1k/pull/130 and Cargo.lock, high). A negation in
 `.meowignore` for a file inside a directory `.gitignore` excludes still needs a
 second walk, because the crate follows git's rule that such a file can't be
-re-included (from https://github.com/retran/meowg1k/pull/130, high).
+re-included (from https://github.com/meowshed/meowg1k/pull/130, high).
 
 ## What would reverse it
 
@@ -54,7 +54,7 @@ advisory against it with no safe upgrade (reasoned from deny.toml, low).
 ## Consequences
 
 - The walk's rules are the crate's, so `.gitignore` behaves as ripgrep reads it
-  (from https://github.com/retran/meowg1k/pull/130, high).
+  (from https://github.com/meowshed/meowg1k/pull/130, high).
 - `.meowignore` is a custom ignore file name added after `.gitignore`, so its
   lines take precedence (from crates/meow-index/src/walk.rs:122, high).
 - The first walk leaves the crate's `ignore(true)` default in place, so a
@@ -77,4 +77,4 @@ crates/meow-index/tests/walk.rs:46, high).
   should apply to the index (from crates/meow-index/src/walk.rs:113, high).
 - How a `.meowignore` negation inside an excluded directory is found, which
   ADR-0117 settles with a second walk (from
-  https://github.com/retran/meowg1k/pull/130, high).
+  https://github.com/meowshed/meowg1k/pull/130, high).

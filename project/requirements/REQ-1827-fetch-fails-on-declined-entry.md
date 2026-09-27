@@ -14,5 +14,5 @@ verification: behavioural
 A fetch MUST fail when the unpacker declines to write an entry, and never pin a
 package without it.
 
-(from https://github.com/retran/meowg1k/pull/162 and
+(from https://github.com/meowshed/meowg1k/pull/162 and
 crates/meow-cli/src/fetch.rs:238, high)

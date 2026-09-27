@@ -33,7 +33,7 @@ covers every caller (from docs/spec/llm.md, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: deduplicate in `module_llm.go` only inside `if useSession && ...`, as v0.2.x does | Keeps the check beside the session history it protected (reasoned from docs/spec/llm.md, low) | With `use_session=False` a duplicated streamed call executes twice (from docs/spec/llm.md, high) |
-| Let the store tolerate a repeated identifier with `INSERT OR IGNORE`, as v0.2.x's agent change did | The session write never fails on a repeat (from https://github.com/retran/meowg1k/pull/89#discussion_r2895914429, high) | It drops rows without a word and hides the bug upstream; the reviewer asked for the identifiers to be deduplicated earlier (from https://github.com/retran/meowg1k/pull/89#discussion_r2895914429, high) |
+| Let the store tolerate a repeated identifier with `INSERT OR IGNORE`, as v0.2.x's agent change did | The session write never fails on a repeat (from https://github.com/meowshed/meowg1k/pull/89#discussion_r2895914429, high) | It drops rows without a word and hides the bug upstream; the reviewer asked for the identifiers to be deduplicated earlier (from https://github.com/meowshed/meowg1k/pull/89#discussion_r2895914429, high) |
 
 Neither the code nor the forge history names a third option.
 
@@ -58,7 +58,7 @@ call (from crates/meow-llm/src/openai.rs:239-243, high).
 ## Consequences
 
 - Every caller gets a list without repeats: the engine, a Starlark handler, a
-  session on or off (from https://github.com/retran/meowg1k/pull/117, high).
+  session on or off (from https://github.com/meowshed/meowg1k/pull/117, high).
 - The streamed and non-streamed paths both deduplicate, so they agree, which
   [REQ-1618] needs (from crates/meow-llm/src/stream.rs:75-86, high).
 

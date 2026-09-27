@@ -28,8 +28,8 @@ common case (from docs/design/0.3.0-starlark-api.md, section 5.6, high).
 
 | Option | Better at | Why it lost |
 | ------ | --------- | ----------- |
-| Do nothing: keep every agent a Starlark file, as v0.2.x did | One declaration form, and a handler can hold the agent value directly (from https://github.com/retran/meowg1k/pull/137, high). | Each agent needs boilerplate that the shipped `lib/agent.star` exists only to hide (from docs/spec/starlark.md, Changes from v0.2.x, high). |
-| Starlark only, with `meow.agent(...)` as a single declaration and no handler | It removes the boilerplate, since `meow.agent` covers what `agent.star` did, and keeps one form (from https://github.com/retran/meowg1k/pull/137, high). | The prompt still lives in a Starlark string literal and the common case still needs a `.star` file, which is the tax section 5.6 names (from docs/design/0.3.0-starlark-api.md, section 5.6, high). |
+| Do nothing: keep every agent a Starlark file, as v0.2.x did | One declaration form, and a handler can hold the agent value directly (from https://github.com/meowshed/meowg1k/pull/137, high). | Each agent needs boilerplate that the shipped `lib/agent.star` exists only to hide (from docs/spec/starlark.md, Changes from v0.2.x, high). |
+| Starlark only, with `meow.agent(...)` as a single declaration and no handler | It removes the boilerplate, since `meow.agent` covers what `agent.star` did, and keeps one form (from https://github.com/meowshed/meowg1k/pull/137, high). | The prompt still lives in a Starlark string literal and the common case still needs a `.star` file, which is the tax section 5.6 names (from docs/design/0.3.0-starlark-api.md, section 5.6, high). |
 
 Neither the code, the history nor the design documents name a further option.
 
@@ -40,7 +40,7 @@ Neither the code, the history nor the design documents name a further option.
   Starlark (from crates/meow-star/src/agent.rs:186-217, high).
 - A handler can't hold a markdown agent's value, because the agent is read
   after the file that would hold it; `meow.agent_named` gives it by name (from
-  https://github.com/retran/meowg1k/pull/137, high).
+  https://github.com/meowshed/meowg1k/pull/137, high).
 
 ## What would reverse it
 
@@ -55,7 +55,7 @@ docs/design/0.3.0-starlark-api.md, section 5.6, low).
   docs/design/0.3.0-starlark-api.md, section 5.6, high).
 - About ten thousand lines of v0.2.x Starlark became three markdown agents, two
   prompt fragments and one file of about two hundred lines (from
-  https://github.com/retran/meowg1k/pull/137, high); the three agents are in
+  https://github.com/meowshed/meowg1k/pull/137, high); the three agents are in
   `.meow/agents/` (from `ls .meow/agents`, high).
 
 ## How I will know it was realised
@@ -70,6 +70,6 @@ pass (high).
 - How a markdown agent composes its prompt, which ADR-2411 settles (from
   docs/spec/starlark.md, Decisions, high).
 - How a handler reaches a markdown agent, which ADR-0446 settles (from
-  https://github.com/retran/meowg1k/pull/137, high).
+  https://github.com/meowshed/meowg1k/pull/137, high).
 - Whether tools and commands can be markdown too; only agents can (from
   docs/design/0.3.0-starlark-api.md, section 5.6, medium).

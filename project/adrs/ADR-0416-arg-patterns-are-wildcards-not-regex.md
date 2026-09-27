@@ -13,7 +13,7 @@ supersedes: []
 
 The pattern language `meow.arg.string(pattern = ...)` accepts is `*` and
 literals, not regular expressions (from
-https://github.com/retran/meowg1k/pull/121, high). The whole value has to match:
+https://github.com/meowshed/meowg1k/pull/121, high). The whole value has to match:
 `*` matches any run of characters and every other character is literal (from
 crates/meow-star/src/schema.rs:216-240, high).
 
@@ -27,7 +27,7 @@ none of them (from crates/meow-star/src/schema.rs:222-240, high).
 
 A full engine would be another dependency and another way for a crafted input
 to make a declaration file run for a long time (from
-https://github.com/retran/meowg1k/pull/121, high). What a tool argument needs is
+https://github.com/meowshed/meowg1k/pull/121, high). What a tool argument needs is
 an anchored shape, which `*` and literals express (from
 crates/meow-star/src/schema.rs:216-221, high).
 
@@ -36,7 +36,7 @@ crates/meow-star/src/schema.rs:216-221, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: accept `pattern` and check nothing | No matcher to write or keep, and the model still sees the pattern in the schema (reasoned from crates/meow-star/src/declare.rs:436-440, low) | REQ-2507 requires a `string` argument to accept `pattern`, and a constraint that is never checked lets a value the declaration forbids reach the handler (reasoned from crates/meow-star/src/args.rs:196, low) |
-| Regular expressions | The pattern means what JSON Schema's `pattern` keyword means, which is the form the argument is sent to the model in, and a user can say more with it (reasoned from crates/meow-star/src/run.rs:392-401, low) | Another dependency, and another way for a crafted input to make a declaration file run for a long time (from https://github.com/retran/meowg1k/pull/121, high) |
+| Regular expressions | The pattern means what JSON Schema's `pattern` keyword means, which is the form the argument is sent to the model in, and a user can say more with it (reasoned from crates/meow-star/src/run.rs:392-401, low) | Another dependency, and another way for a crafted input to make a declaration file run for a long time (from https://github.com/meowshed/meowg1k/pull/121, high) |
 
 The question admits these two alternatives besides the choice: the pattern is
 either unchecked, checked as a regular expression or checked in a smaller
@@ -61,7 +61,7 @@ meowg1k checks it as "starts with `v`" (reasoned from the same lines, low).
   depends on `regex` directly for `@std//re`, and that crate was already in the
   lock file, so a regular expression engine is no longer another dependency
   (from crates/meow-star/Cargo.toml and
-  https://github.com/retran/meowg1k/pull/140, high).
+  https://github.com/meowshed/meowg1k/pull/140, high).
 
 ## Consequences
 
@@ -71,7 +71,7 @@ meowg1k checks it as "starts with `v`" (reasoned from the same lines, low).
 - The pattern is stored in the argument's schema node as given, so the flag,
   the help line and the model's schema carry the same text (from
   crates/meow-star/src/declare.rs:436-440 and
-  https://github.com/retran/meowg1k/pull/121, high).
+  https://github.com/meowshed/meowg1k/pull/121, high).
 
 ## How I will know it was realised
 
@@ -89,4 +89,4 @@ meowg1k checks it as "starts with `v`" (reasoned from the same lines, low).
   Schema's `pattern` keyword, whose meaning is a regular expression, or leave
   it out (reasoned from crates/meow-star/src/run.rs:392-401, low).
 - Whether `@std//re` and argument patterns should share one language now that
-  both exist (reasoned from https://github.com/retran/meowg1k/pull/140, low).
+  both exist (reasoned from https://github.com/meowshed/meowg1k/pull/140, low).

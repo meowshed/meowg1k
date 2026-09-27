@@ -27,7 +27,7 @@ docs/design/0.3.0-tui.md section 2.3, high). The source calls this the one
 default that would be quietly disastrous to get backwards (from
 docs/design/0.3.0-tui.md section 2.3, high). The flag is a statement about how
 the run should behave, not about the terminal (from
-https://github.com/retran/meowg1k/pull/127, high).
+https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## Alternatives
 

@@ -12,8 +12,8 @@ supersedes: []
 ## Decision
 
 `check`, `doctor`, `policy show`, `models` and `providers` are exempt from the
-trust gate (from https://github.com/retran/meowg1k/pull/154, high). `meow pkg`
-is exempt too (from https://github.com/retran/meowg1k/pull/163, high).
+trust gate (from https://github.com/meowshed/meowg1k/pull/154, high). `meow pkg`
+is exempt too (from https://github.com/meowshed/meowg1k/pull/163, high).
 
 Once this is accepted, `gate_on_trust` lets `check`, `doctor`, `policy`,
 `models`, `providers`, `trust`, `version` and `pkg` through without asking, and
@@ -28,23 +28,23 @@ exception for these commands (from docs/spec/auth.md [R-AUTH-030], high).
 
 The describing commands are how a person decides whether to trust a workspace,
 and requiring trust first makes the decision impossible to inform (from
-https://github.com/retran/meowg1k/pull/154, high). `meow pkg` is how a person
+https://github.com/meowshed/meowg1k/pull/154, high). `meow pkg` is how a person
 sees what a workspace would pull in before deciding, and evaluating the
 workspace to learn what to download reaches nothing (from
-https://github.com/retran/meowg1k/pull/163, high).
+https://github.com/meowshed/meowg1k/pull/163, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Require trust before any command | One rule with no list of exceptions to keep current, and no command touches an untrusted `.meow/` beyond the question (reasoned from crates/meow-cli/src/wire.rs:155, low) | The decision to trust becomes impossible to inform (from https://github.com/retran/meowg1k/pull/154, high) |
-| Keep `meow pkg` behind the gate, where it was before #163 (from https://github.com/retran/meowg1k/pull/163, medium) | An untrusted workspace can't make the binary download an archive from a source it names (reasoned from crates/meow-cli/src/wire.rs:165, low) | `meow pkg` is how a person sees what a workspace would pull in before deciding whether to trust it (from https://github.com/retran/meowg1k/pull/163, high) |
-| Do nothing: no trust gate, as v0.2.x had | No friction: every command runs in a fresh clone (from docs/spec/auth.md Changes from v0.2.x, high) | A `.meow/` directory is executable code with tool access, and nothing about `git clone` asks whether you meant to run it (from https://github.com/retran/meowg1k/pull/154, high) |
+| Require trust before any command | One rule with no list of exceptions to keep current, and no command touches an untrusted `.meow/` beyond the question (reasoned from crates/meow-cli/src/wire.rs:155, low) | The decision to trust becomes impossible to inform (from https://github.com/meowshed/meowg1k/pull/154, high) |
+| Keep `meow pkg` behind the gate, where it was before #163 (from https://github.com/meowshed/meowg1k/pull/163, medium) | An untrusted workspace can't make the binary download an archive from a source it names (reasoned from crates/meow-cli/src/wire.rs:165, low) | `meow pkg` is how a person sees what a workspace would pull in before deciding whether to trust it (from https://github.com/meowshed/meowg1k/pull/163, high) |
+| Do nothing: no trust gate, as v0.2.x had | No friction: every command runs in a fresh clone (from docs/spec/auth.md Changes from v0.2.x, high) | A `.meow/` directory is executable code with tool access, and nothing about `git clone` asks whether you meant to run it (from https://github.com/meowshed/meowg1k/pull/154, high) |
 
 ## What it costs
 
 The exempt commands load and inspect an untrusted `.meow/`, which `R-STAR-084`
-says is safe (from https://github.com/retran/meowg1k/pull/154, high).
+says is safe (from https://github.com/meowshed/meowg1k/pull/154, high).
 `meow pkg update` in an untrusted workspace downloads an archive from a source
 the workspace names and writes a lockfile, so an untrusted workspace can make
 the machine reach a host of its choosing (from crates/meow-cli/src/wire.rs:165,

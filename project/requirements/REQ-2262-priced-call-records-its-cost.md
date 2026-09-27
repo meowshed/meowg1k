@@ -15,4 +15,4 @@ A call against a model that declares a price MUST record its cost from the usage
 the provider returned: prompt tokens at the input price plus completion tokens
 at the output price, each price per million tokens.
 
-(from https://github.com/retran/meowg1k/issues/168, high)
+(from https://github.com/meowshed/meowg1k/issues/168, high)

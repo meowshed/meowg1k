@@ -29,7 +29,7 @@ guard with fewer moving parts. (from docs/spec/agent.md Decisions, high)
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: no default budget, as v0.2.x had, where `max_iterations` was the only bound | Never stops a working run on a limit its author didn't choose (reasoned from docs/spec/agent.md Changes from v0.2.x, low) | An agent that loops costs whatever it costs (from docs/design/0.3.0-architecture.md section 2, high), and a spec with no budget has to take a bounded default rather than run unbounded (from docs/spec/agent.md [R-AGENT-012], high) |
-| A five-minute wall clock, the first number chosen | Stops a wedged run sooner (reasoned from docs/spec/agent.md Decisions, low) | Five minutes is less than 40 steps of a slow model, so it turns a working run into a `budget` stop (from docs/spec/agent.md Decisions and https://github.com/retran/meowg1k/pull/111, high) |
+| A five-minute wall clock, the first number chosen | Stops a wedged run sooner (reasoned from docs/spec/agent.md Decisions, low) | Five minutes is less than 40 steps of a slow model, so it turns a working run into a `budget` stop (from docs/spec/agent.md Decisions and https://github.com/meowshed/meowg1k/pull/111, high) |
 | A default cost cap | Bounds spend in money, the unit a person pays in (reasoned from docs/spec/agent.md Decisions, low) | It means estimating the price of a call before making it, and the token cap is the same guard with fewer moving parts (from docs/spec/agent.md Decisions, high) |
 
 ## What it costs
@@ -47,7 +47,7 @@ docs/spec/agent.md Decisions, medium) A run that needs more than 40 steps or
   real runs behind it, and the trade-off pass listed the default budget among
   four decisions that want a measurement (from git show
   f8e58ea:docs/spec/agent.md Open questions and
-  https://github.com/retran/meowg1k/pull/111, high).
+  https://github.com/meowshed/meowg1k/pull/111, high).
 
 ## Consequences
 

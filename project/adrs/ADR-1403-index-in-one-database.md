@@ -38,7 +38,7 @@ to keep in step (from crates/meow-store/src/index.rs:6-9, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: a separate SQLite database under `internal/adapters/sqlite/index/`, as in v0.2.x | Index writes and `meow index clear` can't touch the session tables, because they are in another file (reasoned from docs/spec/index.md [R-INDEX-052], low) | Two files have to be kept in step, and a chunk can't share the blob table with a tool result quoting the same file (from crates/meow-store/src/index.rs:6-9 and docs/spec/index.md, high) |
-| Keep the vectors only in the `hnsw_rs` graph file | No second copy of each vector, and no rebuild from rows (reasoned from crates/meow-index/src/ann.rs:12-13, low) | A graph that is stale, half written or damaged would lose the index, where a graph that is a cache over the rows costs only a rebuild (from https://github.com/retran/meowg1k/pull/131, high) |
+| Keep the vectors only in the `hnsw_rs` graph file | No second copy of each vector, and no rebuild from rows (reasoned from crates/meow-index/src/ann.rs:12-13, low) | A graph that is stale, half written or damaged would lose the index, where a graph that is a cache over the rows costs only a rebuild (from https://github.com/meowshed/meowg1k/pull/131, high) |
 
 The history names no third option; these two are all that the specification,
 the code and the pull requests record.

@@ -14,4 +14,4 @@ verification: behavioural
 A request that would exceed a declared ceiling MUST be refused before the call
 is made.
 
-(from https://github.com/retran/meowg1k/issues/167, high)
+(from https://github.com/meowshed/meowg1k/issues/167, high)

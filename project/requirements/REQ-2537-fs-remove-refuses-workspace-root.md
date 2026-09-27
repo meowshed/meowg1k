@@ -13,5 +13,5 @@ verification: behavioural
 
 `fs.remove` MUST refuse the workspace root.
 
-(from https://github.com/retran/meowg1k/pull/135 and
+(from https://github.com/meowshed/meowg1k/pull/135 and
 crates/meow-star/src/capability.rs:210, high)

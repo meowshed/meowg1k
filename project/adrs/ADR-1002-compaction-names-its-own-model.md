@@ -25,12 +25,12 @@ high)
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: leave the compaction model unspecified, so it summarises on the agent's model, as the first draft did | One model to declare and nothing to fall back from (reasoned from crates/meow-agent/src/compaction.rs:20-25, low) | It runs a cheap task on the agent's expensive model at the worst possible moment, on every long run (from docs/spec/agent.md Decisions and https://github.com/retran/meowg1k/pull/111, high) |
+| Do nothing: leave the compaction model unspecified, so it summarises on the agent's model, as the first draft did | One model to declare and nothing to fall back from (reasoned from crates/meow-agent/src/compaction.rs:20-25, low) | It runs a cheap task on the agent's expensive model at the worst possible moment, on every long run (from docs/spec/agent.md Decisions and https://github.com/meowshed/meowg1k/pull/111, high) |
 
 The trade-off pass in pull request 111 recorded only the first answer,
 "Unspecified", and the answer that replaced it; no third option appears in the
 specification, the design documents or the history (from
-https://github.com/retran/meowg1k/pull/111, high).
+https://github.com/meowshed/meowg1k/pull/111, high).
 
 ## What it costs
 

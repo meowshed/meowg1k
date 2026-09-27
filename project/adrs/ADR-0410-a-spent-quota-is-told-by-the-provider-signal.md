@@ -13,7 +13,7 @@ supersedes: []
 
 A 429 is a rate limit unless the provider's own documented signal says the quota
 is spent, and that signal is a field the provider fills from its response (from
-https://github.com/retran/meowg1k/pull/117, high). `LlmError::Http` carries a
+https://github.com/meowshed/meowg1k/pull/117, high). `LlmError::Http` carries a
 `quota_exhausted` flag, and `LlmError::class` returns `QuotaExhausted` when it
 is set and `Transient` for a 429 when it isn't (from
 crates/meow-llm/src/error.rs:114-137, high). Each provider reads its own signal:
@@ -41,16 +41,16 @@ high).
 
 The ambiguous case takes the cheaper mistake: retrying a spent quota costs a
 delay, and refusing a rate limit costs the run (from
-https://github.com/retran/meowg1k/pull/117, high). Matching text out of a
+https://github.com/meowshed/meowg1k/pull/117, high). Matching text out of a
 message broke whenever a provider reworded an error (from
-https://github.com/retran/meowg1k/pull/117, high).
+https://github.com/meowshed/meowg1k/pull/117, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: match the quota signal out of the error message's text, as v0.2.x did | One function covered every provider, with no per-vendor code (from v0.2.1:internal/adapters/gateway/retry.go:30-46, high) | It broke whenever a provider reworded an error (from https://github.com/retran/meowg1k/pull/117, high) |
-| Treat an ambiguous 429 as a spent quota | A spent quota fails at once, with no backoff spent on it (reasoned from crates/meow-llm/src/retry.rs:52-53, low) | Refusing a rate limit costs the run, where retrying a spent quota costs only a delay (from https://github.com/retran/meowg1k/pull/117, high) |
+| Do nothing: match the quota signal out of the error message's text, as v0.2.x did | One function covered every provider, with no per-vendor code (from v0.2.1:internal/adapters/gateway/retry.go:30-46, high) | It broke whenever a provider reworded an error (from https://github.com/meowshed/meowg1k/pull/117, high) |
+| Treat an ambiguous 429 as a spent quota | A spent quota fails at once, with no backoff spent on it (reasoned from crates/meow-llm/src/retry.rs:52-53, low) | Refusing a rate limit costs the run, where retrying a spent quota costs only a delay (from https://github.com/meowshed/meowg1k/pull/117, high) |
 | The provider's documented signal, with an ambiguous 429 read as transient (chosen) | A reworded message doesn't change the classification (from crates/meow-llm/src/anthropic.rs:156-160, high) | It won |
 
 ## What it costs
@@ -58,7 +58,7 @@ https://github.com/retran/meowg1k/pull/117, high).
 Gemini uses one status for a rate limit and an exhausted quota, so
 `RESOURCE_EXHAUSTED` reads as a spent quota only when there is no `Retry-After`,
 and a provider that sends neither is retried when it shouldn't be (from
-https://github.com/retran/meowg1k/pull/133, high). That retry is bounded: four
+https://github.com/meowshed/meowg1k/pull/133, high). That retry is bounded: four
 attempts, each backoff capped at 30 seconds (from
 crates/meow-llm/src/retry.rs:27-29, high). Each provider also carries its own
 list of quota codes, which has to follow the vendor's documentation (from
@@ -73,7 +73,7 @@ crates/meow-llm/src/openai.rs:174-196, high).
 - The retry schedule grows long enough that retrying a spent quota costs more
   than refusing a rate limit, which inverts the cost argument (reasoned from
   crates/meow-llm/src/retry.rs:27-29 and
-  https://github.com/retran/meowg1k/pull/117, low).
+  https://github.com/meowshed/meowg1k/pull/117, low).
 
 ## Consequences
 

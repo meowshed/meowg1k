@@ -14,5 +14,5 @@ verification: behavioural
 A tool call MUST reach the policy with the host of its argument named `url` as
 the host it reaches.
 
-(from https://github.com/retran/meowg1k/pull/127 and
+(from https://github.com/meowshed/meowg1k/pull/127 and
 crates/meow-star/src/run.rs:560, high)

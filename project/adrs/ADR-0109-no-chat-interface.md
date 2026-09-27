@@ -83,6 +83,6 @@ fail when there is no terminal (from docs/design/0.3.0-tui.md section 6, high).
 ## What this does not settle
 
 - How a resumed session seeds the engine with its own messages, which belongs to
-  the session log (from https://github.com/retran/meowg1k/pull/127, high).
+  the session log (from https://github.com/meowshed/meowg1k/pull/127, high).
 - Whether a new run starts a fresh session or continues one by default, which
   ADR-0111 records (from docs/design/0.3.0-tui.md section 2.3, high).

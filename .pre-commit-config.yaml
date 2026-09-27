@@ -72,7 +72,7 @@ repos:
 
       - id: goimports
         name: goimports (organize imports)
-        entry: bash -c 'goimports -local github.com/retran/meowg1k -w .'
+        entry: bash -c 'goimports -local github.com/meowshed/meowg1k -w .'
         language: system
         files: \.go$
         pass_filenames: false

@@ -13,7 +13,7 @@ supersedes: []
 
 `Redaction` is supplied by the caller, not derived by `meow-session`, and the
 binary is meant to pass `Policy::sensitive_for` (from
-https://github.com/retran/meowg1k/pull/128, high).
+https://github.com/meowshed/meowg1k/pull/128, high).
 
 Once this is accepted, `Sessions::export_json` and `Sessions::export_markdown`
 replace the value of every argument the caller names, in both formats (from
@@ -25,16 +25,16 @@ crates/meow-cli/src/wire.rs:713, high).
 ## Why
 
 Which arguments are sensitive is a property of the policy and the tool set, and
-`meow-session` knows neither (from https://github.com/retran/meowg1k/pull/128,
+`meow-session` knows neither (from https://github.com/meowshed/meowg1k/pull/128,
 high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Derive the redaction inside `meow-session` | A caller couldn't forget to pass the list, and every export would be redacted without the binary wiring anything (reasoned from crates/meow-cli/src/wire.rs:713, low) | `meow-session` knows neither the policy nor the tool set (from https://github.com/retran/meowg1k/pull/128, high) |
+| Derive the redaction inside `meow-session` | A caller couldn't forget to pass the list, and every export would be redacted without the binary wiring anything (reasoned from crates/meow-cli/src/wire.rs:713, low) | `meow-session` knows neither the policy nor the tool set (from https://github.com/meowshed/meowg1k/pull/128, high) |
 | Redact the arguments before they reach the log, so export needs no list | The log would never hold a marked value, which REQ-2043 asks for anyway (reasoned from docs/requirements/REQ-2043-sensitive-value-never-logged-clear.md, low) | The engine records the arguments it was given and `meow-star` writes them unchanged, so export is where the redaction happens today (from crates/meow-session/src/export.rs:196 and crates/meow-star/src/run.rs:710, medium) |
-| Do nothing: export the log as recorded | No policy has to be loaded to read a session, which is the state `meow session export` is in now (from https://github.com/retran/meowg1k/pull/129, high) | REQ-2260 requires every value the policy marked sensitive to be redacted in both formats (from docs/spec/session.md [R-SESSION-092], high) |
+| Do nothing: export the log as recorded | No policy has to be loaded to read a session, which is the state `meow session export` is in now (from https://github.com/meowshed/meowg1k/pull/129, high) | REQ-2260 requires every value the policy marked sensitive to be redacted in both formats (from docs/spec/session.md [R-SESSION-092], high) |
 
 ## What it costs
 
@@ -43,7 +43,7 @@ that passes an empty list gets an unredacted export with no error (reasoned from
 crates/meow-session/src/export.rs:219, low). The binary pays that cost now:
 `meow session export` doesn't load a policy, so the requirement is met in
 `meow-session` and not through the command line (from
-https://github.com/retran/meowg1k/pull/129, high).
+https://github.com/meowshed/meowg1k/pull/129, high).
 
 ## What would reverse it
 
@@ -77,7 +77,7 @@ crates/meow-cli/src/wire.rs:713, high).
 
 - `meow session export` passes an empty redaction, because the binary doesn't
   load a policy for a session command yet (from
-  https://github.com/retran/meowg1k/pull/129, high).
+  https://github.com/meowshed/meowg1k/pull/129, high).
 - Whether the log should hold a marked value at all: the engine hands the tool
   arguments to `meow-star` unredacted and `meow-star` records them, which
   REQ-2043 forbids (from crates/meow-agent/src/engine.rs:287 and

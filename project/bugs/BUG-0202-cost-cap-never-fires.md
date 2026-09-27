@@ -22,13 +22,13 @@ At `d67ae50`:
 2. Run it for several steps.
 
 The run is never stopped by cost, and `meow session show` reports no cost (from
-https://github.com/retran/meowg1k/issues/168, high).
+https://github.com/meowshed/meowg1k/issues/168, high).
 
 ## What the system does
 
 `Budget` has a `cost_micros` axis and the ledger checks it, but every provider
 sets `cost_micros: None`, so the axis never fires. `meow.model` takes no price,
-so nothing can supply one (from https://github.com/retran/meowg1k/issues/168 and
+so nothing can supply one (from https://github.com/meowshed/meowg1k/issues/168 and
 crates/meow-llm/src, high).
 
 ## What it should do, and why

@@ -14,5 +14,5 @@ verification: behavioural
 `fs.glob` MUST return, sorted, every file in the workspace whose path relative
 to the workspace root matches the pattern.
 
-(from https://github.com/retran/meowg1k/pull/135 and
+(from https://github.com/meowshed/meowg1k/pull/135 and
 crates/meow-star/src/capability.rs:143, high)

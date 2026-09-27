@@ -48,7 +48,7 @@ former `docs/philosophy.md` principle 6, high)
 | Audience | Wants | What they do today instead |
 | -------- | ----- | -------------------------- |
 | A developer who thinks in scripts | AI workflows that are code: a file to diff and review, a command to chain with `&&` (from the previous `docs/vision.md`, high) | Operates an AI tool through its own interface (from the previous `docs/vision.md`, high) |
-| A team running the same workflow locally and in CI | Identical behaviour on a laptop and in CI (from the previous `docs/vision.md`, high) | Shell scripts that pipe text to a model's API and print the reply, which is the gap meowg1k's first issue set out to fill; the scripts carry no budget, no policy and no log (from https://github.com/retran/meowg1k/issues/1, medium) |
+| A team running the same workflow locally and in CI | Identical behaviour on a laptop and in CI (from the previous `docs/vision.md`, high) | Shell scripts that pipe text to a model's API and print the reply, which is the gap meowg1k's first issue set out to fill; the scripts carry no budget, no policy and no log (from https://github.com/meowshed/meowg1k/issues/1, medium) |
 
 meowg1k asks more of someone happy with a tool's own interface than they need:
 it asks them to write a handler and declare it. (from the previous

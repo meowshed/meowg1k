@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 The provider transport gives up connecting after 30 seconds and puts no
-deadline on the response (from https://github.com/retran/meowg1k/pull/125,
+deadline on the response (from https://github.com/meowshed/meowg1k/pull/125,
 high). The code sets `reqwest`'s `connect_timeout` and no `timeout` (from
 crates/meow-llm/src/http.rs:24 and :46-49, high). The comment on
 `CONNECT_TIMEOUT` calls it "how long to wait for the first byte of a response",
@@ -23,14 +23,14 @@ pull request (reasoned from crates/meow-llm/src/http.rs:19, low).
 
 A model thinking for two minutes is normal, and a whole-response timeout that
 fired on one would make the retry logic hammer a provider that is working (from
-https://github.com/retran/meowg1k/pull/125, high).
+https://github.com/meowshed/meowg1k/pull/125, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: no timeout at all | Nothing to tune (reasoned from crates/meow-llm/src/http.rs:44-53, low) | A connection that goes nowhere holds the run until the operating system gives up (reasoned from crates/meow-llm/src/http.rs:24, low) |
-| A deadline on the whole response | A stalled response ends on its own (reasoned from https://github.com/retran/meowg1k/pull/125, low) | It fires on a model that is thinking, and the retry then hammers a working provider (from https://github.com/retran/meowg1k/pull/125, high) |
+| A deadline on the whole response | A stalled response ends on its own (reasoned from https://github.com/meowshed/meowg1k/pull/125, low) | It fires on a model that is thinking, and the retry then hammers a working provider (from https://github.com/meowshed/meowg1k/pull/125, high) |
 
 ## What it costs
 

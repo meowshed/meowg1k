@@ -13,7 +13,7 @@ supersedes: []
 
 The prompt doesn't suppress echo and says the key will be visible, and `--key`
 exists for scripts that already hold the key somewhere safer (from
-https://github.com/retran/meowg1k/pull/153, high).
+https://github.com/meowshed/meowg1k/pull/153, high).
 
 Once this is accepted, `meow auth login <provider>` without `--key` prints
 "Key for `<provider>` (it will be visible as you type): " on standard error and
@@ -26,20 +26,20 @@ scrollback (reasoned from crates/meow-cli/src/ask.rs:269, low).
 
 Portable suppression needs a terminal crate and raw mode, and a version that
 echoes on one platform and not another is worse than not promising it (from
-https://github.com/retran/meowg1k/pull/153, high).
+https://github.com/meowshed/meowg1k/pull/153, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Suppress echo while the key is typed | Nobody looking at the screen or the scrollback sees the key (reasoned from crates/meow-cli/src/ask.rs:252, low) | It needs a terminal crate and raw mode, and suppression that works on one platform only is worse than not promising it (from https://github.com/retran/meowg1k/pull/153, high) |
-| Do nothing: take the key only from `--key`, with no prompt | Nothing is echoed, because nothing is typed at a prompt (reasoned from crates/meow-cli/src/surface.rs:139, low) | `--key` puts the key in shell history, so it isn't the path a person is steered to (from https://github.com/retran/meowg1k/pull/153, high) |
+| Suppress echo while the key is typed | Nobody looking at the screen or the scrollback sees the key (reasoned from crates/meow-cli/src/ask.rs:252, low) | It needs a terminal crate and raw mode, and suppression that works on one platform only is worse than not promising it (from https://github.com/meowshed/meowg1k/pull/153, high) |
+| Do nothing: take the key only from `--key`, with no prompt | Nothing is echoed, because nothing is typed at a prompt (reasoned from crates/meow-cli/src/surface.rs:139, low) | `--key` puts the key in shell history, so it isn't the path a person is steered to (from https://github.com/meowshed/meowg1k/pull/153, high) |
 | Read the key from piped standard input | A script could pass a key without a terminal and without shell history (reasoned from crates/meow-cli/src/ask.rs:263, low) | A pipeline that silently read a blank key would store one, so the prompt refuses when standard input isn't a terminal (from crates/meow-cli/src/ask.rs:258, high) |
 
 ## What it costs
 
 `--key` puts the key in shell history, which is why it isn't the path a person
-is steered to (from https://github.com/retran/meowg1k/pull/153, high). The typed
+is steered to (from https://github.com/meowshed/meowg1k/pull/153, high). The typed
 key is visible to anyone watching the screen and stays in scrollback (reasoned
 from crates/meow-cli/src/ask.rs:269, low).
 

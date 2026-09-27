@@ -14,5 +14,5 @@ verification: behavioural
 `@std//git` MUST run the user's own `git` program as a subprocess, so it reads
 the repository with the configuration, hooks and worktrees that program sees.
 
-(from https://github.com/retran/meowg1k/pull/136 and
+(from https://github.com/meowshed/meowg1k/pull/136 and
 crates/meow-star/src/capability_git.rs:25, high)

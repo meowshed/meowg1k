@@ -70,7 +70,7 @@ high).
   high).
 - A package source is a gzipped tar archive fetched over HTTP or HTTPS
   [REQ-1825], and a download that hasn't finished in 120 seconds fails
-  [REQ-1829] (from https://github.com/retran/meowg1k/pull/162, high).
+  [REQ-1829] (from https://github.com/meowshed/meowg1k/pull/162, high).
 
 ### What a package may do
 
@@ -99,9 +99,9 @@ high).
 - An archive holding an entry whose path contains `..` or starts at a root is
   refused [REQ-1826], and so is one holding an entry the unpacker declines to
   write, so an escaping archive never pins an empty package [REQ-1827] (from
-  https://github.com/retran/meowg1k/pull/162, high).
+  https://github.com/meowshed/meowg1k/pull/162, high).
 - An archive larger than 64 MiB is refused [REQ-1828] (from
-  https://github.com/retran/meowg1k/pull/162, high).
+  https://github.com/meowshed/meowg1k/pull/162, high).
 - An interrupted download leaves nothing the next run takes for a complete
   package [REQ-1818] (from docs/spec/packages.md [R-PKG-022], high).
 - A file in a package that loads `//<path>`, the host workspace's own tree,

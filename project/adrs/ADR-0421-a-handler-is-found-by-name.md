@@ -13,7 +13,7 @@ supersedes: []
 
 The declaration records the file and the symbol, and the run phase looks the
 handler up in the frozen module (from
-https://github.com/retran/meowg1k/pull/123, high).
+https://github.com/meowshed/meowg1k/pull/123, high).
 
 Once this is accepted, a tool bound to a module-level function runs on its own
 blocking thread with a fresh evaluator, and a private name such as `_review`
@@ -26,7 +26,7 @@ crates/meow-star/src/run.rs:461-467, high).
 ## Why
 
 A function can't outlive the evaluator that made it (from
-https://github.com/retran/meowg1k/pull/123, high). The Starlark spike found the
+https://github.com/meowshed/meowg1k/pull/123, high). The Starlark spike found the
 reason: a value borrows the heap it lives in, and a heap can't outlive the
 closure `Module::with_temp_heap` scopes it to, so moving one to another thread
 fails to compile (from docs/design/0.3.0-spike-starlark.md, section "The
@@ -36,18 +36,18 @@ correction", high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Hold the handler function as a value | Needs no name recovered from a display string, so a lambda or a nested `def` would work too (reasoned from crates/meow-star/src/run.rs:34-41, low) | A function can't outlive the evaluator that made it (from https://github.com/retran/meowg1k/pull/123, high), and a value borrowed from a heap doesn't compile when it crosses a thread (from docs/design/0.3.0-spike-starlark.md, section "The correction", high) |
+| Hold the handler function as a value | Needs no name recovered from a display string, so a lambda or a nested `def` would work too (reasoned from crates/meow-star/src/run.rs:34-41, low) | A function can't outlive the evaluator that made it (from https://github.com/meowshed/meowg1k/pull/123, high), and a value borrowed from a heap doesn't compile when it crosses a thread (from docs/design/0.3.0-spike-starlark.md, section "The correction", high) |
 | Take the handler's name as a string in `run` | Names the symbol exactly, with no heuristic over a display form (reasoned from crates/meow-star/src/run.rs:34-41, low) | The API passes the function itself, `run = _handler`, and the workspace in this repository is written that way (from docs/design/0.3.0-starlark-api.md:333 and .meow/meow.star:82, high) |
 
 Doing nothing isn't an option here, because before this change no handler ran
-at all (from https://github.com/retran/meowg1k/pull/123, high).
+at all (from https://github.com/meowshed/meowg1k/pull/123, high).
 
 ## What it costs
 
 The name comes from the function's display form, so a lambda or a nested `def`
 fails with a message saying a handler has to be a top-level function; that is a
 heuristic over a display string (from
-https://github.com/retran/meowg1k/pull/123, high). A display form that parses
+https://github.com/meowshed/meowg1k/pull/123, high). A display form that parses
 but names no module-level symbol fails only when the tool is first called,
 not when it is declared, because `Handler::parse` checks the shape and the
 lookup happens in `call_handler` (from crates/meow-star/src/declare.rs:238 and

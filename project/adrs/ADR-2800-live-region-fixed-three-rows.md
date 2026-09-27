@@ -38,7 +38,7 @@ amendment of 2026-09-20, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | A region that grows with content | It shows everything the run has to say without truncating, where three rows can hold only the tool, the step and the budget (reasoned from docs/design/0.3.0-tui.md section 5, low) | It reflows the terminal while you're reading it (from docs/spec/tui.md, high) |
-| Do nothing: keep the approved [R-TUI-016] of 2026-09-19, a second larger fixed height while a prompt is open | The prompt sits in a bordered box pinned to the bottom of the screen and leaves no trace in the transcript once answered, as docs/design/0.3.0-tui.md section 7 draws it (from docs/design/0.3.0-tui.md section 7, high); it was what PR #124 built as `Tty::prompting` (from https://github.com/retran/meowg1k/pull/124, high) | It reflows the terminal twice as you read the command you're approving (from docs/spec/tui.md, high), and a permission decision that disappears when the prompt closes can't be checked afterwards (from https://github.com/retran/meowg1k/pull/127, high) |
+| Do nothing: keep the approved [R-TUI-016] of 2026-09-19, a second larger fixed height while a prompt is open | The prompt sits in a bordered box pinned to the bottom of the screen and leaves no trace in the transcript once answered, as docs/design/0.3.0-tui.md section 7 draws it (from docs/design/0.3.0-tui.md section 7, high); it was what PR #124 built as `Tty::prompting` (from https://github.com/meowshed/meowg1k/pull/124, high) | It reflows the terminal twice as you read the command you're approving (from docs/spec/tui.md, high), and a permission decision that disappears when the prompt closes can't be checked afterwards (from https://github.com/meowshed/meowg1k/pull/127, high) |
 | Rebuild the terminal with a taller inline viewport each time a prompt opens | It would meet the original [R-TUI-016] to the letter (reasoned from docs/spec/tui.md [R-TUI-016] amendment, low) | `ratatui` offers no way to take the backend back, so the rebuild would be over a backend that can't be recovered (from docs/spec/tui.md [R-TUI-016] amendment of 2026-09-20, high) |
 
 ## What it costs
@@ -49,7 +49,7 @@ crates/meow-ui/src/tty.rs:401-414, low). The live region can show no more than
 three rows at any time, whatever the run is doing (from
 crates/meow-ui/src/tty.rs:25, high). The prompt is answered by typing a line and
 Enter, not by a single keypress, because raw mode could leave the terminal
-broken after a panic (from https://github.com/retran/meowg1k/pull/127, high).
+broken after a panic (from https://github.com/meowshed/meowg1k/pull/127, high).
 
 ## What would reverse it
 

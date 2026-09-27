@@ -13,5 +13,5 @@ verification: behavioural
 
 `fs.glob` MUST NOT walk into a directory named `.data`.
 
-(from https://github.com/retran/meowg1k/pull/135 and
+(from https://github.com/meowshed/meowg1k/pull/135 and
 crates/meow-star/src/capability.rs:164, high)

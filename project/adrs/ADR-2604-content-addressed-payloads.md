@@ -28,10 +28,10 @@ docs/design/0.3.0-sessions.md section 3, high).
 | Option | Better at | Why it lost |
 | --- | --- | --- |
 | Do nothing: store each tool result inline, as v0.2.x does | One row per event and no reference count to keep, so deleting a session is a plain delete (reasoned from docs/spec/store.md [R-STORE-040], low) | An agent that reads the same file at three steps stores it three times (from docs/spec/store.md, Changes from v0.2.x, high) |
-| Address only payloads over 512 bytes, and keep smaller ones inline in the event, as the first draft of [R-STORE-010] said | Small payloads skip the blob table and its reference count (reasoned from `git show f8e58ea:docs/spec/store.md` [R-STORE-010], low) | The event types always carry a hash, so a payload stored only sometimes by hash contradicted them; the spec was amended so every payload has a hash and inlining is an invisible storage choice (from <https://github.com/retran/meowg1k/pull/110>, high) |
+| Address only payloads over 512 bytes, and keep smaller ones inline in the event, as the first draft of [R-STORE-010] said | Small payloads skip the blob table and its reference count (reasoned from `git show f8e58ea:docs/spec/store.md` [R-STORE-010], low) | The event types always carry a hash, so a payload stored only sometimes by hash contradicted them; the spec was amended so every payload has a hash and inlining is an invisible storage choice (from <https://github.com/meowshed/meowg1k/pull/110>, high) |
 
 The Go-era plan in issue 7 keyed a content store by SHA-256 of the file
-content (from <https://github.com/retran/meowg1k/issues/7>, high). No source
+content (from <https://github.com/meowshed/meowg1k/issues/7>, high). No source
 says why BLAKE3 replaced SHA-256, so the table has no row for the choice of
 hash.
 
@@ -84,4 +84,4 @@ docs/design/0.3.0-sessions.md section 3, low).
   say what happened without fetching anything (from
   crates/meow-store/src/rows.rs:81-86, high).
 - Why BLAKE3 and not SHA-256, which issue 7 used (from
-  <https://github.com/retran/meowg1k/issues/7>, high).
+  <https://github.com/meowshed/meowg1k/issues/7>, high).

@@ -13,7 +13,7 @@ supersedes: []
 
 A body over the cap is cut rather than refused; `max_bytes` defaults to 8 MiB
 and a caller can raise it deliberately (from
-https://github.com/retran/meowg1k/pull/145, high).
+https://github.com/meowshed/meowg1k/pull/145, high).
 
 With this in place, each verb takes `max_bytes`, the default is
 `8 * 1024 * 1024`, and the body a handler gets is at most that many bytes,
@@ -29,14 +29,14 @@ crates/meow-star/src/capability_http.rs:249-266, high).
 ## Why
 
 A handler that asked for a megabyte of a stream wants the megabyte (from
-https://github.com/retran/meowg1k/pull/145, high).
+https://github.com/meowshed/meowg1k/pull/145, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Refuse a body over the cap | The handler can't mistake a partial body for the whole one (reasoned from crates/meow-star/src/capability_http.rs:249-266, low) | A handler that asked for a megabyte of a stream wants the megabyte (from https://github.com/retran/meowg1k/pull/145, high) |
-| Do nothing: read the whole body with no cap | No argument to learn, and a body is never partial (reasoned from https://github.com/retran/meowg1k/pull/145, low) | A server that answers forever hangs a handler that did nothing wrong (from https://github.com/retran/meowg1k/pull/145, high) |
+| Refuse a body over the cap | The handler can't mistake a partial body for the whole one (reasoned from crates/meow-star/src/capability_http.rs:249-266, low) | A handler that asked for a megabyte of a stream wants the megabyte (from https://github.com/meowshed/meowg1k/pull/145, high) |
+| Do nothing: read the whole body with no cap | No argument to learn, and a body is never partial (reasoned from https://github.com/meowshed/meowg1k/pull/145, low) | A server that answers forever hangs a handler that did nothing wrong (from https://github.com/meowshed/meowg1k/pull/145, high) |
 
 The source names no third option.
 
@@ -80,5 +80,5 @@ crates/meow-star/tests/running.rs:2351, high).
   promises and the code does not return (from
   crates/meow-star/src/capability_http.rs:249-266, high).
 - Binary bodies, which come back with replacement characters because the
-  dialect has no bytes type (from https://github.com/retran/meowg1k/pull/145,
+  dialect has no bytes type (from https://github.com/meowshed/meowg1k/pull/145,
   high).

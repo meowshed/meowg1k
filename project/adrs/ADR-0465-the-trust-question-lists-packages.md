@@ -13,7 +13,7 @@ supersedes: []
 
 The trust question shows declared packages, and adding a package withdraws an
 agreement as adding a tool does (from
-https://github.com/retran/meowg1k/pull/163, high).
+https://github.com/meowshed/meowg1k/pull/163, high).
 
 Once this is accepted, `Declared::of` adds one line per declared package,
 `package <name> <version> from <source>`, to the lines the trust question shows
@@ -28,13 +28,13 @@ crates/meow-cli/src/trust.rs:44, high).
 
 A workspace that declares a package will run code somebody else wrote, the most
 important line on that list, and leaving it off made the prompt ask less than it
-appeared to (from https://github.com/retran/meowg1k/pull/163, high).
+appeared to (from https://github.com/meowshed/meowg1k/pull/163, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: leave packages off the trust question | A shorter question, and adding a package doesn't withdraw an agreement (reasoned from crates/meow-cli/src/trust.rs:33, low) | The prompt asks less than it appears to (from https://github.com/retran/meowg1k/pull/163, high) |
+| Do nothing: leave packages off the trust question | A shorter question, and adding a package doesn't withdraw an agreement (reasoned from crates/meow-cli/src/trust.rs:33, low) | The prompt asks less than it appears to (from https://github.com/meowshed/meowg1k/pull/163, high) |
 
 The code and the history name no other option: the question is whether a
 package is on the list, and the only other answer is the one that lost.
@@ -57,12 +57,12 @@ docs/requirements/REQ-1824-package-code-follows-workspace-rules.md, low).
 ## Consequences
 
 - What is shown is what is agreed to, and a package was missing from what was
-  shown (from https://github.com/retran/meowg1k/pull/163, high).
+  shown (from https://github.com/meowshed/meowg1k/pull/163, high).
 - The lines are sorted, so reordering declarations doesn't ask again (from
   crates/meow-cli/src/trust.rs:66, high).
 - `meow pkg` is exempt from the trust gate, so a person can see what a
   workspace would pull in before deciding to trust it (from
-  https://github.com/retran/meowg1k/pull/163, high).
+  https://github.com/meowshed/meowg1k/pull/163, high).
 
 ## How I will know it was realised
 

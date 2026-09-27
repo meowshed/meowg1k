@@ -13,7 +13,7 @@ supersedes: []
 
 The port behind `ctx.out` takes one typed event rather than offering a method
 per call, and the engine's own events go down the same channel (from
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 Once this is accepted, the `Events` trait has one method, `event`, taking a
 `ViewEvent`, and the ten `ctx.out` calls are the variants of `Output` (from
@@ -25,16 +25,16 @@ high).
 ## Why
 
 A trait with ten methods would let a renderer quietly handle nine (from
-https://github.com/retran/meowg1k/pull/124, high). One channel lets a renderer
+https://github.com/meowshed/meowg1k/pull/124, high). One channel lets a renderer
 see one vocabulary instead of two (from
-https://github.com/retran/meowg1k/pull/124, high).
+https://github.com/meowshed/meowg1k/pull/124, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| A trait with a method per `ctx.out` call | Each call gets its own signature, and a renderer overrides only the calls it cares about (reasoned from https://github.com/retran/meowg1k/pull/124, low) | A renderer could quietly handle nine of the ten (from https://github.com/retran/meowg1k/pull/124, high) |
-| One channel for `ctx.out` and another for the engine's events | Keeps what a script said apart from what the engine reported, so a consumer can take one without the other (reasoned from crates/meow-star/tests/running.rs:33-38, where a test filters the engine's events out, low) | A renderer would see two vocabularies that have to be kept level (from https://github.com/retran/meowg1k/pull/124 and crates/meow-star/src/port.rs:19-23, high) |
+| A trait with a method per `ctx.out` call | Each call gets its own signature, and a renderer overrides only the calls it cares about (reasoned from https://github.com/meowshed/meowg1k/pull/124, low) | A renderer could quietly handle nine of the ten (from https://github.com/meowshed/meowg1k/pull/124, high) |
+| One channel for `ctx.out` and another for the engine's events | Keeps what a script said apart from what the engine reported, so a consumer can take one without the other (reasoned from crates/meow-star/tests/running.rs:33-38, where a test filters the engine's events out, low) | A renderer would see two vocabularies that have to be kept level (from https://github.com/meowshed/meowg1k/pull/124 and crates/meow-star/src/port.rs:19-23, high) |
 | Do nothing: keep v0.2.x's `ctx.ui` with 22 layout builtins | A script decides its own layout (from docs/spec/tui.md:204-206, medium) | Presentation is decided in userland and can't be fixed centrally, and three rendering stacks each own the cursor (from docs/spec/tui.md:199-206, high) |
 
 ## What it costs

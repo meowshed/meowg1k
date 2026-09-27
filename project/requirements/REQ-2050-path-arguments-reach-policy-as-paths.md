@@ -15,5 +15,5 @@ A tool call MUST reach the policy with the values of its arguments named `path`,
 `file`, `paths` and `files` as the paths it touches, each resolved against the
 workspace root.
 
-(from https://github.com/retran/meowg1k/pull/127 and
+(from https://github.com/meowshed/meowg1k/pull/127 and
 crates/meow-star/src/run.rs:540, high)

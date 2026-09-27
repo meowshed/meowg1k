@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `index.build`, `index.update` and `index.stats` report counts rather than
-sentences (from https://github.com/retran/meowg1k/pull/142, high).
+sentences (from https://github.com/meowshed/meowg1k/pull/142, high).
 
 With this in place, `build` and `update` return a struct with `files`,
 `added`, `changed`, `removed` and `embedded`, and `stats` returns `chunks`,
@@ -24,14 +24,14 @@ that call embedded (from crates/meow-cli/src/index.rs:208-225, high).
 
 A handler deciding whether to keep going needs a number, and parsing one back
 out of a sentence is how a report goes stale (from
-https://github.com/retran/meowg1k/pull/142, high).
+https://github.com/meowshed/meowg1k/pull/142, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Report sentences | Printing as it is, the way `meow index build` reports to a person (reasoned from crates/meow-cli/src/index.rs, low) | A handler has to parse the number back out, and that is how a report goes stale (from https://github.com/retran/meowg1k/pull/142, high) |
-| Do nothing: no `index` module, so a handler shells out to `meow index build` | No new module to keep (reasoned from https://github.com/retran/meowg1k/pull/142, low) | A script that indexes before it searches would shell out to the binary running it (from https://github.com/retran/meowg1k/pull/142, high) |
+| Report sentences | Printing as it is, the way `meow index build` reports to a person (reasoned from crates/meow-cli/src/index.rs, low) | A handler has to parse the number back out, and that is how a report goes stale (from https://github.com/meowshed/meowg1k/pull/142, high) |
+| Do nothing: no `index` module, so a handler shells out to `meow index build` | No new module to keep (reasoned from https://github.com/meowshed/meowg1k/pull/142, low) | A script that indexes before it searches would shell out to the binary running it (from https://github.com/meowshed/meowg1k/pull/142, high) |
 
 The source names no third shape for the result.
 

@@ -14,5 +14,5 @@ verification: behavioural
 The provider transport MUST NOT put a deadline on a whole response, because a
 model thinking for two minutes is normal.
 
-(from https://github.com/retran/meowg1k/pull/125 and
+(from https://github.com/meowshed/meowg1k/pull/125 and
 crates/meow-llm/src/http.rs:46, high)

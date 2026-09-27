@@ -40,13 +40,13 @@ docs/spec/policy.md, high).
 | --- | --- | --- |
 | Do nothing: no policy layer, as in v0.2.x, with `shell_exec` an ordinary tool | No rules to write and no prompts, so an agent uses every tool it is given (reasoned from docs/design/0.3.0-architecture.md section 2, low) | An agent that is talked into running a command runs it (from docs/spec/policy.md, high), and a tool that shells out is the product's central safety question with no answer (from docs/design/0.3.0-architecture.md section 2, high) |
 | A policy written as a Starlark library | Rules would be written and extended in the language the workspace already uses (reasoned from docs/design/0.3.0-starlark-api.md, low) | A library can't be trusted by the thing it constrains (from docs/spec/policy.md, high) |
-| Allow a call that no rule matches | An agent works before anyone writes a rule (reasoned from https://github.com/retran/meowg1k/pull/119, low) | Forgetting to grant something becomes a hole and not a refusal (from https://github.com/retran/meowg1k/pull/119, high) |
+| Allow a call that no rule matches | An agent works before anyone writes a rule (reasoned from https://github.com/meowshed/meowg1k/pull/119, low) | Forgetting to grant something becomes a hole and not a refusal (from https://github.com/meowshed/meowg1k/pull/119, high) |
 
 ## What it costs
 
 A workspace has to write rules before an agent's tools do anything, because an
 empty policy denies every call (from crates/meow-agent/src/spec.rs:62-67 and
-https://github.com/retran/meowg1k/pull/119, high). The runtime has to describe
+https://github.com/meowshed/meowg1k/pull/119, high). The runtime has to describe
 each call to the policy, resolving its paths and parsing its command and host
 before the decision (from crates/meow-star/src/run.rs:515-566, high).
 
@@ -62,7 +62,7 @@ The whole policy specification is new in v0.3.0, and it is the largest single
 addition of the rewrite (from docs/spec/policy.md, high). A denied call tells
 the model which tool policy refused, and a run that policy stopped ends with
 the stop reason `denied`, apart from a tool failure (from
-https://github.com/retran/meowg1k/pull/119 and
+https://github.com/meowshed/meowg1k/pull/119 and
 crates/meow-agent/tests/spec.rs:761-829, high).
 
 ## How I will know it was realised

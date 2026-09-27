@@ -31,7 +31,7 @@ crates/meow-star/src/modules.rs:121, high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: offer only `env.get`, which returns `None` or a default | A workspace that declares three providers loads when only one key is set, and the missing one fails only when used (from https://github.com/retran/meowg1k/pull/126, high) | Where the key is always needed, the failure arrives at the first request, far from the line that caused it (from docs/design/0.3.0-starlark-api.md section 4, high) |
+| Do nothing: offer only `env.get`, which returns `None` or a default | A workspace that declares three providers loads when only one key is set, and the missing one fails only when used (from https://github.com/meowshed/meowg1k/pull/126, high) | Where the key is always needed, the failure arrives at the first request, far from the line that caused it (from docs/design/0.3.0-starlark-api.md section 4, high) |
 | Keep keys out of `.meow/` and read them from the global credential store | Keys belong to the machine and not the repository (from docs/design/0.3.0-starlark-api.md section 4.1, high) | This is the normal path and stays so; `env.require` is the escape hatch for a key that must come from the environment (from docs/design/0.3.0-starlark-api.md section 4.1, high) |
 
 ## What it costs

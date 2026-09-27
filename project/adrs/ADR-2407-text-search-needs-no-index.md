@@ -24,31 +24,31 @@ and a built graph for it would make the cheap search depend on the expensive one
 
 | Option | Better at | Why it lost |
 | ------ | --------- | ----------- |
-| Serve `search.text` from the index | A search reads indexed chunks and doesn't scan every file line by line (reasoned from https://github.com/retran/meowg1k/pull/142, low). | The cheap search would depend on an embedding model and a built graph (from docs/spec/starlark.md, Decisions, high). |
-| Make `search.text` and `search.files` capabilities beside `fs` | They would need no port (from https://github.com/retran/meowg1k/pull/142, high). | They must reach the files the index reaches, and that walk lives in `meow-index`; a capability would need a `meow-star` to `meow-index` edge the architecture doesn't have (from https://github.com/retran/meowg1k/pull/142, high). |
-| Do nothing: answer both with an empty list when there is no index, as the wiring did before PR #147 | Already built (from https://github.com/retran/meowg1k/pull/147, high). | `search.files("**/*.rs")` came back empty while `fs.glob("**/*.rs")` in the same handler found the file, so a handler was told the workspace was empty (from https://github.com/retran/meowg1k/pull/147, high). |
+| Serve `search.text` from the index | A search reads indexed chunks and doesn't scan every file line by line (reasoned from https://github.com/meowshed/meowg1k/pull/142, low). | The cheap search would depend on an embedding model and a built graph (from docs/spec/starlark.md, Decisions, high). |
+| Make `search.text` and `search.files` capabilities beside `fs` | They would need no port (from https://github.com/meowshed/meowg1k/pull/142, high). | They must reach the files the index reaches, and that walk lives in `meow-index`; a capability would need a `meow-star` to `meow-index` edge the architecture doesn't have (from https://github.com/meowshed/meowg1k/pull/142, high). |
+| Do nothing: answer both with an empty list when there is no index, as the wiring did before PR #147 | Already built (from https://github.com/meowshed/meowg1k/pull/147, high). | `search.files("**/*.rs")` came back empty while `fs.glob("**/*.rs")` in the same handler found the file, so a handler was told the workspace was empty (from https://github.com/meowshed/meowg1k/pull/147, high). |
 
 ## What it costs
 
 `search.text` reads every file the walk returns and scans it line by line. The
 walk refuses binary and oversized files, so the cost is bounded by the walk and
 not by the corpus, but it is a linear scan; a workspace where it is too slow
-wants `search.code` (from https://github.com/retran/meowg1k/pull/142, high).
+wants `search.code` (from https://github.com/meowshed/meowg1k/pull/142, high).
 Each search call canonicalises the root once, which is one `stat` (from
-https://github.com/retran/meowg1k/pull/147, high).
+https://github.com/meowshed/meowg1k/pull/147, high).
 
 ## What would reverse it
 
 A workspace where the linear scan is too slow for the searches handlers make
 would favour serving literal text from an index (from
-https://github.com/retran/meowg1k/pull/142, medium).
+https://github.com/meowshed/meowg1k/pull/142, medium).
 
 ## Consequences
 
 `search.text` shares the walk with the index, so one `.gitignore` decides what
 is searchable however a handler searches (from docs/spec/starlark.md, Decisions,
 high). A hit from `search.text` carries a score of 1.0, so every search returns
-one shape (from https://github.com/retran/meowg1k/pull/142, high).
+one shape (from https://github.com/meowshed/meowg1k/pull/142, high).
 
 ## How I will know it was realised
 
@@ -70,4 +70,4 @@ missing: `searcher` then builds `Unindexed`, which walks with `Walk::default()`
 and not the declared limits, so `search.text` can reach files the index would
 refuse (from crates/meow-cli/src/wire.rs `searcher`,
 crates/meow-cli/src/index.rs `Unindexed::new` and
-https://github.com/retran/meowg1k/pull/147, high).
+https://github.com/meowshed/meowg1k/pull/147, high).

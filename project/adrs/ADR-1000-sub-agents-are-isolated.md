@@ -56,7 +56,7 @@ in its own session with the caller recorded as its parent, and its spend counts
 against the caller's remaining budget (from docs/design/0.3.0-starlark-api.md
 section 5.3, high). Pull request 120 describes the same trade: inheriting the
 caller's messages would give context and would make the agent's behaviour
-depend on who called it (from https://github.com/retran/meowg1k/pull/120,
+depend on who called it (from https://github.com/meowshed/meowg1k/pull/120,
 high).
 
 ## How I will know it was realised

@@ -13,7 +13,7 @@ supersedes: []
 
 `R-AGENT-025` executes tool calls in the order the model returned them, a
 trade-off accepted rather than solved (from
-https://github.com/retran/meowg1k/pull/111, high).
+https://github.com/meowshed/meowg1k/pull/111, high).
 
 Once this is accepted, the engine walks a response's tool calls in a plain
 loop, deciding policy, running the tool and recording the result for one call
@@ -24,14 +24,14 @@ decision is left unbuilt (reasoned from the same lines, low).
 ## Why
 
 Sequential execution keeps policy evaluation and session writes simple (from
-https://github.com/retran/meowg1k/pull/111, high).
+https://github.com/meowshed/meowg1k/pull/111, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Run the tool calls of one response in parallel | The latency win that parallel tool calls exist for (from https://github.com/retran/meowg1k/pull/111, high) | Sequential execution keeps policy evaluation and session writes simple (from https://github.com/retran/meowg1k/pull/111, high) |
-| Run reads in parallel and writes in sequence, using the read-and-write distinction of `R-POLICY-008` and `R-POLICY-009` | Most of the latency win on read-heavy turns, without two writes racing (reasoned from https://github.com/retran/meowg1k/pull/111, low) | The history names it as the opening to revisit this decision, not as the choice for now (from https://github.com/retran/meowg1k/pull/111, high) |
+| Run the tool calls of one response in parallel | The latency win that parallel tool calls exist for (from https://github.com/meowshed/meowg1k/pull/111, high) | Sequential execution keeps policy evaluation and session writes simple (from https://github.com/meowshed/meowg1k/pull/111, high) |
+| Run reads in parallel and writes in sequence, using the read-and-write distinction of `R-POLICY-008` and `R-POLICY-009` | Most of the latency win on read-heavy turns, without two writes racing (reasoned from https://github.com/meowshed/meowg1k/pull/111, low) | The history names it as the opening to revisit this decision, not as the choice for now (from https://github.com/meowshed/meowg1k/pull/111, high) |
 
 Doing nothing is the decision itself: v0.2.x also ran a response's tool calls
 one after another in a `for` loop, so keeping the prior behaviour and choosing
@@ -41,18 +41,18 @@ sequential execution are the same option (from
 ## What it costs
 
 The run forfeits the latency win that parallel tool calls exist for (from
-https://github.com/retran/meowg1k/pull/111, high). The pull request that built
+https://github.com/meowshed/meowg1k/pull/111, high). The pull request that built
 the engine repeats the cost and records it in `agent.md` as accepted, not
-solved (from https://github.com/retran/meowg1k/pull/118, high).
+solved (from https://github.com/meowshed/meowg1k/pull/118, high).
 
 ## What would reverse it
 
 - The read-and-write distinction in `R-POLICY-008` and `R-POLICY-009` is the
-  opening to revisit this (from https://github.com/retran/meowg1k/pull/111,
+  opening to revisit this (from https://github.com/meowshed/meowg1k/pull/111,
   high).
 - A run's tool calls within one response come to take more wall time than its
   model calls, which is when the forfeited latency is worth the complexity
-  (reasoned from https://github.com/retran/meowg1k/pull/111, low).
+  (reasoned from https://github.com/meowshed/meowg1k/pull/111, low).
 
 ## Consequences
 
@@ -77,7 +77,7 @@ solved (from https://github.com/retran/meowg1k/pull/118, high).
 
 - Whether sub-agents run concurrently: the budget ledger is built for
   concurrent sub-agents, and this decision covers only the calls in one
-  response (from https://github.com/retran/meowg1k/pull/111 and
+  response (from https://github.com/meowshed/meowg1k/pull/111 and
   crates/meow-agent/src/engine.rs:284, medium).
 - What the model is told about the calls after one that stopped the run: the
   engine returns without a result for them (from

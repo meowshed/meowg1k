@@ -14,5 +14,5 @@ verification: behavioural
 `toml.encode` MUST fail, saying that TOML has no null, when a value it is given
 holds `None`, and never drop the key.
 
-(from https://github.com/retran/meowg1k/pull/141 and
+(from https://github.com/meowshed/meowg1k/pull/141 and
 crates/meow-star/src/modules.rs:258, high)

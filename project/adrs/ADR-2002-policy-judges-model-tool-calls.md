@@ -38,7 +38,7 @@ layer exists to prevent (from docs/spec/policy.md, high).
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Judge a script's own capability calls as well | One rule would cover a path whether a model or a handler touches it (reasoned from docs/spec/policy.md, Decisions, low) | Asking the workspace's author to approve their own script is a prompt nobody reads (from docs/spec/policy.md, high), and it puts a prompt in front of the author's own program (from https://github.com/retran/meowg1k/pull/145, high) |
+| Judge a script's own capability calls as well | One rule would cover a path whether a model or a handler touches it (reasoned from docs/spec/policy.md, Decisions, low) | Asking the workspace's author to approve their own script is a prompt nobody reads (from docs/spec/policy.md, high), and it puts a prompt in front of the author's own program (from https://github.com/meowshed/meowg1k/pull/145, high) |
 | Enforce in the engine and inside each capability module | A capability would refuse a denied call even on a path that skipped the engine (reasoned from docs/spec/policy.md, Decisions, low) | Two enforcement points are two places for a decision to differ, which is the defect the policy layer exists to prevent (from docs/spec/policy.md, high) |
 
 Doing nothing isn't an option here: v0.2.x had no policy layer, and the choice
@@ -49,7 +49,7 @@ to have one is ADR-2004 (from docs/spec/policy.md, Changes from v0.2.x, high).
 A handler that writes a file or runs a command does so with no rule and no
 prompt, so a workspace author who gives a model a tool taking a URL or a path
 has handed the model what the tool reaches, and the rule for that tool is the
-only place to narrow it (from https://github.com/retran/meowg1k/pull/145 and
+only place to narrow it (from https://github.com/meowshed/meowg1k/pull/145 and
 docs/design/0.3.0-starlark-api.md section 10, high). Code from a package runs
 as a handler too, and it isn't code the workspace's author wrote (reasoned from
 docs/spec/packages.md [R-PKG-033], low).

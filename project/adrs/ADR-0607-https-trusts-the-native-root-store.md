@@ -13,7 +13,7 @@ supersedes: []
 
 The provider transport verifies a vendor against the machine's native root
 certificate store and not the bundled Mozilla set (from
-https://github.com/retran/meowg1k/pull/125, high).
+https://github.com/meowshed/meowg1k/pull/125, high).
 
 Once this is accepted, it holds for every HTTP client in the binary: `meow-llm`,
 `meow-star`'s `http` module and `meow-cli`'s package fetch all build `reqwest`
@@ -26,33 +26,33 @@ crates/meow-cli/Cargo.toml:32, high).
 A developer behind a TLS-inspecting proxy otherwise gets "certificate unknown"
 with no way to fix it, and honouring the machine's trust store is what every
 other developer tool on that machine does (from
-https://github.com/retran/meowg1k/pull/125, high). It also avoids
+https://github.com/meowshed/meowg1k/pull/125, high). It also avoids
 `webpki-roots`, whose `CDLA-Permissive-2.0` licence `cargo deny` rejects; that
 prompted the question and isn't the reason for the answer (from
-https://github.com/retran/meowg1k/pull/125, high).
+https://github.com/meowshed/meowg1k/pull/125, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Do nothing: keep only the `Recorded` transport | Every provider test stays deterministic and nothing reaches the network (from https://github.com/retran/meowg1k/pull/125, high) | Nothing outside a test can use a provider (from https://github.com/retran/meowg1k/pull/125, high) |
-| The bundled Mozilla set through `webpki-roots` | Works in a minimal container with no CA bundle (from https://github.com/retran/meowg1k/pull/125, high) | Fails behind a TLS-inspecting proxy with no fix, and its licence fails `cargo deny` (from https://github.com/retran/meowg1k/pull/125, high) |
+| Do nothing: keep only the `Recorded` transport | Every provider test stays deterministic and nothing reaches the network (from https://github.com/meowshed/meowg1k/pull/125, high) | Nothing outside a test can use a provider (from https://github.com/meowshed/meowg1k/pull/125, high) |
+| The bundled Mozilla set through `webpki-roots` | Works in a minimal container with no CA bundle (from https://github.com/meowshed/meowg1k/pull/125, high) | Fails behind a TLS-inspecting proxy with no fix, and its licence fails `cargo deny` (from https://github.com/meowshed/meowg1k/pull/125, high) |
 
 ## What it costs
 
 A minimal container with no CA bundle can't reach a vendor, where the bundled
-set would have worked (from https://github.com/retran/meowg1k/pull/125, high).
+set would have worked (from https://github.com/meowshed/meowg1k/pull/125, high).
 
 ## What would reverse it
 
 - A supported install target ships without a CA bundle, or `cargo deny` comes
   to accept `webpki-roots`' licence and a bundled fallback is wanted (reasoned
-  from https://github.com/retran/meowg1k/pull/125, low).
+  from https://github.com/meowshed/meowg1k/pull/125, low).
 
 ## Consequences
 
 - Proxy settings come only from what `reqwest` reads in the environment,
-  `HTTPS_PROXY` and `NO_PROXY` (from https://github.com/retran/meowg1k/pull/125,
+  `HTTPS_PROXY` and `NO_PROXY` (from https://github.com/meowshed/meowg1k/pull/125,
   high).
 
 ## How I will know it was realised

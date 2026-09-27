@@ -29,7 +29,7 @@ v0.2.1:cmd/starlark.go:81-110, medium).
 | Option | Better at | Why it lost |
 | ------ | --------- | ----------- |
 | Do nothing: keep the v0.2.x `meow.param` | Existing workspaces keep working, and one constructor takes the type as a string (from v0.2.1:internal/core/starlark/registry.go:16-30, high). | The flag came from a `FlagDef` copy and the schema from the `Param`, so the two could drift (from v0.2.1:internal/core/starlark/registry.go:34-64, medium), and an absent parameter was filled with its type's zero value (from docs/design/0.3.0-starlark-api.md, section 6.1, high). |
-| Store each argument as a finished JSON Schema | The model's schema is ready without a conversion (reasoned from https://github.com/retran/meowg1k/pull/121, low). | The flag, the help line and the schema have to come from the same node or they drift, so an argument is stored as its declaration (from https://github.com/retran/meowg1k/pull/121, high). |
+| Store each argument as a finished JSON Schema | The model's schema is ready without a conversion (reasoned from https://github.com/meowshed/meowg1k/pull/121, low). | The flag, the help line and the schema have to come from the same node or they drift, so an argument is stored as its declaration (from https://github.com/meowshed/meowg1k/pull/121, high). |
 
 Neither the code, the history nor the design documents name a further option.
 
@@ -40,7 +40,7 @@ Neither the code, the history nor the design documents name a further option.
 - The `pattern` a string argument accepts is `*` and literals, not a regular
   expression, because a full engine would be another dependency and a crafted
   input could make a declaration run long (from
-  https://github.com/retran/meowg1k/pull/121, high).
+  https://github.com/meowshed/meowg1k/pull/121, high).
 
 ## What would reverse it
 

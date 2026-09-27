@@ -17,4 +17,4 @@ meowg1k persists nothing itself and asks the operating system to, because OAuth
 forces something to persist and the principle forbids meowg1k being the thing
 that holds the secret.
 
-(from https://github.com/retran/meowg1k/issues/166, high)
+(from https://github.com/meowshed/meowg1k/issues/166, high)

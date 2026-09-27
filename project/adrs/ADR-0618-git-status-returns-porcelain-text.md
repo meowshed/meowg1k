@@ -12,7 +12,7 @@ supersedes: []
 ## Decision
 
 `git.status()` runs `git status --porcelain=v1` and returns what it prints, one
-path per line, as a string (from https://github.com/retran/meowg1k/pull/136 and
+path per line, as a string (from https://github.com/meowshed/meowg1k/pull/136 and
 crates/meow-star/src/capability_git.rs:88-98, high). It doesn't parse the lines
 into values, so REQ-2543 states the text and not a structure (from
 crates/meow-star/src/capability_git.rs:91-98, high).
@@ -24,16 +24,16 @@ crates/meow-star/tests/running.rs:1084-1118, high).
 
 The porcelain format is the one `git` promises not to change between versions;
 the human format is prettier and isn't a contract (from
-https://github.com/retran/meowg1k/pull/136, high).
+https://github.com/meowshed/meowg1k/pull/136, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| The human format of `git status` | Prettier to read (from https://github.com/retran/meowg1k/pull/136, high) | It isn't a contract, so a handler that reads it can break on a `git` upgrade (from https://github.com/retran/meowg1k/pull/136, high) |
+| The human format of `git status` | Prettier to read (from https://github.com/meowshed/meowg1k/pull/136, high) | It isn't a contract, so a handler that reads it can break on a `git` upgrade (from https://github.com/meowshed/meowg1k/pull/136, high) |
 
 Doing nothing isn't an option, because `git.status` was new in #136 and had to
-return one format or another (from https://github.com/retran/meowg1k/pull/136,
+return one format or another (from https://github.com/meowshed/meowg1k/pull/136,
 high).
 
 ## What it costs

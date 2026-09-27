@@ -40,7 +40,7 @@ docs/spec/agent.md Decisions, high) The engine sends the summary request with
 a limit of 1,024 output tokens, and a summary of a short exchange can be longer
 than what it replaces, in which case the recorded saving is zero (from
 crates/meow-agent/src/engine.rs:186-215 and
-https://github.com/retran/meowg1k/pull/120, high).
+https://github.com/meowshed/meowg1k/pull/120, high).
 
 ## What would reverse it
 
@@ -70,6 +70,6 @@ than it saves (from crates/meow-agent/src/compaction.rs:50-66, high).
 - How tokens are counted. The engine estimates four characters to a token,
   which is close enough for a threshold and wrong enough that nothing should
   bill from it (from crates/meow-agent/src/compaction.rs:37-48 and
-  https://github.com/retran/meowg1k/pull/120, high).
+  https://github.com/meowshed/meowg1k/pull/120, high).
 - Which model summarises, which ADR-1002 settles.
 - When compaction fires, which ADR-1006 settles.

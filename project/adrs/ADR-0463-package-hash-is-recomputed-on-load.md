@@ -13,7 +13,7 @@ supersedes: []
 
 The tree is hashed over sorted relative paths and the bytes at each, recomputed
 rather than read from a marker file, and compared against the lockfile before
-anything is evaluated (from https://github.com/retran/meowg1k/pull/157, high).
+anything is evaluated (from https://github.com/meowshed/meowg1k/pull/157, high).
 
 Once this is accepted, `package::resolve` hashes the cached tree with
 `hash_tree` on every `@<pkg>//` load and refuses a mismatch with a message that
@@ -29,21 +29,21 @@ crates/meow-star/src/loader.rs:129, low).
 
 A marker is written by the same process that would have been fooled, so a cache
 somebody edited, or a mirror that served something else, would still run (from
-https://github.com/retran/meowg1k/pull/157, high).
+https://github.com/meowshed/meowg1k/pull/157, high).
 
 ## Alternatives
 
 | Option | Better at | Why it lost |
 | --- | --- | --- |
-| Read the hash from a marker file written at fetch time | A load reads one small file and hashes nothing, so its cost doesn't grow with the package (reasoned from crates/meow-star/src/package.rs:116, low) | The process that writes the marker is the one that would have been fooled (from https://github.com/retran/meowg1k/pull/157, high) |
-| Cache the computed hash against modification times | A large package isn't re-read on every load (from https://github.com/retran/meowg1k/pull/157, high) | Packages are kilobytes of Starlark and the hash takes microseconds, so the pull request shipped the plain version and left the optimisation out (from https://github.com/retran/meowg1k/pull/157, high) |
-| Do nothing: trust the cache as it stands, since it is keyed by hash | No hashing at load at all (reasoned from crates/meow-star/src/package.rs:99, low) | A loader that verified nothing would pass every other test, and REQ-1807 requires the check (from https://github.com/retran/meowg1k/pull/157, high) |
+| Read the hash from a marker file written at fetch time | A load reads one small file and hashes nothing, so its cost doesn't grow with the package (reasoned from crates/meow-star/src/package.rs:116, low) | The process that writes the marker is the one that would have been fooled (from https://github.com/meowshed/meowg1k/pull/157, high) |
+| Cache the computed hash against modification times | A large package isn't re-read on every load (from https://github.com/meowshed/meowg1k/pull/157, high) | Packages are kilobytes of Starlark and the hash takes microseconds, so the pull request shipped the plain version and left the optimisation out (from https://github.com/meowshed/meowg1k/pull/157, high) |
+| Do nothing: trust the cache as it stands, since it is keyed by hash | No hashing at load at all (reasoned from crates/meow-star/src/package.rs:99, low) | A loader that verified nothing would pass every other test, and REQ-1807 requires the check (from https://github.com/meowshed/meowg1k/pull/157, high) |
 
 ## What it costs
 
 The hash is recomputed on every load; packages are kilobytes of Starlark, and a
 large package would want the result cached against modification times (from
-https://github.com/retran/meowg1k/pull/157, high). `resolve` runs before the
+https://github.com/meowshed/meowg1k/pull/157, high). `resolve` runs before the
 loader looks in its evaluate-once cache, so each `load` of a package hashes the
 whole tree again, even when the module was already evaluated in this run (from
 crates/meow-star/src/loader.rs:129 and crates/meow-star/src/loader.rs:146,
@@ -53,7 +53,7 @@ high).
 
 A package large enough that hashing it on every load shows in a run's start-up
 time would call for caching the result against modification times, as the pull
-request names (from https://github.com/retran/meowg1k/pull/157, high). A
+request names (from https://github.com/meowshed/meowg1k/pull/157, high). A
 verified signature on the cache entry, which a user-edited cache couldn't
 forge, would also remove the need to recompute (reasoned from
 crates/meow-star/src/package.rs:99, low).
@@ -73,7 +73,7 @@ crates/meow-star/src/package.rs:99, low).
 
 Short-circuiting the comparison fails
 `contents_that_do_not_match_the_lockfile_are_refused`, which edits a cached
-package after locking it (from https://github.com/retran/meowg1k/pull/157,
+package after locking it (from https://github.com/meowshed/meowg1k/pull/157,
 high). That test and `moving_a_file_changes_the_hash` are in
 `crates/meow-star/tests/packages.rs` (from
 crates/meow-star/tests/packages.rs:110, high).

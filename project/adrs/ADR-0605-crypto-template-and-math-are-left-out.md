@@ -25,7 +25,7 @@ No automation use case justified `crypto`; Starlark's `%` operator and string
 methods cover what `template` did; and `math` belongs in a `.star` library, not
 in the runtime (from docs/design/0.3.0-starlark-api.md section 10, high). A
 module nobody calls is a surface nobody checked (from
-https://github.com/retran/meowg1k/pull/135, high).
+https://github.com/meowshed/meowg1k/pull/135, high).
 
 ## Alternatives
 
