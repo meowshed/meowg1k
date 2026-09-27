@@ -1,7 +1,7 @@
 ---
 id: BUG-0200
 artifact: bug
-status: draft
+status: approved
 severity: major
 violates: REQ-1230
 found: 2026-09-27
